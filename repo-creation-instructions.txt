@@ -2,7 +2,7 @@ mkdir lastChanceDance
 cd lastChanceDance
 git init
 # ... do some work: REMEMEBER to "git add" the files
-git commit -a
+git commit  # or git commit -a if you want to include all changed files in the commit
 git remote add origin git@e.andyfreeland.net:lastChanceDance.git
 git push origin master:refs/heads/master
 git config --add branch.master.remote origin
