@@ -1,1 +1,5 @@
 *.pyc
+# Ignore libraries-- They should be installed from the script
+web/
+flup/
+gAppEngine/google_appengine/
