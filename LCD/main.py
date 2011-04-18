@@ -23,7 +23,10 @@ def getCarl():
     carl.filter("googleID =", str(users.get_current_user().user_id()))
     return carl.get()
 
-def getPerson(username):  # Need your advice, dan
+def get_user_by_CID(username):
+    '''
+    returns a user row given their carleton id
+    '''
     carl = Carl.all()
     carl.filter("carletonID =",username)
     return carl.get()
@@ -94,19 +97,20 @@ class Pair(webapp.RequestHandler):
             # use get() to return the carleton email id that this google account was paired to
             self.response.out.write("Your account is already paired")
         else:
-            #theCarl = Carl().all()
-            #theCarl.filter("carletonID =",self.request.get('carletonID'))
-            theCarl = getPerson(self.request.get('carletonID'))
-            self.response.out.write(theCarl.carletonID)
-            self.response.out.write(theCarl.verificationCode)
+            theCarl = get_user_by_CID(self.request.get('carletonID'))
             # uhh.. this better only be one entry.
             if theCarl.verificationCode == self.request.get('verificationCode'):
                 theCarl.googleID = str(users.get_current_user().user_id())
-                theCarl.verificationCode = ""
+                theCarl.verificationCode = "" # yeah, what do we want to do with this field? should we keep the verification code there?
                 theCarl.put()
                 self.response.out.write("Your account was successfully paired:<br>")
                 self.response.out.write("Carleton ID:" + theCarl.carletonID + "<br>")
                 self.response.out.write("GoogleID: " + theCarl.googleID)
+            else:
+                self.response.out.write("You entered an incorrect verification code")
+                self.response.out.write("Carleton ID:" + theCarl.carletonID)
+                self.response.out.write("Google ID: " + theCarl.googleID)
+                self.response.out.write("Verification Code:" + theCarl.verificationCode)
 
 class Admin(webapp.RequestHandler):
     def get(self):
@@ -117,27 +121,22 @@ class Admin(webapp.RequestHandler):
         path = os.path.join(os.path.dirname(__file__), 'templates/admin.html')
         self.response.out.write(template.render(path, template_values))
 
-class AddCarl(webapp.RequestHandler):  # Adding a new student to database
+class AddCarl(webapp.RequestHandler):
     def post(self):
-        if users.is_current_user_admin():
-            from random import randint
-            admin = True
-            carl = Carl()
+        if users.is_current_user_admin(): # we dont need to check if the user is the admin if we put the admin stuff in another script and use the handler to do this for us
+            carl = Carl() # NEED TO CHECK IF USER WITH THAT ID ALREADY EXISTS IN DB
             carl.carletonID = self.request.get('carletonID')
-            carl.verificationCode = str(randint(0,2**16))
-            self.response.out.write('Trying to put '+carl.carletonID+' into database.')
+            carl.verificationCode = generateVerificationCode() # do we want to generate an authentication code here or when we send out an invite?
             carl.put()
             self.redirect('/admin')
         else:
-            admin = False
             self.response.out.write('Hey! You are not an administrator. SHAME')
-
 
 class PairCode(webapp.RequestHandler):
     def post(self):
         self.response.out.write(self.request.get('carletonID'))
         # Lookup carletonID -> get/generate verification code
-        carletonAccount = getPerson(self.request.get('carletonID'))
+        carletonAccount = get_user_by_CID(self.request.get('carletonID'))
         carletonAccount.verificationCode = generateVerificationCode()
         carletonAccount.put()
         # mail some stuff

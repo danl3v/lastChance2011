@@ -6,14 +6,17 @@
 <ul>
 <li>Send Invitations</li>
 <li>Generate Matches</li>
+<li><form action="/admin/addcarl" method="post"><input type="text" name="carletonID"><input type="submit" value="Add Carl to LCD"></form></li>
 </ul>
-<form action="/admin/addcarl" method="post">
-    <input type="text" name="carletonID" value="">
-    <input type="submit" value="Continue &rarr;">
-</form>
+
+<h2>Existing Users</h2>
 <ul>
 {% for carl in carls %}
-   <li>{{ carl.carletonID }} and {{ carl.verificationCode }}</li> 
+  {% if carl.googleID %}
+    <li>{{ carl.carletonID }} PAIRED</li>
+  {% else %}
+   <li>{{ carl.carletonID }} WITH CODE [{{ carl.verificationCode }}]</li>
+  {% endif %}
 {% endfor %}
 </ul>
 </body>
