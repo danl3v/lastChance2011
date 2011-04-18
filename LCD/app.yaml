@@ -7,8 +7,8 @@ handlers:
 - url: /.*
   script: main.py
 
-- url: /stylesheets
-  static_dir: static/stylesheets
-
 - url: /favicon.ico
   static_dir: static/favicon.ico
+
+- url: /stylesheets
+  static_dir: static/stylesheets

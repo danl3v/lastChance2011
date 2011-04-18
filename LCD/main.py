@@ -70,13 +70,13 @@ class MainPage(webapp.RequestHandler):
             'pair_url_linktext': pair_url_linktext
         }
 
-        path = os.path.join(os.path.dirname(__file__), 'index.html')
+        path = os.path.join(os.path.dirname(__file__), 'templates/index.html')
         self.response.out.write(template.render(path, template_values))
 
 class Pair(webapp.RequestHandler):
     def get(self):
         template_values = {}
-        path = os.path.join(os.path.dirname(__file__), 'pair.html')
+        path = os.path.join(os.path.dirname(__file__), 'templates/pair.html')
         self.response.out.write(template.render(path, template_values))
 
     def post(self):
