@@ -7,6 +7,8 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
 
+import mailfunction
+
 #### FUNCTIONS ####
 
 def isPaired():
@@ -141,6 +143,7 @@ class PairCode(webapp.RequestHandler):
         carletonAccount.verificationCode = generateVerificationCode()
         carletonAccount.put()
         # mail some stuff
+        mailfunction.sendInvite(carletonAccount)  # Untested
         '''http://code.google.com/appengine/docs/python/mail/sendingmail.html'''
         self.response.out.write("<br>Your pair code has been sent!! jk. we haven't coded that much yet.")
 
