@@ -7,5 +7,14 @@
 <li>Send Invitations</li>
 <li>Generate Matches</li>
 </ul>
+<form action="/admin/addcarl" method="post">
+    <input type="text" name="carletonID" value="">
+    <input type="submit" value="Continue &rarr;">
+</form>
+<ul>
+{% for carl in carls %}
+   <li>{{ carl.carletonID }} and {{ carl.verificationCode }}</li> 
+{% endfor %}
+</ul>
 </body>
 </html>
