@@ -1,0 +1,10 @@
+<!DOCTYPE HTML>
+<html>
+<body>
+   <a href="{{url}}"> {{url_linktext}}</a>
+   <h1>Welcome to Last Chance Dance</h1>
+   {% if user %}
+   <p> You've logged in! </p>
+   {% endif %}
+</body>
+</html>
