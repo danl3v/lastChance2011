@@ -1,10 +1,17 @@
 <!DOCTYPE HTML>
 <html>
 <body>
+   <h1>Welcome to LCD</h1>
    <a href="{{url}}"> {{url_linktext}}</a>
-   <h1>Welcome to Last Chance Dance</h1>
    {% if user %}
-   <p> You've logged in! </p>
+     <p>Options:</p>
+     <ul><li><a href="{{pair_url}}"> {{pair_url_linktext}}</a></li>
+     <li><a href="preferences">Preferences</a></li>
+     {% if admin %}
+       <li><a href="admin">Admin</a></li>
+     {% endif %}
+     </ul>
    {% endif %}
+
 </body>
 </html>
