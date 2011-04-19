@@ -5,10 +5,17 @@
     [-] When to publicize site?
     [-] When to codefreeze?
     [-] Featurefreeze?
-[+] Make some 'hello world'-esque prototypes to prove we can do client-server trickery
-    [-] google apps engine?
-    [-] django
-    [-] web.py
+[+] Get working prototype
+    [+] Get preferences working
+        [-] clean input (lowercase, strip anything unneccessary)
+        [-] check input against database. validate actual usernames
+    [-] figure out how to dev-server.py --enable-sendmail for mail testing
+    [-] break admin functions into different pages.  admin page is expensive to the database
+    [+] notifications
+        [-] when someone picks you, you get notified
+	[-] if one of your preferences opts out, you get notified
+	[-] check on the day before -- if one of your prefs has not logged in, alert the user
+    [-] 
 [+] Plan out webapp structure
 [+] Write documentation
     [-] How to build and host
