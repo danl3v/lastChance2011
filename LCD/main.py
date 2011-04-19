@@ -2,21 +2,22 @@ import cgi
 import os
 
 from google.appengine.ext.webapp import template
-from google.appengine.api import users
+#from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
 import models 
-from functions import *
+import session
+#from functions import *
 
 import mailfunction
 
 class MainPage(webapp.RequestHandler):
     def get(self):
 
-        user = users.get_current_user()
+        user = session.get_current_user()
         if user:
-            login_url = users.create_logout_url(self.request.uri)
+            login_url = session.create_logout_url(self.request.uri)
             login_url_linktext = 'Logout'
             
             if models.isPaired():
@@ -26,13 +27,13 @@ class MainPage(webapp.RequestHandler):
                 pair_url = "pair"
                 pair_url_linktext = "You need to pair your account"
         else:
-            login_url = users.create_login_url(self.request.uri)
+            login_url = session.create_login_url(self.request.uri)
             login_url_linktext = 'Login'
             pair_url = ""
             pair_url_linktext = ""
 
   
-        if users.is_current_user_admin():
+        if session.is_current_user_admin():
             admin = True
         else:
             admin = False
@@ -62,7 +63,7 @@ class Pair(webapp.RequestHandler):
         else:
             theCarl = models.get_user_by_CID(self.request.get('carletonID'))
             if theCarl.verificationCode == self.request.get('verificationCode'):
-                theCarl.googleID = str(users.get_current_user().user_id())
+                theCarl.googleID = str(session.get_current_user().user_id())
                 theCarl.verificationCode = "" # yeah, what do we want to do with this field? should we keep the verification code there?
                 theCarl.put()
                 self.response.out.write("Your account was successfully paired:<br>")
@@ -71,7 +72,7 @@ class Pair(webapp.RequestHandler):
             else:
                 self.response.out.write("You entered an incorrect verification code")
                 self.response.out.write("Carleton ID:" + theCarl.carletonID)
-                self.response.out.write("Google ID: " + str(users.get_current_user().user_id()))
+                self.response.out.write("Google ID: " + str(session.get_current_user().user_id()))
                 self.response.out.write("Verification Code:" + theCarl.verificationCode)
 
 class PairCode(webapp.RequestHandler):
@@ -88,14 +89,11 @@ class PairCode(webapp.RequestHandler):
 
 class Preferences(webapp.RequestHandler):
     def get(self):
-
-        carl2carl = Carl2Carl.all()
-        carl2carl.filter("source =", models.getCarl().carletonID)
-        results = carl2carl.fetch(20)
-        used_spots = carl2carl.count()
+        user = models.getCarl().carletonID  # this is its own line only because it's sort of a session-based/model operation
+        results = models.getCarlPreferences(user)
 
         #results = [pair.target for pair in results]
-        results = ['a','b','c']
+        results = ['a','b','c']  # temp because i just wanted to see how it'd look right now
         total_spots = 10 # this is the number of people someone can select
         slots = ['' for i in range(total_spots)]
         carls2carls = results + slots[:len(results)]
@@ -107,12 +105,10 @@ class Preferences(webapp.RequestHandler):
         path = os.path.join(os.path.dirname(__file__), 'templates/preferences.html')
         self.response.out.write(template.render(path, template_values))
 
-    def post(self):
+    def post(self):  # Haven't figured out what to do with this yet
+        user = models.getCarl().carletonID  # this is its own line only because it's sort of a session-based/model operation
+        results = models.getCarlPreferences(user)
 
-        carl2carl = Carl2Carl.all()
-        carl2carl.filter("source =", models.getCarl().carletonID)
-        results = carl2carl.fetch(20)
-        used_spots = carl2carl.count()
 
         total_spots = 10 # total number of people someone can select
         remaining_spots = total_spots - used_spots

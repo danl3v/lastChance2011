@@ -32,6 +32,11 @@ def getCarl():
     carl.filter("googleID =", str(users.get_current_user().user_id()))
     return carl.get()
 
+def getCarlPreferences(user):
+    carl2carl = Carl2Carl.all()
+    carl2carl.filter("source =", user)
+    results = carl2carl.fetch(20)
+    return results
 
 ### Get stuff from the Database ###
 
