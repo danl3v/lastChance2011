@@ -6,7 +6,7 @@ from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-from models import *
+import models 
 from functions import *
 
 import mailfunction
@@ -19,7 +19,7 @@ class MainPage(webapp.RequestHandler):
             login_url = users.create_logout_url(self.request.uri)
             login_url_linktext = 'Logout'
             
-            if isPaired():
+            if models.isPaired():
                 pair_url = "pair"
                 pair_url_linktext = "Unpair Your Account"
             else:
@@ -56,11 +56,11 @@ class Pair(webapp.RequestHandler):
         self.response.out.write(template.render(path, template_values))
 
     def post(self):
-        if isPaired():
+        if models.isPaired():
             # use get() to return the carleton email id that this google account was paired to
             self.response.out.write("Your account is already paired")
         else:
-            theCarl = get_user_by_CID(self.request.get('carletonID'))
+            theCarl = models.get_user_by_CID(self.request.get('carletonID'))
             if theCarl.verificationCode == self.request.get('verificationCode'):
                 theCarl.googleID = str(users.get_current_user().user_id())
                 theCarl.verificationCode = "" # yeah, what do we want to do with this field? should we keep the verification code there?
@@ -78,8 +78,8 @@ class PairCode(webapp.RequestHandler):
     def post(self):
         self.response.out.write(self.request.get('carletonID'))
         # Lookup carletonID -> get/generate verification code
-        carletonAccount = get_user_by_CID(self.request.get('carletonID'))
-        carletonAccount.verificationCode = generateVerificationCode()
+        carletonAccount = models.get_user_by_CID(self.request.get('carletonID'))
+        carletonAccount.verificationCode = models.generateVerificationCode()
         carletonAccount.put()
         # mail some stuff
         mailfunction.sendInvite(carletonAccount)  # tested- set to send all emails to conrad right now.
@@ -90,7 +90,7 @@ class Preferences(webapp.RequestHandler):
     def get(self):
 
         carl2carl = Carl2Carl.all()
-        carl2carl.filter("source =", getCarl().carletonID)
+        carl2carl.filter("source =", models.getCarl().carletonID)
         results = carl2carl.fetch(20)
         used_spots = carl2carl.count()
 
@@ -110,7 +110,7 @@ class Preferences(webapp.RequestHandler):
     def post(self):
 
         carl2carl = Carl2Carl.all()
-        carl2carl.filter("source =", getCarl().carletonID)
+        carl2carl.filter("source =", models.getCarl().carletonID)
         results = carl2carl.fetch(20)
         used_spots = carl2carl.count()
 
@@ -124,9 +124,9 @@ class Preferences(webapp.RequestHandler):
         ## Ohh shit that's right!
 
         for preference in preferences:
-            if (get_user_by_CID(preference)):
+            if (models.get_user_by_CID(preference)):
                 carl2carl = Carl2Carl()
-                carl2carl.source = getCarl().carletonID
+                carl2carl.source = models.getCarl().carletonID
                 carl2carl.target = preference
                 carl2carl.put()
                 self.response.out.write(preference + "<br>")
