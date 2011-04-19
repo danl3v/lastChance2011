@@ -1,1 +1,3 @@
-#nav { float: left; }
+html { margin: 0; padding: 0; }
+#nav { float: left; width: 20%; }
+#main { float: right; width: 80% }
