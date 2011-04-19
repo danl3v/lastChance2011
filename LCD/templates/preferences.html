@@ -4,12 +4,8 @@
    <h1>Preferences</h1>
    <form action="/preferences" method="post">
    <p>Current Selection</p>
-   {% for carl2carl in carls2carls %}
-     <input type="checkbox" value="{{ carl2carl.target }}" checked> {{ carl2carl.target }}<br>
-   {% endfor %}
-   <p>Enter some new people</p>
-   {% for i in n %}
-     <input type="input" name="new_carl{{ i }}"><br>
+   {% for name in carls2carls %} 
+     <input type="text" name="carl{{for.counter}}" value="{{ name }}">
    {% endfor %}
    <input type="submit" value="submit">
    </form>

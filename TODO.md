@@ -5,10 +5,10 @@
     [-] When to publicize site?
     [-] When to codefreeze?
     [-] Featurefreeze?
-[+] Make some 'hello world'-esque prototypes to prove we can do client-server trickery
-    [-] google apps engine?
-    [-] django
-    [-] web.py
+[+] Get working prototype
+    [-] get preferences template working
+    [-] figure out how to dev-server.py --enable-sendmail for mail testing
+    [-] 
 [+] Plan out webapp structure
 [+] Write documentation
     [-] How to build and host

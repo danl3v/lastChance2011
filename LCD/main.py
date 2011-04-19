@@ -94,13 +94,14 @@ class Preferences(webapp.RequestHandler):
         results = carl2carl.fetch(20)
         used_spots = carl2carl.count()
 
+        #results = [pair.target for pair in results]
+        results = ['a','b','c']
         total_spots = 10 # this is the number of people someone can select
-        remaining_spots = total_spots - used_spots
-        if remaining_spots < 1: remaining_spots = 0
+        slots = ['' for i in range(total_spots)]
+        carls2carls = results + slots[:len(results)]
 
         template_values = {
-            'carls2carls': results,
-            'n': range(remaining_spots)
+            'carls2carls': carls2carls,
             }
 
         path = os.path.join(os.path.dirname(__file__), 'templates/preferences.html')
@@ -113,13 +114,14 @@ class Preferences(webapp.RequestHandler):
         results = carl2carl.fetch(20)
         used_spots = carl2carl.count()
 
-        total_spots = 10 # this is the number of people someone can select                                                                     
+        total_spots = 10 # total number of people someone can select
         remaining_spots = total_spots - used_spots
         if remaining_spots < 1: remaining_spots = 0
 
         preferences = [self.request.get("new_carl" + str(i)) for i in range(remaining_spots) if self.request.get("new_carl" + str(i)) != ""]
 
         # NEED TO DEAL WITH DELETING PEOPLE!!
+        ## Ohh shit that's right!
 
         for preference in preferences:
             if (get_user_by_CID(preference)):
