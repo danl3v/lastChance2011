@@ -88,15 +88,16 @@ class PairCode(webapp.RequestHandler):
         self.response.out.write("<br>Your pair code has been sent!!")
 
 class Preferences(webapp.RequestHandler):
+    total_spots = 10  # this is the number of people someone can select
+
     def get(self):
         user = models.getCarl().carletonID  # this is its own line only because it's sort of a session-based/model operation
         results = models.getCarlPreferences(user)
 
         #results = [pair.target for pair in results]
         results = ['a','b','c']  # temp because i just wanted to see how it'd look right now
-        total_spots = 10 # this is the number of people someone can select
         slots = ['' for i in range(total_spots)]
-        carls2carls = results + slots[:len(results)]
+        carls2carls = results + slots[:len(results)]  # has empty trailing slots
 
         template_values = {
             'carls2carls': carls2carls,
@@ -107,14 +108,15 @@ class Preferences(webapp.RequestHandler):
 
     def post(self):  # Haven't figured out what to do with this yet
         user = models.getCarl().carletonID  # this is its own line only because it's sort of a session-based/model operation
-        results = models.getCarlPreferences(user)
+        results = models.getCarlPreferences(user)  # retrieve existing preferences
 
 
         total_spots = 10 # total number of people someone can select
         remaining_spots = total_spots - used_spots
         if remaining_spots < 1: remaining_spots = 0
 
-        preferences = [self.request.get("new_carl" + str(i)) for i in range(remaining_spots) if self.request.get("new_carl" + str(i)) != ""]
+        preferences = [self.request.get("carl" + str(i) for i in range(1,total_spots+1)]
+        #preferences = [self.request.get("new_carl" + str(i)) for i in range(remaining_spots) if self.request.get("new_carl" + str(i)) != ""]
 
         # NEED TO DEAL WITH DELETING PEOPLE!!
         ## Ohh shit that's right!
