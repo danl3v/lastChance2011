@@ -9,6 +9,8 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 from models import *
 from functions import *
 
+import mailfunction
+
 class MainPage(webapp.RequestHandler):
     def get(self):
 
@@ -80,8 +82,9 @@ class PairCode(webapp.RequestHandler):
         carletonAccount.verificationCode = generateVerificationCode()
         carletonAccount.put()
         # mail some stuff
+        mailfunction.sendInvite(carletonAccount)  # tested- set to send all emails to conrad right now.
         '''http://code.google.com/appengine/docs/python/mail/sendingmail.html'''
-        self.response.out.write("<br>Your pair code has been sent!! jk. we haven't coded that much yet.")
+        self.response.out.write("<br>Your pair code has been sent!!")
 
 class Preferences(webapp.RequestHandler):
     def get(self):
