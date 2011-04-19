@@ -21,7 +21,7 @@ class AddCarl(webapp.RequestHandler):
     def post(self):
         carl = models.Carl() # NEED TO CHECK IF USER WITH THAT ID ALREADY EXISTS IN DB, or for empty user
         carl.carletonID = self.request.get('carletonID')
-        carl.verificationCode = generateVerificationCode() # do we want to generate an authentication code here or when we send out an invite?
+        carl.verificationCode = models.generateVerificationCode() # do we want to generate an authentication code here or when we send out an invite?
         carl.put()
         self.redirect('/admin')
 
