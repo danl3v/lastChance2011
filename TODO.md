@@ -6,8 +6,12 @@
     [-] When to codefreeze?
     [-] Featurefreeze?
 [+] Get working prototype
-    [-] get preferences template working
+    [-] Get preferences working
+        [-] clean input (lowercase, strip anything unneccessary)
+        [-] check input against database. validate actual usernames
     [-] figure out how to dev-server.py --enable-sendmail for mail testing
+    [-] break admin functions into different pages.  admin page is expensive to the database
+    [-] 
     [-] 
 [+] Plan out webapp structure
 [+] Write documentation

@@ -9,8 +9,8 @@ class Carl(db.Model):
     verificationCode = db.StringProperty()
 
 class Carl2Carl(db.Model):
-    source = db.StringProperty()
-    target = db.StringProperty()
+        source = db.StringProperty()
+        target = db.StringProperty()
 
 # Things that access data, either from the session or the database
 
@@ -33,6 +33,7 @@ def getCarl():
     return carl.get()
 
 def getCarlPreferences(user):
+    # returns carl2carl model instances for a given user's preferences
     carl2carl = Carl2Carl.all()
     carl2carl.filter("source =", user)
     results = carl2carl.fetch(20)

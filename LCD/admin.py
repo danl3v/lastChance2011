@@ -6,12 +6,11 @@ from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-from models import *
-from functions import *
+import models
 
 class Admin(webapp.RequestHandler):
     def get(self):
-        carls = Carl.all()
+        carls = models.Carl.all()
         template_values = {
             'carls' : carls
         }
@@ -20,7 +19,7 @@ class Admin(webapp.RequestHandler):
 
 class AddCarl(webapp.RequestHandler):
     def post(self):
-        carl = Carl() # NEED TO CHECK IF USER WITH THAT ID ALREADY EXISTS IN DB, or for empty user
+        carl = models.Carl() # NEED TO CHECK IF USER WITH THAT ID ALREADY EXISTS IN DB, or for empty user
         carl.carletonID = self.request.get('carletonID')
         carl.verificationCode = generateVerificationCode() # do we want to generate an authentication code here or when we send out an invite?
         carl.put()

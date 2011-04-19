@@ -16,7 +16,8 @@ You've been invited to this year's Last Chance Dance.
 
 To open your account, go to http://lcdance2011.appspot.com/ with the paircode below.
 
-%s
+Carleton Account: %s
+Pair Code:        %s
 
 After logging in with your Gmail account, you will be prompted to verify your account with the pair code above.
 
@@ -24,6 +25,6 @@ Have fun, and remember: If you can't handle the heat, stay out of the sex kitche
 
 Nursing seared genitalia,
 C
-""" % verificationCode
+""" % (username,verificationCode)
     
     mail.send_mail(sender_address, user_address, subject, body)
