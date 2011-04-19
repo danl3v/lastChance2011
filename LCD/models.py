@@ -36,7 +36,8 @@ def getCarlPreferences(user):
     carl2carl = Carl2Carl.all()
     carl2carl.filter("source =", user)
     results = carl2carl.fetch(20)
-    return results
+    preferences = [] if results is None else results  # type checking if there's no preferences in DB
+    return preferences
 
 ### Get stuff from the Database ###
 
