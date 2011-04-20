@@ -14,6 +14,8 @@
     [+] notifications
         [-] when someone picks you, you get notified
     [-] click "Logout" on /pair page. It should kick you to the mainpage.
+        [-] Tried app.yamil "login: required" but this leaves a logged out user stuck in a loop.
+        Current fix is to put "if !session.get_current_user()" at the top of everything, but this might be CPU heavy
     [-] separate page navigation and user account links
 	[-] if one of your preferences opts out, you get notified
 	[-] check on the day before -- if one of your prefs has not logged in, alert the user

@@ -1,73 +1,28 @@
 import cgi
 import os
 
-from google.appengine.ext.webapp import template
+#from google.appengine.ext.webapp import template
 #from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
 import models 
+import view
 import session
-#from functions import *
 
 import mailfunction
-
-def getNavData(self):
-    user = session.get_current_user()
-    if user:
-        login_url = session.create_logout_url(self.request.uri)
-        login_url_linktext = 'Logout'
-        
-        if models.isPaired():
-            pair_url = "pair"
-            pair_url_linktext = "Unpair Your Account"
-        else:
-            pair_url = "pair"
-            pair_url_linktext = "You need to pair your account"
-    else:
-        login_url = session.create_login_url(self.request.uri)
-        login_url_linktext = 'Login'
-        pair_url = ""
-        pair_url_linktext = ""
-        
-    if session.is_current_user_admin():
-        admin = True
-    else:
-        admin = False
-
-    return {
-        'user': user,
-        'admin': admin,
-        'login_url': login_url,
-        'login_url_linktext': login_url_linktext,
-        'pair_url': pair_url,
-        'pair_url_linktext': pair_url_linktext
-        }
-
-def renderTemplate(self, template_file, template_values):
-
-    template_values = dict(getNavData(self), **template_values)
-
-    path = os.path.join(os.path.dirname(__file__), 'templates/header.html')
-    self.response.out.write(template.render(path, template_values))
-    
-    path = os.path.join(os.path.dirname(__file__), 'templates/' + template_file)
-    self.response.out.write(template.render(path, template_values))
-    
-    path = os.path.join(os.path.dirname(__file__), 'templates/footer.html')
-    self.response.out.write(template.render(path, template_values))
 
 class MainPage(webapp.RequestHandler):
     def get(self):
 
         template_values = {}
-        renderTemplate(self, 'index.html', template_values)
+        view.renderTemplate(self, 'index.html', template_values)
         
 class Pair(webapp.RequestHandler):
     def get(self):
 
         template_values = {}
-        renderTemplate(self, 'pair.html', template_values)
+        view.renderTemplate(self, 'pair.html', template_values)
 
     def post(self):
         if models.isPaired():
@@ -104,24 +59,26 @@ class Preferences(webapp.RequestHandler):
     total_spots = 10  # this is the number of people someone can select
 
     def get(self):
-        user = models.getCarl().carletonID  # this is its own line only because it's sort of a session-based/model operation
-        user = "PAIR YOUR ACCOUNT" if user is None else user
-        results = models.getCarlPreferences(user)
+        if session.get_current_user(): # I don't like this solution..
+            student = session.getCarl().carletonID  # this is its own line only because it's sort of a session-based/model operation
+            student = "PAIR YOUR ACCOUNT" if student is None else student
+            results = models.getCarlPreferences(student)
 
-        results = [pair.target for pair in results]
-        #results = ['a','b','c']  # temp because i just wanted to see how it'd look right now
-        slots = ['' for i in range(Preferences.total_spots)]
-        carls2carls = results + slots[len(results):]  # has empty trailing slots
+            results = [pair.target for pair in results]
+            #results = ['a','b','c']  # temp because i just wanted to see how it'd look right now
+            slots = ['' for i in range(Preferences.total_spots)]
+            carls2carls = results + slots[len(results):]  # has empty trailing slots
 
-        template_values = {
-            'user': user,
-            'carls2carls': carls2carls,
-            }
+            template_values = {
+                'carls2carls': carls2carls,
+                }
 
-        renderTemplate(self, 'preferences.html', template_values)
+            view.renderTemplate(self, 'preferences.html', template_values)
+        else:
+            self.redirect('/')
 
     def post(self):  # Haven't figured out what to do with this yet
-        user = models.getCarl().carletonID  # this is its own line only because it's sort of a session-based/model operation
+        user = session.getCarl().carletonID  # this is its own line only because it's sort of a session-based/model operation
         results = models.getCarlPreferences(user)  # retrieve existing preferences
         ''' Check user input for mistakes, if there are any back out.  If not, delete all previous
         entries and load new preferences into the database'''
