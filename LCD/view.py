@@ -10,14 +10,17 @@ def getNavData(self):
         login_url_linktext = 'Logout'
         
         if session.isPaired():
+            paired = True
             pair_url = "pair"
             pair_url_linktext = "Unpair Your Account"
         else:
+            paired = False
             pair_url = "pair"
             pair_url_linktext = "You need to pair your account"
     else:
         login_url = session.create_login_url(self.request.uri)
         login_url_linktext = 'Login'
+        paired = False
         pair_url = ""
         pair_url_linktext = ""
         
@@ -31,6 +34,7 @@ def getNavData(self):
         'admin': admin,
         'login_url': login_url,
         'login_url_linktext': login_url_linktext,
+        'paired': paired,
         'pair_url': pair_url,
         'pair_url_linktext': pair_url_linktext
         }

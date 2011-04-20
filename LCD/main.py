@@ -18,6 +18,7 @@ class MainPage(webapp.RequestHandler):
         template_values = {}
         view.renderTemplate(self, 'index.html', template_values)
         
+
 class Pair(webapp.RequestHandler):
     def get(self):
 
@@ -25,10 +26,21 @@ class Pair(webapp.RequestHandler):
         view.renderTemplate(self, 'pair.html', template_values)
 
     def post(self):
-        if models.isPaired():
-            # use get() to return the carleton email id that this google account was paired to
-            self.response.out.write("Your account is already paired")
-        else:
+        if session.isPaired(): # unpair their account
+            theCarl = session.getCarl()
+            if theCarl.carletonID == self.request.get('carletonID'):
+                theCarl.googleID = ""
+                theCarl.put()
+                self.response.out.write("Your account was successfully unpaired:<br>The following accounts are no longer associated:<br>")
+                self.response.out.write("Carleton ID :" + theCarl.carletonID + "<br>")
+                self.response.out.write("GoogleID: " + str(session.get_current_user().user_id())
+            else:
+                self.response.out.write("Your account is not paired with " + self.request.get('carletonID') + "<br>")
+                self.response.out.write("Your account is paired with:<br>")
+                self.response.out.write("Carleton ID: " + theCarl.carletonID + "<br>")
+                self.response.out.write("Google ID: " + str(session.get_current_user().user_id()))
+
+        else: # pair their account
             theCarl = models.get_user_by_CID(self.request.get('carletonID'))
             if theCarl.verificationCode == self.request.get('verificationCode'):
                 theCarl.googleID = str(session.get_current_user().user_id())
@@ -39,9 +51,9 @@ class Pair(webapp.RequestHandler):
                 self.response.out.write("GoogleID: " + theCarl.googleID)
             else:
                 self.response.out.write("You entered an incorrect verification code")
-                self.response.out.write("Carleton ID:" + theCarl.carletonID)
-                self.response.out.write("Google ID: " + str(session.get_current_user().user_id()))
-                self.response.out.write("Verification Code:" + theCarl.verificationCode)
+                self.response.out.write("Carleton ID: " + theCarl.carletonID + "<br>")
+                self.response.out.write("Google ID: " + str(session.get_current_user().user_id()) + "<br>")
+                self.response.out.write("Verification Code: " + theCarl.verificationCode)
 
 class PairCode(webapp.RequestHandler):
     def post(self):
