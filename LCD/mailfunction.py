@@ -5,10 +5,9 @@ def sendInvite(carletonAccount):
     verificationCode = carletonAccount.verificationCode
 
     #user_address = carletonAccount.carletonID + "@carleton.edu"
-    user_address = "conrad.p.dean@gmail.com"
-    #user_address = "dlouislevy@gmail.com"
+    user_address = ["conrad.p.dean@gmail.com", "dlouislevy@gmail.com"]
 
-    sender_address = "Conerd <conrad.p.dean@gmail.com>"  # figure out a more legit email
+    sender_address = "Conerd <conrad.p.dean@gmail.com>"  # figure out a more legit email (our app can receive email, so let's do that or create a gmail
     subject = "Last Chance Dance Invitation!"
     body = """
 Hey there!
