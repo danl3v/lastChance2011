@@ -14,21 +14,30 @@ import mailfunction
 
 class MainPage(webapp.RequestHandler):
     def get(self):
-
         template_values = {}
         view.renderTemplate(self, 'index.html', template_values)
         
 class Pair(webapp.RequestHandler):
     def get(self):
-
         template_values = {}
         view.renderTemplate(self, 'pair.html', template_values)
 
     def post(self):
-        if models.isPaired():
-            # use get() to return the carleton email id that this google account was paired to
-            self.response.out.write("Your account is already paired")
-        else:
+        if session.isPaired(): # unpair their account
+            theCarl = session.getCarl()
+            if theCarl.carletonID == self.request.get('carletonID'):
+                theCarl.googleID = ""
+                theCarl.put()
+                self.response.out.write("Your account was successfully unpaired:<br>The following accounts are no longer associated:<br>")
+                self.response.out.write("Carleton ID :" + theCarl.carletonID + "<br>")
+                self.response.out.write("GoogleID: " + str(session.get_current_user().user_id()))
+            else:
+                self.response.out.write("Your account is not paired with " + self.request.get('carletonID') + "<br>")
+                self.response.out.write("Your account is paired with:<br>")
+                self.response.out.write("Carleton ID: " + theCarl.carletonID + "<br>")
+                self.response.out.write("Google ID: " + str(session.get_current_user().user_id()))
+
+        else: # pair their account
             theCarl = models.get_user_by_CID(self.request.get('carletonID'))
             if theCarl.verificationCode == self.request.get('verificationCode'):
                 theCarl.googleID = str(session.get_current_user().user_id())
@@ -39,9 +48,9 @@ class Pair(webapp.RequestHandler):
                 self.response.out.write("GoogleID: " + theCarl.googleID)
             else:
                 self.response.out.write("You entered an incorrect verification code")
-                self.response.out.write("Carleton ID:" + theCarl.carletonID)
-                self.response.out.write("Google ID: " + str(session.get_current_user().user_id()))
-                self.response.out.write("Verification Code:" + theCarl.verificationCode)
+                self.response.out.write("Carleton ID: " + theCarl.carletonID + "<br>")
+                self.response.out.write("Google ID: " + str(session.get_current_user().user_id()) + "<br>")
+                self.response.out.write("Verification Code: " + theCarl.verificationCode)
 
 class PairCode(webapp.RequestHandler):
     def post(self):
@@ -56,66 +65,41 @@ class PairCode(webapp.RequestHandler):
         self.response.out.write("<br>Your pair code has been sent!!")
 
 class Preferences(webapp.RequestHandler):
-    total_spots = 10  # this is the number of people someone can select
+    total_spots = 10  # this is the number of people someone can select -- is this ok? should it go in an __init__ or something?
 
     def get(self):
-        if session.get_current_user(): # I don't like this solution..
+        if session.isPaired():
             student = session.getCarl().carletonID  # this is its own line only because it's sort of a session-based/model operation
-            student = "PAIR YOUR ACCOUNT" if student is None else student
             results = models.getCarlPreferences(student)
 
             results = [pair.target for pair in results]
-            #results = ['a','b','c']  # temp because i just wanted to see how it'd look right now
             slots = ['' for i in range(Preferences.total_spots)]
             carls2carls = results + slots[len(results):]  # has empty trailing slots
 
-            template_values = {
-                'carls2carls': carls2carls,
-                }
-
+            template_values = { 'carls2carls': carls2carls }
             view.renderTemplate(self, 'preferences.html', template_values)
         else:
-            self.redirect('/')
+            self.response.out.write("You need to pair your account before entering preferences")
 
-    def post(self):  # Haven't figured out what to do with this yet
-        user = session.getCarl().carletonID  # this is its own line only because it's sort of a session-based/model operation
-        results = models.getCarlPreferences(user)  # retrieve existing preferences
-        ''' Check user input for mistakes, if there are any back out.  If not, delete all previous
-        entries and load new preferences into the database'''
-
-        '''assume it's perfect for now'''
+    def post(self):
+        student = session.getCarl().carletonID  # this is its own line only because it's sort of a session-based/model operation
+        results = models.getCarlPreferences(student)  # retrieve existing preferences
+        
         for edge in results:
             edge.delete()
-
-        preferences = [self.request.get("carl" + str(i)) for i in range(1,Preferences.total_spots+1)]
-        for choice in preferences:
-            if choice == "":
-                continue
-            edge = models.Carl2Carl()
-            edge.source = user
-            edge.target = choice
-            edge.put()
-            self.response.out.write("<p>"+choice + " added to your list.</p>")
+        
+        preferences = [self.request.get("carl" + str(i)) for i in range(1,Preferences.total_spots+1) if self.request.get("carl" + str(i)) != ""] # maybe convert this to 0 based in the future?
+        for preference in preferences:
+            if models.get_user_by_CID(preference):
+                edge = models.Carl2Carl()
+                edge.source = student
+                edge.target = preference
+                edge.put()
+                self.response.out.write("<p>" + preference + " added to your list.</p>")
+            else:
+                self.response.out.write("<p>" + preference + " could not be added.</p>")
 
         self.response.out.write('<a href="/preferences">back to preferences</a>')
-
-        #preferences = [self.request.get("new_carl" + str(i)) for i in range(remaining_spots) if self.request.get("new_carl" + str(i)) != ""]
-
-        # NEED TO DEAL WITH DELETING PEOPLE!!
-        ## Ohh shit that's right!
-
-"""
-        for preference in preferences:
-            if (models.get_user_by_CID(preference)):
-                carl2carl = Carl2Carl()
-                carl2carl.source = models.getCarl().carletonID
-                carl2carl.target = preference
-                carl2carl.put()
-                self.response.out.write(preference + "<br>")
-            else:
-                self.response.out.write("cound not add " + preference + "<br>")
-
-"""
         
 application = webapp.WSGIApplication(
                                      [('/', MainPage),
