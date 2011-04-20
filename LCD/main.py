@@ -17,13 +17,19 @@ class MainPage(webapp.RequestHandler):
         template_values = {}
         view.renderTemplate(self, 'index.html', template_values)
         
+class OptOut(webapp.RequestHandler):
+    def get(self):
+        pass
+    def post(self):
+        pass
+
 class Pair(webapp.RequestHandler):
     def get(self):
         template_values = {}
         view.renderTemplate(self, 'pair.html', template_values)
 
     def post(self):
-        if session.isPaired(): # unpair their account
+        if session.isPaired(): # unpair their account -- use unpair.html as template
             theCarl = session.getCarl()
             if theCarl.carletonID == self.request.get('carletonID'):
                 theCarl.googleID = ""
@@ -37,7 +43,7 @@ class Pair(webapp.RequestHandler):
                 self.response.out.write("Carleton ID: " + theCarl.carletonID + "<br>")
                 self.response.out.write("Google ID: " + str(session.get_current_user().user_id()))
 
-        else: # pair their account
+        else: # pair their account ###*** use pair_success.html/pair_failure.html as templates
             theCarl = models.get_user_by_CID(self.request.get('carletonID'))
             if theCarl.verificationCode == self.request.get('verificationCode'):
                 theCarl.googleID = str(session.get_current_user().user_id())
@@ -103,6 +109,7 @@ class Preferences(webapp.RequestHandler):
         
 application = webapp.WSGIApplication(
                                      [('/', MainPage),
+                                      ('/optout', OptOut),
                                       ('/preferences', Preferences),
                                       ('/pair', Pair),
                                       ('/sendPairCode', PairCode)],

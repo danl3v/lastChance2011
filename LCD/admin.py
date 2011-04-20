@@ -17,6 +17,7 @@ class Admin(webapp.RequestHandler):
             'carls' : carls
         }
         view.renderTemplate(self, 'admin.html', template_values)
+
 class AddCarl(webapp.RequestHandler):
     def post(self):
         carl = models.Carl() # NEED TO CHECK IF USER WITH THAT ID ALREADY EXISTS IN DB, or for empty user
@@ -24,6 +25,24 @@ class AddCarl(webapp.RequestHandler):
         carl.verificationCode = generateVerificationCode() # do we want to generate an authentication code here or when we send out an invite?
         carl.put()
         self.redirect('/admin')
+
+'''
+we should write functions to do the pairing and unpairing, and then we can call them here or on the other pages where a user pairs their account as needed.
+
+'''
+
+class DeleteCarl(webapp.RequestHandler):
+    def post(self):
+        pass
+
+class PairCarl(webapp.RequestHandler):
+    def post(self):
+        pass
+
+class UnPairCarl(webapp.RequestHandler):
+    def post(self):
+        pass
+
 
 application = webapp.WSGIApplication(
                                       [('/admin', Admin),
