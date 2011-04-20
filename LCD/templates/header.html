@@ -5,12 +5,12 @@
 </head>
 <body>
 
-<h1>LCD</h1>
+<div id="header"><h1>LCD</h1></div>
 <div id="nav">
 <ul>
   <li><a href="/">Main</a></li>
   {% if user %}
-  <li><a href="{{pair_url}}"> {{pair_url_linktext}}</a></li>
+  <li><a href="{{pair_url}}">{{pair_url_linktext}}</a></li>
   {% if paired %}
   <li><a href="preferences">Preferences</a></li>
   <li><a href="#">Opt Out</a></li>
