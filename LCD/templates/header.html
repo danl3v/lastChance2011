@@ -11,6 +11,7 @@
   <li><a href="/">Main</a></li>
   {% if user %}
   <li><a href="{{pair_url}}"> {{pair_url_linktext}}</a></li>
+  {% if paired %}
   <li><a href="preferences">Preferences</a></li>
   <li><a href="#">Opt Out</a></li>
   {% endif %}
@@ -18,8 +19,6 @@
   <li><a href="admin">Admin</a></li>
   {% endif %}
   {% endif %}
-  <li><a href="{{login_url}}"> {{login_url_linktext}}</a></li>
+  <li><a href="{{login_url}}">{{login_url_linktext}}</a></li>
 </ul>
-
-<!--[paypal donate button]--><!-- maybe in the footer? -->
 </div>
