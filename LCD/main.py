@@ -29,34 +29,41 @@ class Pair(webapp.RequestHandler):
         view.renderTemplate(self, 'pair.html', template_values)
 
     def post(self):
-        if session.isPaired(): # unpair their account -- use unpair.html as template
+        if session.isPaired(): # unpair their account
             theCarl = session.getCarl()
             if theCarl.carletonID == self.request.get('carletonID'):
                 theCarl.googleID = ""
                 theCarl.put()
-                self.response.out.write("Your account was successfully unpaired:<br>The following accounts are no longer associated:<br>")
-                self.response.out.write("Carleton ID: " + theCarl.carletonID + "<br>")
-                self.response.out.write("GoogleID: " + str(session.get_current_user().user_id()))
+                template_values = {
+                    'carletonID': theCarl.carletonID,
+                    'googleID': session.get_current_user().nickname()
+                    }
+                view.renderTemplate(self, 'unpair_success.html', template_values)
             else:
-                self.response.out.write("Your account is not paired with " + self.request.get('carletonID') + "<br>")
-                self.response.out.write("Your account is paired with:<br>")
-                self.response.out.write("Carleton ID: " + theCarl.carletonID + "<br>")
-                self.response.out.write("Google ID: " + str(session.get_current_user().user_id()))
-
-        else: # pair their account ###*** use pair_success.html/pair_failure.html as templates
+                template_values = {
+                    'carletonID_Requested': self.request.get('carletonID'),
+                    'carletonID_Actual': theCarl.carletonID,
+                    'googleID': session.get_current_user().nickname()
+                    }
+                view.renderTemplate(self, 'unpair_failure.html', template_values)
+        else: # pair their account
             theCarl = models.get_user_by_CID(self.request.get('carletonID'))
-            if theCarl.verificationCode == self.request.get('verificationCode'):
+            if (theCarl) and (theCarl.verificationCode == self.request.get('verificationCode')):
                 theCarl.googleID = str(session.get_current_user().user_id())
                 theCarl.verificationCode = "" # yeah, what do we want to do with this field? should we keep the verification code there?
                 theCarl.put()
-                self.response.out.write("Your account was successfully paired:<br>")
-                self.response.out.write("Carleton ID :" + theCarl.carletonID + "<br>")
-                self.response.out.write("GoogleID: " + theCarl.googleID)
+                template_values = {
+                    'carletonID': theCarl.carletonID,
+                    'googleID': session.get_current_user().nickname()
+                    }                
+                view.renderTemplate(self, 'pair_success.html', template_values)
             else:
-                self.response.out.write("You entered an incorrect verification code")
-                self.response.out.write("Carleton ID: " + theCarl.carletonID + "<br>")
-                self.response.out.write("Google ID: " + str(session.get_current_user().user_id()) + "<br>")
-                self.response.out.write("Verification Code: " + theCarl.verificationCode)
+                template_values = {
+                    'pairCode' : self.request.get('verificationCode'),
+                    'carletonID' : self.request.get('carletonID'),
+                    'googleID' : session.get_current_user().nickname()
+                    }
+                view.renderTemplate(self, 'pair_failure.html', template_values)
 
 class PairCode(webapp.RequestHandler):
     def post(self):
