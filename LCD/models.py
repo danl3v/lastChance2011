@@ -39,5 +39,5 @@ def get_user_by_CID(username):
 ### Other ###
 
 def generateVerificationCode():  # maybe this is more of a 'controller' function
-    # Dumb for now
+    # Dumb for now - make it a random string or something in the future
     return "apples"

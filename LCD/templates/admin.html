@@ -1,4 +1,4 @@
-<div id='main'>
+<div id="main">
     <h1>Admin</h1>
 
     <ul>
@@ -8,13 +8,16 @@
     </ul>
 
     <h2>Existing Users</h2>
-    <ul>
-    {% for carl in carls %}
-      {% if carl.googleID %}
-        <li>{{ carl.carletonID }} PAIRED</li>
-      {% else %}
-       <li>{{ carl.carletonID }} WITH CODE [{{ carl.verificationCode }}]</li>
-      {% endif %}
-    {% endfor %}
-    </ul>
+    <table>
+      <tr><th>Carleton ID</th><th>Paired?</th><th>Google ID</th><th>Actions</th></tr>
+      {% for carl in carls %}
+        <tr><td>{{ carl.carletonID }}</td>
+        {% if carl.googleID %}
+          <td>PAIRED</td><td>{{ carl.googleID }}</td>
+        {% else %}
+         <td>CODE [{{ carl.verificationCode }}]</td><td>NOT PAIRED</td>
+        {% endif %}
+        <td>[UnPair][NewPairCode][Delete]</tr>
+      {% endfor %}
+    </table>
 </div>

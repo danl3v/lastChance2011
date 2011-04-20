@@ -29,7 +29,7 @@ class Pair(webapp.RequestHandler):
                 theCarl.googleID = ""
                 theCarl.put()
                 self.response.out.write("Your account was successfully unpaired:<br>The following accounts are no longer associated:<br>")
-                self.response.out.write("Carleton ID :" + theCarl.carletonID + "<br>")
+                self.response.out.write("Carleton ID: " + theCarl.carletonID + "<br>")
                 self.response.out.write("GoogleID: " + str(session.get_current_user().user_id()))
             else:
                 self.response.out.write("Your account is not paired with " + self.request.get('carletonID') + "<br>")
@@ -59,7 +59,7 @@ class PairCode(webapp.RequestHandler):
         carletonAccount = models.get_user_by_CID(self.request.get('carletonID'))
         carletonAccount.verificationCode = models.generateVerificationCode()
         carletonAccount.put()
-        # mail some stuff
+
         mailfunction.sendInvite(carletonAccount)  # tested- set to send all emails to conrad right now.
         '''http://code.google.com/appengine/docs/python/mail/sendingmail.html'''
         self.response.out.write("<br>Your pair code has been sent!!")
