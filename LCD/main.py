@@ -65,16 +65,9 @@ class MainPage(webapp.RequestHandler):
         
 class Pair(webapp.RequestHandler):
     def get(self):
-        template_values = getNavData(self)
 
-        path = os.path.join(os.path.dirname(__file__), 'templates/header.html')
-        self.response.out.write(template.render(path, template_values))
-
-        path = os.path.join(os.path.dirname(__file__), 'templates/pair.html')
-        self.response.out.write('<div id="main">' + template.render(path, template_values) + '</div>')
-
-        path = os.path.join(os.path.dirname(__file__), 'templates/footer.html')
-        self.response.out.write(template.render(path, template_values))
+        template_values = {}
+        renderTemplate(self, 'pair.html', template_values)
 
     def post(self):
         if models.isPaired():

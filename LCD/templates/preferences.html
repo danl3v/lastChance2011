@@ -1,12 +1,10 @@
-<section id="user">
-  user: {{ user }}
+<section id='main'>
+    <h1>Preferences</h1>
+    <form action="/preferences" method="post">
+      <p>Current Selection</p>
+      {% for name in carls2carls %} 
+        <div><input type="text" name="carl{{forloop.counter}}" value="{{ name }}"></div>
+      {% endfor %}
+      <input type="submit" value="submit">
+    </form>
 </section>
-
-<h1>Preferences</h1>
-<form action="/preferences" method="post">
-  <p>Current Selection</p>
-  {% for name in carls2carls %} 
-    <div><input type="text" name="carl{{forloop.counter}}" value="{{ name }}"></div>
-  {% endfor %}
-  <input type="submit" value="submit">
-</form>

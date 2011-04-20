@@ -1,23 +1,20 @@
-<html>
-<body>
+<div id='main'>
+    <h1>Admin</h1>
 
-<h1>Admin</h1>
+    <ul>
+    <li>Send Invitations</li>
+    <li>Generate Matches</li>
+    <li><form action="/admin/addcarl" method="post"><input type="text" name="carletonID"><input type="submit" value="Add Carl to LCD"></form></li>
+    </ul>
 
-<ul>
-<li>Send Invitations</li>
-<li>Generate Matches</li>
-<li><form action="/admin/addcarl" method="post"><input type="text" name="carletonID"><input type="submit" value="Add Carl to LCD"></form></li>
-</ul>
-
-<h2>Existing Users</h2>
-<ul>
-{% for carl in carls %}
-  {% if carl.googleID %}
-    <li>{{ carl.carletonID }} PAIRED</li>
-  {% else %}
-   <li>{{ carl.carletonID }} WITH CODE [{{ carl.verificationCode }}]</li>
-  {% endif %}
-{% endfor %}
-</ul>
-</body>
-</html>
+    <h2>Existing Users</h2>
+    <ul>
+    {% for carl in carls %}
+      {% if carl.googleID %}
+        <li>{{ carl.carletonID }} PAIRED</li>
+      {% else %}
+       <li>{{ carl.carletonID }} WITH CODE [{{ carl.verificationCode }}]</li>
+      {% endif %}
+    {% endfor %}
+    </ul>
+</div>

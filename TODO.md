@@ -13,6 +13,8 @@
     [-] break admin functions into different pages.  admin page is expensive to the database
     [+] notifications
         [-] when someone picks you, you get notified
+    [-] click "Logout" on /pair page. It should kick you to the mainpage.
+    [-] separate page navigation and user account links
 	[-] if one of your preferences opts out, you get notified
 	[-] check on the day before -- if one of your prefs has not logged in, alert the user
     [-] 
