@@ -1,27 +1,22 @@
-import cgi
-import os
+import cgi, os
 
-#from google.appengine.ext.webapp import template
-#from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-import models 
-import view
-import session
-
-import mailfunction
+import models, view, session, mailfunction
 
 class MainPage(webapp.RequestHandler):
     def get(self):
         template_values = {}
         view.renderTemplate(self, 'index.html', template_values)
         
-class OptOut(webapp.RequestHandler):
+class OptOut(webapp.RequestHandler): # need to let people opt back in if they choose
     def get(self):
-        pass
+        template_values = {}
+        view.renderTemplate(self, 'optout.html', template_values)
     def post(self):
-        pass
+        template_values = {}
+        view.renderTemplate(self, 'optout_success.html', template_values)
 
 class Pair(webapp.RequestHandler):
     def get(self):
