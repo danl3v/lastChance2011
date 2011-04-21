@@ -17,7 +17,15 @@
         {% else %}
          <td>CODE [{{ carl.verificationCode }}]</td><td>NOT PAIRED</td>
         {% endif %}
-        <td>[UnPair][NewPairCode][Delete]</tr>
+        <td>
+	  <form class="buttonForm" action="/admin/unpaircarl" method="post"><input type="hidden" name="carletonID" value="{{ carl.carletonID }}"><input type="submit" value="UnPair"></form>
+	  <form class="buttonForm" action="/admin/newpaircode" method="post"><input type="hidden" name="carletonID" value="{{ carl.carletonID }}"><input type="submit" value="NewPairCode"></form>
+	  <form class="buttonForm" action="/admin/deletecarl" method="post"><input type="hidden" name="carletonID" value="{{ carl.carletonID }}"><input type="submit" value="Delete"></form>
+	</tr>
       {% endfor %}
     </table>
 </div>
+<style>
+
+
+</style>

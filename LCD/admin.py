@@ -26,28 +26,33 @@ class AddCarl(webapp.RequestHandler):
         carl.put()
         self.redirect('/admin')
 
-'''
-we should write functions to do the pairing and unpairing, and then we can call them here or on the other pages where a user pairs their account as needed.
-
-'''
-
 class DeleteCarl(webapp.RequestHandler):
     def post(self):
-        pass
+        carl = models.get_user_by_CID(self.request.get('carletonID'))
+        carl.delete()
+        self.redirect('/admin')
 
-class PairCarl(webapp.RequestHandler):
+class NewPairCode(webapp.RequestHandler):
     def post(self):
-        pass
+        carl = models.get_user_by_CID(self.request.get('carletonID'))
+        carl.verificationCode = models.generateVerificationCode()
+        carl.put()
+        self.redirect('/admin')
 
 class UnPairCarl(webapp.RequestHandler):
     def post(self):
-        pass
-
+        carl = models.get_user_by_CID(self.request.get('carletonID'))
+        carl.googleID = ""
+        carl.put()
+        self.redirect('/admin')
 
 application = webapp.WSGIApplication(
                                       [('/admin', Admin),
                                        ('/admin/', Admin),
-                                      ('/admin/addcarl', AddCarl)],
+                                       ('/admin/addcarl', AddCarl),
+                                       ('/admin/newpaircode', NewPairCode),
+                                       ('/admin/deletecarl', DeleteCarl),
+                                       ('/admin/unpaircarl', UnPairCarl)],
                                      debug=True)
 
 def main():

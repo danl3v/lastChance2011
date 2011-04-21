@@ -64,7 +64,8 @@ class Pair(webapp.RequestHandler):
             theCarl = models.get_user_by_CID(self.request.get('carletonID'))
             if (theCarl) and (theCarl.verificationCode == self.request.get('verificationCode')):
                 theCarl.googleID = str(session.get_current_user().user_id())
-                theCarl.verificationCode = "" # yeah, what do we want to do with this field? should we keep the verification code there?
+                # should we delete the verification code or leave it? we are leaving it for now so that once you unpair, you can pair again with the same code.
+                # maybe if you unpair, you get an email with a new code in case you want to pair again.
                 theCarl.put()
                 template_values = {
                     'carletonID': theCarl.carletonID,

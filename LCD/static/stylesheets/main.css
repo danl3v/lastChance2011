@@ -36,3 +36,7 @@ div#main {
 div#main a {
     color: blue;
 }
+
+table { border: 1px solid #000; border-collapse: collapse; }
+table th, table td { border: 1px solid #000; padding: 5px; }
+form.buttonForm { display: inline; }
