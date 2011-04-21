@@ -6,7 +6,9 @@ from google.appengine.api import users
 class Carl(db.Model):
     googleID = db.StringProperty()
     carletonID = db.StringProperty()
-    verificationCode = db.StringProperty()
+    verificationCode = db.StringProperty() # set default to generateVerificationCode?
+    active = db.BooleanProperty(default=True) # if the user opts out, this is set to false
+
 # Might want to put "isPaired" here?
 # the function for seeing if the session user has paired their account is both a model and a session-based peice of code. tricky to find its home
 

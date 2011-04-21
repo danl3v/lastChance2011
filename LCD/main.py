@@ -12,13 +12,32 @@ class MainPage(webapp.RequestHandler):
         
 class OptOut(webapp.RequestHandler): # need to let people opt back in if they choose
     def get(self):
-        template_values = {}
-        view.renderTemplate(self, 'optout.html', template_values)
-    def post(self):
-        template_values = {}
-        view.renderTemplate(self, 'optout_success.html', template_values)
+        theCarl = session.getCarl()
 
-class Pair(webapp.RequestHandler):
+        if session.is_active(): # show optout page
+            template_values = {}
+            view.renderTemplate(self, 'optout.html', template_values)
+
+        else: # show optin page
+            template_values = {}
+            view.renderTemplate(self, 'optin.html', template_values)
+
+    def post(self):
+        theCarl = session.getCarl()
+
+        if session.is_active(): # make not active
+            theCarl.active = False
+            theCarl.put()
+            template_values = {}
+            view.renderTemplate(self, 'optout_success.html', template_values)
+
+        else: # make active again
+            theCarl.active = True
+            theCarl.put()
+            template_values = {}
+            view.renderTemplate(self, 'optin_success.html', template_values)
+
+class Pair(webapp.RequestHandler): # get rid of unpair failure case
     def get(self):
         template_values = {}
         view.renderTemplate(self, 'pair.html', template_values)
