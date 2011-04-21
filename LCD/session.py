@@ -33,9 +33,10 @@ def isPaired():
 
 def is_active():
     '''
-    returns True if current user is active, False if current user us not active
+    returns True if current user is active, False if current user us not active or if account not paired
     '''
-    return getCarl().active
+    carl = getCarl()
+    return carl.active if carl else False
 
 def getCarl(): 
     carl = models.Carl.all()

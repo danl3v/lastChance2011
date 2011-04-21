@@ -37,7 +37,7 @@ class OptOut(webapp.RequestHandler): # need to let people opt back in if they ch
             template_values = {}
             view.renderTemplate(self, 'optin_success.html', template_values)
 
-class Pair(webapp.RequestHandler): # get rid of unpair failure case
+class Pair(webapp.RequestHandler):
     def get(self):
         template_values = {}
         view.renderTemplate(self, 'pair.html', template_values)
@@ -50,14 +50,14 @@ class Pair(webapp.RequestHandler): # get rid of unpair failure case
                 theCarl.put()
                 template_values = {
                     'carletonID': theCarl.carletonID,
-                    'googleID': session.get_current_user().nickname()
+                    'googleEmail': session.get_current_user().email()
                     }
                 view.renderTemplate(self, 'unpair_success.html', template_values)
             else:
                 template_values = {
                     'carletonID_Requested': self.request.get('carletonID'),
                     'carletonID_Actual': theCarl.carletonID,
-                    'googleID': session.get_current_user().nickname()
+                    'googleEmail': session.get_current_user().email()
                     }
                 view.renderTemplate(self, 'unpair_failure.html', template_values)
         else: # pair their account
@@ -68,14 +68,14 @@ class Pair(webapp.RequestHandler): # get rid of unpair failure case
                 theCarl.put()
                 template_values = {
                     'carletonID': theCarl.carletonID,
-                    'googleID': session.get_current_user().nickname()
+                    'googleEmail': session.get_current_user().email()
                     }                
                 view.renderTemplate(self, 'pair_success.html', template_values)
             else:
                 template_values = {
                     'pairCode' : self.request.get('verificationCode'),
                     'carletonID' : self.request.get('carletonID'),
-                    'googleID' : session.get_current_user().nickname()
+                    'googleEmail' : session.get_current_user().email()
                     }
                 view.renderTemplate(self, 'pair_failure.html', template_values)
 
