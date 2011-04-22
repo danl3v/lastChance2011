@@ -5,11 +5,6 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 
 import models, view, session, mailfunction
 
-class MainPage(webapp.RequestHandler):
-    def get(self):
-        template_values = {}
-        view.renderTemplate(self, 'index.html', template_values)
-        
 class OptOut(webapp.RequestHandler): # need to let people opt back in if they choose
     def get(self):
         theCarl = session.getCarl()
@@ -131,8 +126,7 @@ class Preferences(webapp.RequestHandler):
         self.response.out.write('<a href="/preferences">back to preferences</a>')
         
 application = webapp.WSGIApplication(
-                                     [('/', MainPage),
-                                      ('/optout', OptOut),
+                                     [('/optout', OptOut),
                                       ('/preferences', Preferences),
                                       ('/pair', Pair),
                                       ('/sendPairCode', PairCode)],

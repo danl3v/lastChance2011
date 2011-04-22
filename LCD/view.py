@@ -9,7 +9,7 @@ def getHeaderFooterData(self):
     '''
     user = session.get_current_user()
     if user:
-        login_url = session.create_logout_url(self.request.uri)
+        login_url = session.create_logout_url("/")
         login_url_linktext = 'Logout'
         
         if session.isPaired():
