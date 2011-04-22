@@ -107,25 +107,26 @@ class Preferences(webapp.RequestHandler):
             template_values = { 'carls2carls': carls2carls }
             view.renderTemplate(self, 'preferences.html', template_values)
         else:
-            self.response.out.write("You need to pair your account before entering preferences")
+            self.response.out.write('You need to <a href="pair">pair your account</a> before entering preferences.')
 
     def post(self):
-        student = session.getCarl().carletonID  # this is its own line only because it's sort of a session-based/model operation
-        results = models.getCarlPreferences(student)  # retrieve existing preferences
+        carletonID = session.getCarl().carletonID
+        results = models.getCarlPreferences(carletonID)  # retrieve existing preferences
         
         for edge in results:
             edge.delete()
         
-        preferences = [self.request.get("carl" + str(i)) for i in range(1,Preferences.total_spots+1) if self.request.get("carl" + str(i)) != ""] # maybe convert this to 0 based in the future?
-        for preference in preferences:
-            if models.get_user_by_CID(preference):
+        preferenceIDs = [self.request.get("carl" + str(i)) for i in range(Preferences.total_spots) if self.request.get("carl" + str(i)) != ""]
+
+        for preferenceID in preferenceIDs:
+            if models.get_user_by_CID(preferenceID):
                 edge = models.Carl2Carl()
-                edge.source = student
-                edge.target = preference
+                edge.source = carletonID
+                edge.target = preferenceID
                 edge.put()
-                self.response.out.write("<p>" + preference + " added to your list.</p>")
+                self.response.out.write("<p>" + preferenceID + " added to your list.</p>")
             else:
-                self.response.out.write("<p>" + preference + " could not be added.</p>")
+                self.response.out.write("<p>" + preferenceID + " could not be added.</p>")
 
         self.response.out.write('<a href="/preferences">back to preferences</a>')
         
