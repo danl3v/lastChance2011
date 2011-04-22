@@ -105,26 +105,42 @@ class Preferences(webapp.RequestHandler):
             self.response.out.write('You need to <a href="pair">pair your account</a> before entering preferences.')
 
     def post(self):
+
         carletonID = session.getCarl().carletonID
-        results = models.getCarlPreferences(carletonID)  # retrieve existing preferences
+        old_preferences = models.getCarlPreferences(carletonID)  # retrieve existing preferences
         
-        for edge in results:
-            edge.delete()
-        
-        preferenceIDs = [self.request.get("carl" + str(i)) for i in range(Preferences.total_spots) if self.request.get("carl" + str(i)) != ""]
+        old_preference_ids = [old_preference.target for old_preference in old_preferences]
+        new_preference_ids = [self.request.get("carl" + str(i)) for i in range(Preferences.total_spots) if self.request.get("carl" + str(i)) != ""]
 
-        for preferenceID in preferenceIDs:
-            if models.get_user_by_CID(preferenceID):
-                edge = models.Carl2Carl()
-                edge.source = carletonID
-                edge.target = preferenceID
-                edge.put()
-                self.response.out.write("<p>" + preferenceID + " added to your list.</p>")
+        addedList = []
+        removedList = []
+        failedList = []
+
+        for new_preference_id in new_preference_ids: # add new preferences
+            if models.get_user_by_CID(new_preference_id):
+                if new_preference_id not in old_preference_ids:
+                    edge = models.Carl2Carl()
+                    edge.source = carletonID
+                    edge.target = new_preference_id
+                    edge.put()
+                    #mailfunction.sendPersonChosen(edge.target) # tested, turned off for now
+                    addedList.append(new_preference_id)
             else:
-                self.response.out.write("<p>" + preferenceID + " could not be added.</p>")
+                    failedList.append(new_preference_id)
 
-        self.response.out.write('<a href="/preferences">back to preferences</a>')
-        
+        for old_preference in old_preferences: # delete the leftovers
+                if old_preference.target not in new_preference_ids:
+                    old_preference.delete()
+                    removed.append(new_preference_id)
+
+        template_values = {
+            'no_updates': False if addedList or removedList or failedList else True,
+            'added': addedList,
+            'removed': removedList,
+            'failed': failedList
+            }
+        view.renderTemplate(self, 'preferences_success.html', template_values)
+
 application = webapp.WSGIApplication(
                                      [('/optout', OptOut),
                                       ('/preferences', Preferences),
