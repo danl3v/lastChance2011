@@ -15,7 +15,9 @@
     [+] notifications
         [-] when someone picks you, you get notified
 	[-] if one of your preferences opts out, you get notified
-	[-] check on the day before -- if one of your prefs has not logged in, alert the user
+	[-] if a pref opts out, and then opts back in, notify original user
+	[-] check on the day before -- if one of your prefs has not paired account/logged in, alert the user
+	[-] alert user if that user does log in at a later time
     [-] separate page navigation and user account links
 
 [+] Plan out webapp structure
@@ -23,7 +25,6 @@
 [+] Write documentation
     [-] How to build and host
     [-] Architecture layout
-
 
 [+] Fixed things for conrad to verify
     [-] click "Logout" on preferences page.  gives error when runs "isPaired" thing because get_current_user returns None.  Either we can make that function stop if the current user isnt logged in or make the preferences page boot you back to main if youre not logged in
