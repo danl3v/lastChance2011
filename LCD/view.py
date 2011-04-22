@@ -8,10 +8,10 @@ def getHeaderFooterData(self):
     gets and returns the template values to render the header and footer, which are standard on all pages
     '''
     user = session.get_current_user()
-    carl = session.getCarl()
     if user:
         login_url = session.create_logout_url(self.request.uri)
         login_url_linktext = 'Logout'
+        carl = session.getCarl()  # Can only be run when session.get_current_user() != False
         
         if session.isPaired():
             paired = True

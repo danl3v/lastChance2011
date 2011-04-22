@@ -38,6 +38,7 @@ def is_active():
     return carl.active if carl else False
 
 def getCarl(): 
+    """crashes if run on anonymous sessions"""
     carl = models.Carl.all()
     carl.filter("googleID =", str(users.get_current_user().user_id()))
     return carl.get()
