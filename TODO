@@ -5,6 +5,7 @@
     [-] When to publicize site?
     [-] When to codefreeze?
     [-] Featurefreeze?
+
 [+] Get working prototype
     [+] Get preferences working
         [-] clean input (lowercase, strip anything unneccessary)
@@ -13,15 +14,19 @@
     [-] break admin functions into different pages.  admin page is expensive to the database
     [+] notifications
         [-] when someone picks you, you get notified
-    [-] click "Logout" on preferences page.  gives error when runs "isPaired" thing because get_current_user returns None.  Either we can make that function stop if the current user isnt logged in or make the preferences page boot you back to main if youre not logged in
-    [-] click "Logout" on /pair page. It should kick you to the mainpage.
-        [-] Tried app.yamil "login: required" but this leaves a logged out user stuck in a loop.
-        Current fix is to put "if !session.get_current_user()" at the top of everything, but this might be CPU heavy
-    [-] separate page navigation and user account links
 	[-] if one of your preferences opts out, you get notified
 	[-] check on the day before -- if one of your prefs has not logged in, alert the user
-    [-] 
+    [-] separate page navigation and user account links
+
 [+] Plan out webapp structure
+
 [+] Write documentation
     [-] How to build and host
     [-] Architecture layout
+
+
+[+] Fixed things for conrad to verify
+    [-] click "Logout" on preferences page.  gives error when runs "isPaired" thing because get_current_user returns None.  Either we can make that function stop if the current user isnt logged in or make the preferences page boot you back to main if youre not logged in
+    [-] click "Logout" on /pair page. It should kick you to the mainpage.
+    [-] Tried app.yamil "login: required" but this leaves a logged out user stuck in a loop.
+    Current fix is to put "if !session.get_current_user()" at the top of everything, but this might be CPU heavy
