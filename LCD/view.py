@@ -11,11 +11,10 @@ def getHeaderFooterData(self):
     if user:
         login_url = session.create_logout_url(self.request.uri)
         login_url_linktext = 'Logout'
-        carl = session.getCarl()  # Can only be run when session.get_current_user() != False
         
         if session.isPaired():
             paired = True
-            pair_url_linktext = "Unpair Account With " + carl.carletonID.title()
+            pair_url_linktext = "Unpair Account With " + session.getCarl().carletonID.title()
         else:
             paired = False
             pair_url_linktext = "You Need to Pair Your Account"
