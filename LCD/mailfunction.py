@@ -5,26 +5,51 @@ def sendInvite(carletonAccount):
     verificationCode = carletonAccount.verificationCode
 
     #user_address = carletonAccount.carletonID + "@carleton.edu"
-    user_address = "conrad.p.dean@gmail.com"
-    #user_address = "dlouislevy@gmail.com"
+    user_address = ["conrad.p.dean@gmail.com", "dlouislevy@gmail.com"]
 
-    sender_address = "Conerd <conrad.p.dean@gmail.com>"  # figure out a more legit email
-    subject = "Last Chance Dance Invitation!"
+    sender_address = "Conerd <conrad.p.dean@gmail.com>"  # figure out a more legit email (our app can receive email, so let's do that or create a gmail
+    subject = "[Carleton Last Chance Dance 2011] Invitation!"
     body = """
 Hey there!
-You've been invited to this year's Last Chance Dance.
+
+You've been invited to Carleton Last Chance Dance.
 
 To open your account, go to http://lcdance2011.appspot.com/ with the paircode below.
 
 Carleton Account: %s
 Pair Code:        %s
 
-After logging in with your Gmail account, you will be prompted to verify your account with the pair code above.
+After logging in with your Gmail account, you will be prompted to pair your account with your carleton account using the pair code above.
 
 Have fun, and remember: If you can't handle the heat, stay out of the sex kitchen.
 
 Nursing seared genitalia,
-C
+Last Chance Dance 2011
 """ % (username,verificationCode)
+    
+    mail.send_mail(sender_address, user_address, subject, body)
+
+def sendPersonChosen(carletonID):
+    '''
+    Sends an email to a user who has been chosen by someone else.
+    '''
+
+    #user_address = carletonID + "@carleton.edu"
+    user_address = ["conrad.p.dean@gmail.com", "dlouislevy@gmail.com"]
+
+    sender_address = "Conerd <conrad.p.dean@gmail.com>"  # figure out a more legit email (our app can receive email, so let's do that or create a gmail
+    subject = "[Carleton Last Chance Dance 2011] Someone Chose You as a Crush"
+    body = """
+Hey there %s!
+
+Someone selected you as a crush on Carleton Last Chance Dance 2011
+
+You can select your own crushes at http://lcdance2011.appspot.com/.
+
+Have fun, and remember: If you can't handle the heat, stay out of the sex kitchen.
+
+Nursing seared genitalia,
+Last Chance Dance 2011
+""" % (carletonID)
     
     mail.send_mail(sender_address, user_address, subject, body)

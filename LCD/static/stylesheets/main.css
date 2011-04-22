@@ -1,3 +1,43 @@
-html { margin: 0; padding: 0; }
-#nav { float: left; width: 20%; }
-#main { float: right; width: 80% }
+html { margin: 0; padding: 0; font-family: Helvetica, Arial, sans-serif; }
+
+h1 {
+    margin:0;
+    margin-top 0.5em;
+}
+
+div#header {
+    
+
+}
+
+div#nav ul {
+    margin-left: 0;
+    padding-left: 0;
+}
+
+div#nav ul li {
+    display: inline;
+    background: #000;
+    list-style-type: none;
+    padding: 0.3em;
+    margin: 0px 2px;
+}
+
+div#nav ul li a, a:hover, a:visited, a:active {
+    color: #fff;
+    text-decoration: none;
+
+}
+
+div#main {
+    display: block;
+    margin: 0px auto;
+}
+
+div#main a {
+    color: blue;
+}
+
+table { border: 1px solid #000; border-collapse: collapse; }
+table th, table td { border: 1px solid #000; padding: 5px; }
+form.buttonForm { display: inline; }

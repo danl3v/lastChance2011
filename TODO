@@ -1,0 +1,33 @@
+[+] Figure out launch schedule.
+    [-] When is the dance?
+    [-] When are matches sent out?
+    [-] Are we doing staged matchings? (let unmatched people pick different preferences)
+    [-] When to publicize site?
+    [-] When to codefreeze?
+    [-] Featurefreeze?
+
+[+] Get working prototype
+    [+] Get preferences working
+        [-] clean input (lowercase, strip anything unneccessary)
+        [-] check input against database. validate actual usernames
+    [-] figure out how to dev-server.py --enable-sendmail for mail testing
+    [-] break admin functions into different pages.  admin page is expensive to the database
+    [+] notifications
+        [-] when someone picks you, you get notified
+	[-] if one of your preferences opts out, you get notified
+	[-] if a pref opts out, and then opts back in, notify original user
+	[-] check on the day before -- if one of your prefs has not paired account/logged in, alert the user
+	[-] alert user if that user does log in at a later time
+    [-] separate page navigation and user account links
+
+[+] Plan out webapp structure
+
+[+] Write documentation
+    [-] How to build and host
+    [-] Architecture layout
+
+[+] Fixed things for conrad to verify
+    [-] click "Logout" on preferences page.  gives error when runs "isPaired" thing because get_current_user returns None.  Either we can make that function stop if the current user isnt logged in or make the preferences page boot you back to main if youre not logged in
+    [-] click "Logout" on /pair page. It should kick you to the mainpage.
+    [-] Tried app.yamil "login: required" but this leaves a logged out user stuck in a loop.
+    Current fix is to put "if !session.get_current_user()" at the top of everything, but this might be CPU heavy

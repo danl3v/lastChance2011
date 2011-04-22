@@ -7,6 +7,8 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
 import models
+import view
+import session
 
 class Admin(webapp.RequestHandler):
     def get(self):
@@ -14,8 +16,7 @@ class Admin(webapp.RequestHandler):
         template_values = {
             'carls' : carls
         }
-        path = os.path.join(os.path.dirname(__file__), 'templates/admin.html')
-        self.response.out.write(template.render(path, template_values))
+        view.renderTemplate(self, 'admin.html', template_values)
 
 class AddCarl(webapp.RequestHandler):
     def post(self):
@@ -25,10 +26,33 @@ class AddCarl(webapp.RequestHandler):
         carl.put()
         self.redirect('/admin')
 
+class DeleteCarl(webapp.RequestHandler):
+    def post(self):
+        carl = models.get_user_by_CID(self.request.get('carletonID'))
+        carl.delete()
+        self.redirect('/admin')
+
+class NewPairCode(webapp.RequestHandler):
+    def post(self):
+        carl = models.get_user_by_CID(self.request.get('carletonID'))
+        carl.verificationCode = models.generateVerificationCode()
+        carl.put()
+        self.redirect('/admin')
+
+class UnPairCarl(webapp.RequestHandler):
+    def post(self):
+        carl = models.get_user_by_CID(self.request.get('carletonID'))
+        carl.googleID = ""
+        carl.put()
+        self.redirect('/admin')
+
 application = webapp.WSGIApplication(
                                       [('/admin', Admin),
                                        ('/admin/', Admin),
-                                      ('/admin/addcarl', AddCarl)],
+                                       ('/admin/addcarl', AddCarl),
+                                       ('/admin/newpaircode', NewPairCode),
+                                       ('/admin/deletecarl', DeleteCarl),
+                                       ('/admin/unpaircarl', UnPairCarl)],
                                      debug=True)
 
 def main():

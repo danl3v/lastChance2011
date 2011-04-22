@@ -1,21 +1,26 @@
 <!DOCTYPE HTML>
 <html>
-<head><link rel="stylesheet" type="text/css" href="/stylesheets/main.css" /></head>
+<head>
+<link rel="stylesheet" type="text/css" href="/stylesheets/main.css" />
+</head>
 <body>
 
-<h1>Welcome to LCD</h1>
+<div id="header"><h1>LCD</h1></div>
 <div id="nav">
 <ul>
-  <li><a href="{{login_url}}"> {{login_url_linktext}}</a></li>
+  <li><a href="/">Main</a></li>
   {% if user %}
-  <li><a href="{{pair_url}}"> {{pair_url_linktext}}</a></li>
+  <li><a href="pair">{{ pair_url_linktext }}</a></li>
+  {% if paired %}
+  <li><a href="optout">{{ active_url_linktext }}</a></li>
+  {% if active %}
   <li><a href="preferences">Preferences</a></li>
-  <li><a href="#">Opt Out</a></li>
+  {% endif %}
+  {% endif %}
   {% if admin %}
   <li><a href="admin">Admin</a></li>
   {% endif %}
   {% endif %}
+  <li><a href="{{ login_url }}">{{ login_url_linktext }}</a></li>
 </ul>
-
-[paypal donate button]
 </div>

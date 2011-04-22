@@ -1,97 +1,79 @@
-import cgi
-import os
+import cgi, os
 
-from google.appengine.ext.webapp import template
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-import models 
-import session
+import models, view, session, mailfunction
 
-import mailfunction
-
-def getNavData(self):
-    user = session.get_current_user()
-    if user:
-        login_url = session.create_logout_url(self.request.uri)
-        login_url_linktext = 'Logout'
-        
-        if models.isPaired():
-            pair_url = "pair"
-            pair_url_linktext = "Unpair Your Account"
-        else:
-            pair_url = "pair"
-            pair_url_linktext = "You need to pair your account"
-    else:
-        login_url = session.create_login_url(self.request.uri)
-        login_url_linktext = 'Login'
-        pair_url = ""
-        pair_url_linktext = ""
-        
-    if session.is_current_user_admin():
-        admin = True
-    else:
-        admin = False
-
-    return {
-        'user': user,
-        'admin': admin,
-        'login_url': login_url,
-        'login_url_linktext': login_url_linktext,
-        'pair_url': pair_url,
-        'pair_url_linktext': pair_url_linktext
-        }
-
-def renderTemplate(self, template_file, template_values):
-
-    template_values = dict(getNavData(self), **template_values)
-
-    path = os.path.join(os.path.dirname(__file__), 'templates/header.html')
-    self.response.out.write(template.render(path, template_values))
-    
-    path = os.path.join(os.path.dirname(__file__), 'templates/' + template_file)
-    self.response.out.write(template.render(path, template_values))
-    
-    path = os.path.join(os.path.dirname(__file__), 'templates/footer.html')
-    self.response.out.write(template.render(path, template_values))
-
-class MainPage(webapp.RequestHandler):
+class OptOut(webapp.RequestHandler): # need to let people opt back in if they choose
     def get(self):
+        theCarl = session.getCarl()
 
-        template_values = {}
-        renderTemplate(self, 'index.html', template_values)
-        
-class Pair(webapp.RequestHandler):
-    def get(self):
-        template_values = getNavData(self)
+        if session.is_active(): # show optout page
+            template_values = {}
+            view.renderTemplate(self, 'optout.html', template_values)
 
-        path = os.path.join(os.path.dirname(__file__), 'templates/header.html')
-        self.response.out.write(template.render(path, template_values))
-
-        path = os.path.join(os.path.dirname(__file__), 'templates/pair.html')
-        self.response.out.write('<div id="main">' + template.render(path, template_values) + '</div>')
-
-        path = os.path.join(os.path.dirname(__file__), 'templates/footer.html')
-        self.response.out.write(template.render(path, template_values))
+        else: # show optin page
+            template_values = {}
+            view.renderTemplate(self, 'optin.html', template_values)
 
     def post(self):
-        if models.isPaired():
-            # use get() to return the carleton email id that this google account was paired to
-            self.response.out.write("Your account is already paired")
-        else:
-            theCarl = models.get_user_by_CID(self.request.get('carletonID'))
-            if theCarl.verificationCode == self.request.get('verificationCode'):
-                theCarl.googleID = str(session.get_current_user().user_id())
-                theCarl.verificationCode = "" # yeah, what do we want to do with this field? should we keep the verification code there?
+        theCarl = session.getCarl()
+
+        if session.is_active(): # make not active
+            theCarl.active = False
+            theCarl.put()
+            template_values = {}
+            view.renderTemplate(self, 'optout_success.html', template_values)
+
+        else: # make active again
+            theCarl.active = True
+            theCarl.put()
+            template_values = {}
+            view.renderTemplate(self, 'optin_success.html', template_values)
+
+class Pair(webapp.RequestHandler):
+    def get(self):
+        template_values = {}
+        view.renderTemplate(self, 'pair.html', template_values)
+
+    def post(self):
+        if session.isPaired(): # unpair their account
+            theCarl = session.getCarl()
+            if theCarl.carletonID == self.request.get('carletonID'):
+                theCarl.googleID = ""
                 theCarl.put()
-                self.response.out.write("Your account was successfully paired:<br>")
-                self.response.out.write("Carleton ID :" + theCarl.carletonID + "<br>")
-                self.response.out.write("GoogleID: " + theCarl.googleID)
+                template_values = {
+                    'carletonID': theCarl.carletonID,
+                    'googleEmail': session.get_current_user().email()
+                    }
+                view.renderTemplate(self, 'unpair_success.html', template_values)
             else:
-                self.response.out.write("You entered an incorrect verification code")
-                self.response.out.write("Carleton ID:" + theCarl.carletonID)
-                self.response.out.write("Google ID: " + str(session.get_current_user().user_id()))
-                self.response.out.write("Verification Code:" + theCarl.verificationCode)
+                template_values = {
+                    'carletonID_Requested': self.request.get('carletonID'),
+                    'carletonID_Actual': theCarl.carletonID,
+                    'googleEmail': session.get_current_user().email()
+                    }
+                view.renderTemplate(self, 'unpair_failure.html', template_values)
+        else: # pair their account
+            theCarl = models.get_user_by_CID(self.request.get('carletonID'))
+            if (theCarl) and (theCarl.verificationCode == self.request.get('verificationCode')):
+                theCarl.googleID = str(session.get_current_user().user_id())
+                # should we delete the verification code or leave it? we are leaving it for now so that once you unpair, you can pair again with the same code.
+                # maybe if you unpair, you get an email with a new code in case you want to pair again.
+                theCarl.put()
+                template_values = {
+                    'carletonID': theCarl.carletonID,
+                    'googleEmail': session.get_current_user().email()
+                    }                
+                view.renderTemplate(self, 'pair_success.html', template_values)
+            else:
+                template_values = {
+                    'pairCode' : self.request.get('verificationCode'),
+                    'carletonID' : self.request.get('carletonID'),
+                    'googleEmail' : session.get_current_user().email()
+                    }
+                view.renderTemplate(self, 'pair_failure.html', template_values)
 
 class PairCode(webapp.RequestHandler):
     def post(self):
@@ -100,73 +82,67 @@ class PairCode(webapp.RequestHandler):
         carletonAccount = models.get_user_by_CID(self.request.get('carletonID'))
         carletonAccount.verificationCode = models.generateVerificationCode()
         carletonAccount.put()
-        # mail some stuff
+
         mailfunction.sendInvite(carletonAccount)  # tested- set to send all emails to conrad right now.
         '''http://code.google.com/appengine/docs/python/mail/sendingmail.html'''
         self.response.out.write("<br>Your pair code has been sent!!")
 
 class Preferences(webapp.RequestHandler):
-    total_spots = 10  # this is the number of people someone can select
+    total_spots = 10  # this is the number of people someone can select -- is this ok? should it go in an __init__ or something?
 
     def get(self):
-        user = models.getCarl().carletonID  # this is its own line only because it's sort of a session-based/model operation
-        user = "PAIR YOUR ACCOUNT" if user is None else user
-        results = models.getCarlPreferences(user)
+        if session.isPaired():
+            student = session.getCarl().carletonID  # this is its own line only because it's sort of a session-based/model operation
+            results = models.getCarlPreferences(student)
 
-        results = [pair.target for pair in results]
-        #results = ['a','b','c']  # temp because i just wanted to see how it'd look right now
-        slots = ['' for i in range(Preferences.total_spots)]
-        carls2carls = results + slots[len(results):]  # has empty trailing slots
+            results = [pair.target for pair in results]
+            slots = ['' for i in range(Preferences.total_spots)]
+            carls2carls = results + slots[len(results):]  # has empty trailing slots
+
+            template_values = { 'carls2carls': carls2carls }
+            view.renderTemplate(self, 'preferences.html', template_values)
+        else:
+            self.response.out.write('You need to <a href="pair">pair your account</a> before entering preferences.')
+
+    def post(self):
+
+        carletonID = session.getCarl().carletonID
+        old_preferences = models.getCarlPreferences(carletonID)  # retrieve existing preferences
+        
+        old_preference_ids = [old_preference.target for old_preference in old_preferences]
+        new_preference_ids = [self.request.get("carl" + str(i)) for i in range(Preferences.total_spots) if self.request.get("carl" + str(i)) != ""]
+
+        addedList = []
+        removedList = []
+        failedList = []
+
+        for new_preference_id in new_preference_ids: # add new preferences
+            if models.get_user_by_CID(new_preference_id):
+                if new_preference_id not in old_preference_ids and new_preference_id not in addedList:
+                    edge = models.Carl2Carl()
+                    edge.source = carletonID
+                    edge.target = new_preference_id
+                    edge.put()
+                    #mailfunction.sendPersonChosen(edge.target) # tested, turned off for now
+                    addedList.append(new_preference_id)
+            else:
+                    failedList.append(new_preference_id)
+
+        for old_preference in old_preferences: # delete the leftovers
+                if old_preference.target not in new_preference_ids:
+                    old_preference.delete()
+                    removedList.append(old_preference.target)
 
         template_values = {
-            'user': user,
-            'carls2carls': carls2carls,
+            'no_updates': False if addedList or removedList or failedList else True,
+            'added': addedList,
+            'removed': removedList,
+            'failed': failedList
             }
+        view.renderTemplate(self, 'preferences_success.html', template_values)
 
-        renderTemplate(self, 'preferences.html', template_values)
-
-    def post(self):  # Haven't figured out what to do with this yet
-        user = models.getCarl().carletonID  # this is its own line only because it's sort of a session-based/model operation
-        results = models.getCarlPreferences(user)  # retrieve existing preferences
-        ''' Check user input for mistakes, if there are any back out.  If not, delete all previous
-        entries and load new preferences into the database'''
-
-        '''assume it's perfect for now'''
-        for edge in results:
-            edge.delete()
-
-        preferences = [self.request.get("carl" + str(i)) for i in range(1,Preferences.total_spots+1)]
-        for choice in preferences:
-            if choice == "":
-                continue
-            edge = models.Carl2Carl()
-            edge.source = user
-            edge.target = choice
-            edge.put()
-            self.response.out.write("<p>"+choice + " added to your list.</p>")
-
-        self.response.out.write('<a href="/preferences">back to preferences</a>')
-
-        #preferences = [self.request.get("new_carl" + str(i)) for i in range(remaining_spots) if self.request.get("new_carl" + str(i)) != ""]
-
-        # NEED TO DEAL WITH DELETING PEOPLE!!
-        ## Ohh shit that's right!
-
-"""
-        for preference in preferences:
-            if (models.get_user_by_CID(preference)):
-                carl2carl = Carl2Carl()
-                carl2carl.source = models.getCarl().carletonID
-                carl2carl.target = preference
-                carl2carl.put()
-                self.response.out.write(preference + "<br>")
-            else:
-                self.response.out.write("cound not add " + preference + "<br>")
-
-"""
-        
 application = webapp.WSGIApplication(
-                                     [('/', MainPage),
+                                     [('/optout', OptOut),
                                       ('/preferences', Preferences),
                                       ('/pair', Pair),
                                       ('/sendPairCode', PairCode)],
