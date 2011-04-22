@@ -20,6 +20,7 @@ div#nav ul li {
     background: #000;
     list-style-type: none;
     padding: 0.3em;
+    margin: 0px 2px;
 }
 
 div#nav ul li a, a:hover, a:visited, a:active {
