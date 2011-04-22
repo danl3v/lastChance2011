@@ -118,7 +118,7 @@ class Preferences(webapp.RequestHandler):
 
         for new_preference_id in new_preference_ids: # add new preferences
             if models.get_user_by_CID(new_preference_id):
-                if new_preference_id not in old_preference_ids:
+                if new_preference_id not in old_preference_ids and new_preference_id not in addedList:
                     edge = models.Carl2Carl()
                     edge.source = carletonID
                     edge.target = new_preference_id
@@ -131,7 +131,7 @@ class Preferences(webapp.RequestHandler):
         for old_preference in old_preferences: # delete the leftovers
                 if old_preference.target not in new_preference_ids:
                     old_preference.delete()
-                    removed.append(new_preference_id)
+                    removedList.append(old_preference.target)
 
         template_values = {
             'no_updates': False if addedList or removedList or failedList else True,
