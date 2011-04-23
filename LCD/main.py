@@ -3,7 +3,7 @@ import cgi, os
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-import models, view, session, mailfunction
+import models, view, session, emailfunctions
 
 class OptOut(webapp.RequestHandler): # need to let people opt back in if they choose
     def get(self):
@@ -83,7 +83,7 @@ class PairCode(webapp.RequestHandler):
         carletonAccount.verificationCode = models.generateVerificationCode()
         carletonAccount.put()
 
-        mailfunction.sendInvite(carletonAccount)  # tested- set to send all emails to conrad right now.
+        emailfunctions.sendInvite(carletonAccount)  # tested- set to send all emails to conrad right now.
         '''http://code.google.com/appengine/docs/python/mail/sendingmail.html'''
         self.response.out.write("<br>Your pair code has been sent!!")
 
@@ -123,7 +123,7 @@ class Preferences(webapp.RequestHandler):
                     edge.source = carletonID
                     edge.target = new_preference_id
                     edge.put()
-                    #mailfunction.sendPersonChosen(edge.target) # tested, turned off for now
+                    #emailfunctions.sendPersonChosen(edge.target) # tested, turned off for now
                     addedList.append(new_preference_id)
             else:
                     failedList.append(new_preference_id)
