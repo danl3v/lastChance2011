@@ -5,6 +5,24 @@
 </head>
 <body>
 
+{% if user %}
+<div id="account">
+    <ul>
+        {% if admin %}
+          <li><a href="admin">Admin</a></li>
+          <li>-</li>
+        {% endif %}
+        {% if paired %}
+            <li><a href="#">carlname</a></li>
+        {% else %}
+            <li><a href="pair">{{ pair_url_linktext }}</a></li>
+        {% endif %}
+        <li><a href="{{ login_url }}">{{ login_url_linktext }}</a></li>
+    </ul>
+{% endif %}
+
+    
+</div>
 <div id="header"><h1>LCD</h1></div>
 <div id="nav">
 <ul>
