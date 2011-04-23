@@ -1,5 +1,10 @@
 [+] Figure out launch schedule.
+    [-] Solidify our position in taking care of the LCD before someone else does
+    [+] Promotion
+        [-] Anonymous posters
+        [-] CLAP articles (then it's no longer anonymous...?)
     [-] When is the dance?
+        [-] Are we hosting the dance, or can we hijack an already occuring deal?
     [-] When are matches sent out?
     [-] Are we doing staged matchings? (let unmatched people pick different preferences)
     [-] When to publicize site?
@@ -19,6 +24,14 @@
 	[-] check on the day before -- if one of your prefs has not paired account/logged in, alert the user
 	[-] alert user if that user does log in at a later time
     [-] separate page navigation and user account links
+
+[+] Emails
+    [-] Get webapp to receive emails.
+    [-] Get it so that admin can send personal emails through the webapp's "in" inbox.
+    [+] Notification system
+        [-] Email on "someone's crushin on you!"
+        [+] You recieved a secret message!
+            [-] Have on site message notification (inbox lights up)
 
 [+] Plan out webapp structure
 
