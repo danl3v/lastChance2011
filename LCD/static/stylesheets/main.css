@@ -56,6 +56,13 @@ div#account ul li a
     text-decoration: none;
 }
 
+div#account ul li#pair a
+{
+    background: #f00;
+    color: #fff;
+    font-weight:bold;
+}
+
 
 
 div#main {
