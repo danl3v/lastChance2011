@@ -1,12 +1,12 @@
 <div id="main">
     {% if paired %}
-    <h1>UnPair Your Account</h1>
+    <h2>UnPair Your Account</h2>
     <form action="/pair" method="post">
     <p>Enter Your Carleton ID: <input type="text" name="carletonID"></p>
     <p><input type="submit" value="UnPair Account" onclick="if(!confirm('Do you really want to unpair this google account?')){return false;};"></p>
     </form>
     {% else %}
-    <h1>Pair Your Account</h1>
+    <h2>Pair Your Account</h2>
     <form action="/pair" method="post">
     <p>Enter Your Carleton ID: <input type="text" name="carletonID"></p>
     <p>Enter Your Pair Code: <input type="text" name="verificationCode"></p>

@@ -1,13 +1,13 @@
 <div id="main">
-    <h1>Admin</h1>
+    <h2>Admin</h2>
 
+    <h3>Tools</h3>
     <ul>
-    <li>Send Invitations</li>
-    <li>Generate Matches</li>
-    <li><form action="/admin/addcarl" method="post"><input type="text" name="carletonID"><input type="submit" value="Add Carl to LCD"></form></li>
+    <li><a href="#">Generate Matches</a></li>
+    <li><form action="/admin/addcarl" method="post"><input type="text" name="carletonID"><input type="submit" value="Add CarletonID"></form></li>
     </ul>
 
-    <h2>Existing Users</h2>
+    <h3>Existing Users</h3>
     <table>
       <tr><th>Carleton ID</th><th>Paired?</th><th>Google ID</th><th>Actions</th></tr>
       {% for carl in carls %}

@@ -1,79 +1,28 @@
-body {
-    margin: 0;
-    padding: 0;
-    font-family: Helvetica, Arial, sans-serif;
-}
+body { font-family: Arial, sans-serif; width: 56em; margin-left: auto; margin-right: auto; margin-top: 5em; }
 
+h1 { margin:0; margin-top 0.5em; color: #B14500; }
 
-h1 {
-    margin:0;
-    margin-top 0.5em;
-}
+div#header { float: left; }
+div#header h1 { display: inline; }
 
-div#header {
-    
+div#nav { float:right; margin-top: .6em; }
+div#nav ul { display: inline; margin-left: 0; padding-left: 0; }
+div#nav ul li { display: inline; background: #04346C; list-style-type: none; padding: 0.3em; margin: 0px 2px; }
+div#nav ul li a, div#nav ul li a:hover, div#nav ul li a:visited, div#nav ul li a:active { color: #FFFFFF; text-decoration: none; }
 
-}
+div#main { display: block; margin: 0px auto; clear: both; padding-top: 10px; }
+div#main a, div#main a:hover, div#main a:visited, div#main a:active { color: #04346C; }
 
-div#nav ul {
-    margin-left: 0;
-    padding-left: 0;
-}
+div#mycrushes { float: left; }
+div#messages { float: right; }
 
-div#nav ul li {
-    display: inline;
-    background: #000;
-    list-style-type: none;
-    padding: 0.3em;
-    margin: 0px 2px;
-}
+table { border: 1px solid #000000; border-collapse: collapse; }
+table th, table td { border: 1px solid #000000; padding: 5px; }
 
-div#nav ul li a,
-div#nav ul li a:hover,
-div#nav ul li a:visited,
-div#nav ul li a:active {
-    color: #fff;
-    text-decoration: none;
-
-}
-
-div#account
-{
-    float: right;
-}
-
-div#account ul,
-div#account ul li
-{
-    display:inline;
-}
-
-div#account ul li a
-{
-    background: #444;
-    color: #ddd;
-    padding: 0.2em 0.4em;
-    text-decoration: none;
-}
-
-div#account ul li#pair a
-{
-    background: #f00;
-    color: #fff;
-    font-weight:bold;
-}
-
-
-
-div#main {
-    display: block;
-    margin: 0px auto;
-}
-
-div#main a {
-    color: blue;
-}
-
-table { border: 1px solid #000; border-collapse: collapse; }
-table th, table td { border: 1px solid #000; padding: 5px; }
 form.buttonForm { display: inline; }
+
+
+div#account { float: right; }
+div#account ul, div#account ul li { display:inline; }
+div#account ul li a { background: #4D8FDF; color: #ddd; padding: 0.2em 0.4em; text-decoration: none; }
+div#account ul li#pair a { background: #f00; color: #FFFFFF; font-weight:bold; }

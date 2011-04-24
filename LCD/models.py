@@ -13,8 +13,13 @@ class Carl(db.Model):
 # the function for seeing if the session user has paired their account is both a model and a session-based peice of code. tricky to find its home
 
 class Carl2Carl(db.Model):
-        source = db.StringProperty()
-        target = db.StringProperty()
+    source = db.StringProperty()
+    target = db.StringProperty()
+
+class Message(db.Model):
+    target = db.StringProperty()
+    message = db.StringProperty()
+
 
 # Things that access data, either from the session or the database
 

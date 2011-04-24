@@ -1,9 +1,0 @@
-<div id="main">
-    <h1>Current Preferences</h1>
-    <form action="/preferences" method="post">
-      {% for name in carls2carls %} 
-        <div><input type="text" name="carl{{ forloop.counter0 }}" value="{{ name }}"></div>
-      {% endfor %}
-      <input type="submit" value="Submit">
-    </form>
-</div>

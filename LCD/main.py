@@ -78,17 +78,14 @@ class Pair(webapp.RequestHandler):
 class PairCode(webapp.RequestHandler):
     def post(self):
         self.response.out.write(self.request.get('carletonID').split("@")[0])
-        # Lookup carletonID -> get/generate verification code
         carletonAccount = models.get_user_by_CID(self.request.get('carletonID').split("@")[0])
         carletonAccount.verificationCode = models.generateVerificationCode()
         carletonAccount.put()
-
-        emailfunctions.sendInvite(carletonAccount)  # tested- set to send all emails to conrad right now.
-        '''http://code.google.com/appengine/docs/python/mail/sendingmail.html'''
+        emailfunctions.sendInvite(carletonAccount)
         self.response.out.write("<br>Your pair code has been sent!!")
 
-class Preferences(webapp.RequestHandler):
-    total_spots = 10  # this is the number of people someone can select -- is this ok? should it go in an __init__ or something?
+class Crushes(webapp.RequestHandler):
+    total_spots = 5  # this is the number of people someone can select -- is this ok? should it go in an __init__ or something?
 
     def get(self):
         if session.isPaired():
@@ -96,18 +93,18 @@ class Preferences(webapp.RequestHandler):
             results = models.getCarlPreferences(student)
 
             results = [pair.target for pair in results]
-            slots = ['' for i in range(Preferences.total_spots)]
+            slots = ['' for i in range(Crushes.total_spots)]
             carls2carls = results + slots[len(results):]  # has empty trailing slots
 
             template_values = { 'carls2carls': carls2carls }
-            view.renderTemplate(self, 'preferences.html', template_values)
+            view.renderTemplate(self, 'crushes.html', template_values)
         else:
-            self.response.out.write('You need to <a href="pair">pair your account</a> before entering preferences.')
+            self.response.out.write('You need to <a href="pair">pair your account</a> before entering crushes.')
 
     def post(self):
 
         carletonID = session.getCarl().carletonID
-        old_preferences = models.getCarlPreferences(carletonID)  # retrieve existing preferences
+        old_preferences = models.getCarlPreferences(carletonID)  # retrieve existing crushes
         
         old_preference_ids = [old_preference.target for old_preference in old_preferences]
         new_preference_ids = [self.request.get("carl" + str(i)) for i in range(Preferences.total_spots) if self.request.get("carl" + str(i)) != ""]
@@ -143,7 +140,7 @@ class Preferences(webapp.RequestHandler):
 
 application = webapp.WSGIApplication(
                                      [('/optout', OptOut),
-                                      ('/preferences', Preferences),
+                                      ('/crushes', Crushes),
                                       ('/pair', Pair),
                                       ('/sendPairCode', PairCode)],
                                      debug=True)
