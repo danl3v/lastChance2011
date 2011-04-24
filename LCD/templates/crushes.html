@@ -1,0 +1,23 @@
+<div id="main">
+
+<div id="mycrushes">
+<h2>My Crushes</h2>
+<form action="/crushes" method="post">
+  {% for name in carls2carls %} 
+    <div>{{ forloop.counter }}. <input type="text" name="carl{{ forloop.counter0 }}" value="{{ name }}"></div>
+  {% endfor %}
+  <input type="submit" value="Submit">
+</form>
+</div>
+
+<div id="messages">
+<h2>Messages from people who have crushes on me</h2>
+<ul>
+<li>message 1 [delete]</li>
+<li>message 2 [delete]</li>
+<li>message 3 [delete]</li>
+</ul>
+
+</div>
+
+</div>
