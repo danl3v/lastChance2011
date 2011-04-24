@@ -26,7 +26,7 @@ class Message(db.Model):
 ### Get stuff from the Database ###
 
 
-def getCarlPreferences(user):
+def getCarlCrushes(user):
     # returns carl2carl model instances for a given user's preferences
     carl2carl = Carl2Carl.all()
     carl2carl.filter("source =", user)

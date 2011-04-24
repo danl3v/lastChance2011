@@ -90,7 +90,7 @@ class Crushes(webapp.RequestHandler):
     def get(self):
         if session.isPaired():
             student = session.getCarl().carletonID  # this is its own line only because it's sort of a session-based/model operation
-            results = models.getCarlPreferences(student)
+            results = models.getCarlCrushes(student)
 
             results = [pair.target for pair in results]
             slots = ['' for i in range(Crushes.total_spots)]
@@ -104,7 +104,7 @@ class Crushes(webapp.RequestHandler):
     def post(self):
 
         carletonID = session.getCarl().carletonID
-        old_preferences = models.getCarlPreferences(carletonID)  # retrieve existing crushes
+        old_preferences = models.getCarlCrushes(carletonID)  # retrieve existing crushes
         
         old_preference_ids = [old_preference.target for old_preference in old_preferences]
         new_preference_ids = [self.request.get("carl" + str(i)) for i in range(Crushes.total_spots) if self.request.get("carl" + str(i)) != ""]
