@@ -12,9 +12,16 @@
     [-] Featurefreeze?
 
 [+] Get working prototype
-    [+] Get preferences working
+    [+] Get crushes working
+        [-] change all preferences references to crushes now.
         [-] clean input (lowercase, strip anything unneccessary)
         [-] check input against database. validate actual usernames
+    [+] messages
+        [-] get crush messages working
+	[-] viewing messages
+	[-] posting messages
+	[-] deleting unwanted messages
+    [-] fucking make it secure
     [-] figure out how to dev-server.py --enable-sendmail for mail testing
     [-] break admin functions into different pages.  admin page is expensive to the database
     [+] notifications
@@ -23,7 +30,9 @@
 	[-] if a pref opts out, and then opts back in, notify original user
 	[-] check on the day before -- if one of your prefs has not paired account/logged in, alert the user
 	[-] alert user if that user does log in at a later time
-    [-] separate page navigation and user account links
+    [+] page organization (navigation, user account links)
+        [+] merge pairing/opting out pages into one page and call it settings.
+	[+] settings can be have a red background when you need to pair your account
 
 [+] Emails
     [-] Get webapp to receive emails.
@@ -38,3 +47,4 @@
 [+] Write documentation
     [-] How to build and host
     [-] Architecture layout
+    [-] Make it so it is not carleton only specific -- generalize to other schools, etc
