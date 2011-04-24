@@ -40,7 +40,7 @@ class Pair(webapp.RequestHandler):
     def post(self):
         if session.isPaired(): # unpair their account
             theCarl = session.getCarl()
-            if theCarl.carletonID == self.request.get('carletonID'):
+            if theCarl.carletonID == self.request.get('carletonID').split("@")[0]:
                 theCarl.googleID = ""
                 theCarl.put()
                 template_values = {
@@ -50,13 +50,13 @@ class Pair(webapp.RequestHandler):
                 view.renderTemplate(self, 'unpair_success.html', template_values)
             else:
                 template_values = {
-                    'carletonID_Requested': self.request.get('carletonID'),
+                    'carletonID_Requested': self.request.get('carletonID').split("@")[0],
                     'carletonID_Actual': theCarl.carletonID,
                     'googleEmail': session.get_current_user().email()
                     }
                 view.renderTemplate(self, 'unpair_failure.html', template_values)
         else: # pair their account
-            theCarl = models.get_user_by_CID(self.request.get('carletonID'))
+            theCarl = models.get_user_by_CID(self.request.get('carletonID').split("@")[0])
             if (theCarl) and (theCarl.verificationCode == self.request.get('verificationCode')):
                 theCarl.googleID = str(session.get_current_user().user_id())
                 # should we delete the verification code or leave it? we are leaving it for now so that once you unpair, you can pair again with the same code.
@@ -70,16 +70,16 @@ class Pair(webapp.RequestHandler):
             else:
                 template_values = {
                     'pairCode' : self.request.get('verificationCode'),
-                    'carletonID' : self.request.get('carletonID'),
+                    'carletonID' : self.request.get('carletonID').split("@")[0],
                     'googleEmail' : session.get_current_user().email()
                     }
                 view.renderTemplate(self, 'pair_failure.html', template_values)
 
 class PairCode(webapp.RequestHandler):
     def post(self):
-        self.response.out.write(self.request.get('carletonID'))
+        self.response.out.write(self.request.get('carletonID').split("@")[0])
         # Lookup carletonID -> get/generate verification code
-        carletonAccount = models.get_user_by_CID(self.request.get('carletonID'))
+        carletonAccount = models.get_user_by_CID(self.request.get('carletonID').split("@")[0])
         carletonAccount.verificationCode = models.generateVerificationCode()
         carletonAccount.put()
 
