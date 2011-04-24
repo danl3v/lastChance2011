@@ -85,7 +85,7 @@ class PairCode(webapp.RequestHandler):
         self.response.out.write("<br>Your pair code has been sent!!")
 
 class Crushes(webapp.RequestHandler):
-    total_spots = 5  # this is the number of people someone can select -- is this ok? should it go in an __init__ or something?
+    total_spots = 5  # this is the number of people someone can select
 
     def get(self):
         if session.isPaired():
@@ -107,7 +107,7 @@ class Crushes(webapp.RequestHandler):
         old_preferences = models.getCarlPreferences(carletonID)  # retrieve existing crushes
         
         old_preference_ids = [old_preference.target for old_preference in old_preferences]
-        new_preference_ids = [self.request.get("carl" + str(i)) for i in range(Preferences.total_spots) if self.request.get("carl" + str(i)) != ""]
+        new_preference_ids = [self.request.get("carl" + str(i)) for i in range(Crushes.total_spots) if self.request.get("carl" + str(i)) != ""]
 
         addedList = []
         removedList = []
