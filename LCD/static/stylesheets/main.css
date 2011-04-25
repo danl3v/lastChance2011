@@ -1,3 +1,9 @@
+html
+{
+    overflow: -moz-scrollbars-vertical;
+    overflow-y: scroll;
+}
+
 body
 {
     font-family: Arial, sans-serif;
@@ -53,6 +59,54 @@ div#nav ul li a, div#nav ul li a:hover, div#nav ul li a:visited, div#nav ul li a
     padding: 0.3em;
 }
 
+div#nav ul li.alert
+{
+    position: relative;
+    text-decoration: none;
+}
+
+div#nav ul li.alert a
+{
+    background: #B14500 !important;
+}
+
+div#nav ul li.alert span
+{
+    display: block;
+    position: absolute; 
+    padding: .75em;
+    content: attr(title);
+    min-width: 120px;
+    text-align: center;
+    width: auto;
+    height: auto;
+    white-space: nowrap;
+    font: normal 12px "Segoe UI", Arial, Sans-serif;
+    top: -50px;
+    left: -37px;
+    background: rgba(0,0,0,.8);
+    -moz-border-radius:8px;
+    -webkit-border-radius:px;
+    border-radius:10px;    
+    color: #fff;
+}
+
+div#nav ul li.alert span:after
+{
+    position: absolute;
+    display: block;
+    content: "";  
+    border-color: rgba(0,0,0,.8) transparent transparent transparent;
+    border-style: solid;
+    border-width: 7px;
+    height:0;
+    width:0;
+    position:absolute;
+    left: 62px;
+    bottom: -14px;
+    margin: auto;
+}
+
 div#main
 {
     display: block;
@@ -91,29 +145,4 @@ table th, table td
 form.buttonForm
 {
     display: inline;
-}
-
-div#account
-{
-    float: right;
-}
-
-div#account ul, div#account ul li
-{
-    display:inline;
-}
-
-div#account ul li a
-{
-    background: #4D8FDF;
-    color: #ddd;
-    padding: 0.2em 0.4em;
-    text-decoration: none;
-}
-
-div#account ul li#pair a
-{
-    background: #f00;
-    color: #FFFFFF;
-    font-weight:bold;
 }

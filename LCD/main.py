@@ -5,6 +5,84 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 
 import models, view, session, emailfunctions
 
+class Settings(webapp.RequestHandler):
+
+    def get(self, action=None):
+        theCarl = session.getCarl()
+
+        if session.is_active(): optedout = False
+        else: optedout = True
+
+        template_values = {
+            'optedout': optedout
+            }
+
+        view.renderTemplate(self, 'settings.html', template_values)
+
+    def post(self, action=None):
+
+        if action == "optin": # think about where things could go wrong in each of these cases********** FIX THEM
+            theCarl = session.getCarl()
+            theCarl.active = True
+            theCarl.put()
+            template_values = {}
+            view.renderTemplate(self, 'optin_success.html', template_values)
+            
+        elif action == "optout":
+            theCarl = session.getCarl()
+            theCarl.active = False
+            theCarl.put()
+            template_values = {}
+            view.renderTemplate(self, 'optout_success.html', template_values)
+
+        elif action == "pair":
+            theCarl = models.get_user_by_CID(self.request.get('carletonID').split("@")[0])
+            if (theCarl) and (theCarl.verificationCode == self.request.get('verificationCode')):
+                theCarl.googleID = str(session.get_current_user().user_id())
+                theCarl.put()
+                template_values = {
+                    'carletonID': theCarl.carletonID,
+                    'googleEmail': session.get_current_user().email()
+                    }                
+                view.renderTemplate(self, 'pair_success.html', template_values)
+            else:
+                template_values = {
+                    'pairCode' : self.request.get('verificationCode'),
+                    'carletonID' : self.request.get('carletonID').split("@")[0],
+                    'googleEmail' : session.get_current_user().email()
+                    }
+                view.renderTemplate(self, 'pair_failure.html', template_values)
+
+        elif action == "unpair":
+            theCarl = session.getCarl()
+            if theCarl.carletonID == self.request.get('carletonID').split("@")[0]:
+                theCarl.googleID = ""
+                theCarl.put()
+                template_values = {
+                    'carletonID': theCarl.carletonID,
+                    'googleEmail': session.get_current_user().email()
+                    }
+                view.renderTemplate(self, 'unpair_success.html', template_values)
+            else:
+                template_values = {
+                    'carletonID_Requested': self.request.get('carletonID').split("@")[0],
+                    'carletonID_Actual': theCarl.carletonID,
+                    'googleEmail': session.get_current_user().email()
+                    }
+                view.renderTemplate(self, 'unpair_failure.html', template_values)
+
+        elif action == "sendcode":
+            self.response.out.write(self.request.get('carletonID').split("@")[0])
+            carletonAccount = models.get_user_by_CID(self.request.get('carletonID').split("@")[0])
+            carletonAccount.verificationCode = models.generateVerificationCode()
+            carletonAccount.put()
+            emailfunctions.sendInvite(carletonAccount)
+            self.response.out.write("<br>Your pair code has been sent!!")
+
+        else: self.response.out.write("not a valid action:" + action)
+
+'''
+
 class OptOut(webapp.RequestHandler): # need to let people opt back in if they choose
     def get(self):
         theCarl = session.getCarl()
@@ -84,6 +162,8 @@ class PairCode(webapp.RequestHandler):
         emailfunctions.sendInvite(carletonAccount)
         self.response.out.write("<br>Your pair code has been sent!!")
 
+'''
+
 class Crushes(webapp.RequestHandler):
     total_spots = 5  # this is the number of people someone can select
 
@@ -99,7 +179,7 @@ class Crushes(webapp.RequestHandler):
             template_values = { 'carls2carls': carls2carls }
             view.renderTemplate(self, 'crushes.html', template_values)
         else:
-            self.response.out.write('You need to <a href="pair">pair your account</a> before entering crushes.')
+            self.response.out.write('You need to <a href="/settings">pair your account</a> before entering crushes.')
 
     def post(self):
 
@@ -139,10 +219,9 @@ class Crushes(webapp.RequestHandler):
         view.renderTemplate(self, 'preferences_success.html', template_values)
 
 application = webapp.WSGIApplication(
-                                     [('/optout', OptOut),
-                                      ('/crushes', Crushes),
-                                      ('/pair', Pair),
-                                      ('/sendPairCode', PairCode)],
+                                     [('/crushes', Crushes),
+                                      ('/settings', Settings),
+                                      ('/settings/(.*)', Settings)],
                                      debug=True)
 
 def main():

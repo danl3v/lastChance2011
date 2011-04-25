@@ -9,8 +9,21 @@ class MainPage(webapp.RequestHandler):
         template_values = {}
         view.renderTemplate(self, 'index.html', template_values)
 
+class Privacy(webapp.RequestHandler):
+    def get(self):
+        template_values = {}
+        view.renderTemplate(self, 'privacy.html', template_values)
+
+class Contact(webapp.RequestHandler):
+    def get(self):
+        template_values = {}
+        view.renderTemplate(self, 'contact.html', template_values)
+
+
 application = webapp.WSGIApplication(
-                                      [('/', MainPage)],
+                                      [('/', MainPage),
+                                       ('/privacy', Privacy),
+                                       ('/contact', Contact)],
                                      debug=True)
 
 def main():

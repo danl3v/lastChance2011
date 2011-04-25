@@ -28,6 +28,9 @@ handlers:
   script: admin.py
   login: admin
 
+- url: /privacy|/contact
+  script: welcome.py
+
 - url: /.+
   script: main.py
   login: required
