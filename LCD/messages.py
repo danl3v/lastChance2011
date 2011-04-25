@@ -7,19 +7,27 @@ import models, view, session, emailfunctions
 
 class Inbox(webapp.RequestHandler):
     def get(self):
+        carl = session.getCarl().carletonID
+        messages = models.get_messages_by_CID(carl)
         
-        template_values = { }
-        view.renderTemplate(self, 'inbox.html', template_values)
-    def post(self):
-        newMessage = models.Message()
-        newMessage.target = self.request.get("to")
-        newMessage.message = self.request.get("body")
-        newMessage.put()
-        template_values = { }
+        template_values = {
+           'messages': messages }
         view.renderTemplate(self, 'inbox.html', template_values)
 
+
+class Send(webapp.RequestHandler):
+    def post(self):
+        newMessage = models.Message()
+        newMessage.source = "nobody"
+        newMessage.target = self.request.get("to")
+        newMessage.message = self.request.get("body")
+        newMessage.read = False
+        newMessage.put()
+        self.redirect("/messages/")
+
 application = webapp.WSGIApplication(
-                                     [('/messages/', Inbox) ],
+                                     [('/messages.?', Inbox),
+                                     ('/messages/send', Send) ],
                                      debug=True)
 
 def main():
