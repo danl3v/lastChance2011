@@ -17,8 +17,10 @@ class Carl2Carl(db.Model):
     target = db.StringProperty()
 
 class Message(db.Model):
-    target = db.StringProperty()
+    source = db.StringProperty("completelyAnonymousForNow")  # hash(Carl.googleID)
+    target = db.StringProperty()  # Carl.googleID
     message = db.StringProperty()
+    created = db.DateTimeProperty(auto_now_add=True)
 
 
 # Things that access data, either from the session or the database
