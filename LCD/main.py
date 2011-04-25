@@ -8,7 +8,6 @@ import models, view, session, emailfunctions
 class Settings(webapp.RequestHandler):
 
     def get(self, action=None):
-        theCarl = session.getCarl()
 
         if session.is_active(): optedout = False
         else: optedout = True
@@ -21,21 +20,21 @@ class Settings(webapp.RequestHandler):
 
     def post(self, action=None):
 
-        if action == "optin": # think about where things could go wrong in each of these cases********** FIX THEM
+        if action == "optin" and not session.is_active() and session.isPaired():
             theCarl = session.getCarl()
             theCarl.active = True
             theCarl.put()
             template_values = {}
             view.renderTemplate(self, 'optin_success.html', template_values)
             
-        elif action == "optout":
+        elif action == "optout" and session.is_active() and session.isPaired():
             theCarl = session.getCarl()
             theCarl.active = False
             theCarl.put()
             template_values = {}
             view.renderTemplate(self, 'optout_success.html', template_values)
 
-        elif action == "pair":
+        elif action == "pair" and not session.isPaired():
             theCarl = models.get_user_by_CID(self.request.get('carletonID').split("@")[0])
             if (theCarl) and (theCarl.verificationCode == self.request.get('verificationCode')):
                 theCarl.googleID = str(session.get_current_user().user_id())
@@ -53,7 +52,7 @@ class Settings(webapp.RequestHandler):
                     }
                 view.renderTemplate(self, 'pair_failure.html', template_values)
 
-        elif action == "unpair":
+        elif action == "unpair" and session.isPaired():
             theCarl = session.getCarl()
             if theCarl.carletonID == self.request.get('carletonID').split("@")[0]:
                 theCarl.googleID = ""
@@ -72,97 +71,13 @@ class Settings(webapp.RequestHandler):
                 view.renderTemplate(self, 'unpair_failure.html', template_values)
 
         elif action == "sendcode":
-            self.response.out.write(self.request.get('carletonID').split("@")[0])
             carletonAccount = models.get_user_by_CID(self.request.get('carletonID').split("@")[0])
             carletonAccount.verificationCode = models.generateVerificationCode()
             carletonAccount.put()
             emailfunctions.sendInvite(carletonAccount)
-            self.response.out.write("<br>Your pair code has been sent!!")
+            self.response.out.write('A pair code has been sent to ' + self.request.get('carletonID').split("@")[0] + '@carleton.edu. Once you get the email, go to <a href="/settings">settings</a> to enter your pair code.')
 
-        else: self.response.out.write("not a valid action:" + action)
-
-'''
-
-class OptOut(webapp.RequestHandler): # need to let people opt back in if they choose
-    def get(self):
-        theCarl = session.getCarl()
-
-        if session.is_active(): # show optout page
-            template_values = {}
-            view.renderTemplate(self, 'optout.html', template_values)
-
-        else: # show optin page
-            template_values = {}
-            view.renderTemplate(self, 'optin.html', template_values)
-
-    def post(self):
-        theCarl = session.getCarl()
-
-        if session.is_active(): # make not active
-            theCarl.active = False
-            theCarl.put()
-            template_values = {}
-            view.renderTemplate(self, 'optout_success.html', template_values)
-
-        else: # make active again
-            theCarl.active = True
-            theCarl.put()
-            template_values = {}
-            view.renderTemplate(self, 'optin_success.html', template_values)
-
-class Pair(webapp.RequestHandler):
-    def get(self):
-        template_values = {}
-        view.renderTemplate(self, 'pair.html', template_values)
-
-    def post(self):
-        if session.isPaired(): # unpair their account
-            theCarl = session.getCarl()
-            if theCarl.carletonID == self.request.get('carletonID').split("@")[0]:
-                theCarl.googleID = ""
-                theCarl.put()
-                template_values = {
-                    'carletonID': theCarl.carletonID,
-                    'googleEmail': session.get_current_user().email()
-                    }
-                view.renderTemplate(self, 'unpair_success.html', template_values)
-            else:
-                template_values = {
-                    'carletonID_Requested': self.request.get('carletonID').split("@")[0],
-                    'carletonID_Actual': theCarl.carletonID,
-                    'googleEmail': session.get_current_user().email()
-                    }
-                view.renderTemplate(self, 'unpair_failure.html', template_values)
-        else: # pair their account
-            theCarl = models.get_user_by_CID(self.request.get('carletonID').split("@")[0])
-            if (theCarl) and (theCarl.verificationCode == self.request.get('verificationCode')):
-                theCarl.googleID = str(session.get_current_user().user_id())
-                # should we delete the verification code or leave it? we are leaving it for now so that once you unpair, you can pair again with the same code.
-                # maybe if you unpair, you get an email with a new code in case you want to pair again.
-                theCarl.put()
-                template_values = {
-                    'carletonID': theCarl.carletonID,
-                    'googleEmail': session.get_current_user().email()
-                    }                
-                view.renderTemplate(self, 'pair_success.html', template_values)
-            else:
-                template_values = {
-                    'pairCode' : self.request.get('verificationCode'),
-                    'carletonID' : self.request.get('carletonID').split("@")[0],
-                    'googleEmail' : session.get_current_user().email()
-                    }
-                view.renderTemplate(self, 'pair_failure.html', template_values)
-
-class PairCode(webapp.RequestHandler):
-    def post(self):
-        self.response.out.write(self.request.get('carletonID').split("@")[0])
-        carletonAccount = models.get_user_by_CID(self.request.get('carletonID').split("@")[0])
-        carletonAccount.verificationCode = models.generateVerificationCode()
-        carletonAccount.put()
-        emailfunctions.sendInvite(carletonAccount)
-        self.response.out.write("<br>Your pair code has been sent!!")
-
-'''
+        else: self.response.out.write('You are not allowed to perform this action given your current user state. Please go back to <a href="/main">main</a> and try again')
 
 class Crushes(webapp.RequestHandler):
     total_spots = 5  # this is the number of people someone can select
