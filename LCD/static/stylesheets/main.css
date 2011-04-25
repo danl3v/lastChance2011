@@ -53,6 +53,11 @@ div#nav ul li a, div#nav ul li a:hover, div#nav ul li a:visited, div#nav ul li a
     padding: 0.3em;
 }
 
+div#nav ul li .alert
+{
+    background: #B14500 !important;
+}
+
 div#main
 {
     display: block;

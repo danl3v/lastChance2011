@@ -1,0 +1,39 @@
+<div id="main">
+
+{% if paired %}
+
+  {% if optedout %}
+  <h2>Opt In</h2>
+  <form action="/settings/optin" method="post">
+  <p><input type="submit" value="Opt In ^_^"></p>
+  </form>
+
+  {% else %}
+  <h2>Opt Out</h2>
+  <form action="/settings/optout" method="post">
+  <p><input type="submit" value="Opt Out T_T" onclick="if(!confirm('Do you really want to opt out?')){return false;};"></p>
+  </form>
+  {% endif %}
+
+  <h2>UnPair Your Account</h2>
+  <form action="/settings/unpair" method="post">
+  <p>Enter Your Carleton ID: <input type="text" name="carletonID"></p>
+  <p><input type="submit" value="UnPair Account" onclick="if(!confirm('Do you really want to unpair this google account?')){return false;};"></p>
+  </form>
+
+{% else %}
+  <h2>Pair Your Account</h2>
+  <form action="/settings/pair" method="post">
+  <p>Enter Your Carleton ID: <input type="text" name="carletonID"></p>
+  <p>Enter Your Pair Code: <input type="text" name="verificationCode"></p>
+  <p><input type="submit" value="Pair Accounts!"></p>
+  </form>
+
+  <h2>Don't have a pair code? Get another one!</h2>
+  <form action="/settings/sendcode" method="post">
+  <p>Enter Your Carleton ID: <input type="text" name="carletonID"></p>
+  <p><input type="submit" value="Get new pair code!"></p>
+  </form>
+{% endif %}
+
+</div>
