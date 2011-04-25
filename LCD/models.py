@@ -17,6 +17,7 @@ class Carl2Carl(db.Model):
     target = db.StringProperty()
 
 class Message(db.Model):
+    read = db.BooleanProperty() 
     source = db.StringProperty("completelyAnonymousForNow")  # hash(Carl.googleID)
     target = db.StringProperty()  # Carl.googleID
     message = db.StringProperty()
@@ -43,6 +44,10 @@ def get_user_by_CID(username):
     carl = Carl.all()
     carl.filter("carletonID =",username)
     return carl.get()
+
+def get_messages_by_CID(username):
+    messages = Carl.all().filter("carletonID =",username)
+    return messages.get()
 
 
 ### Other ###
