@@ -1,12 +1,17 @@
 <div id="main">
 
     <ul>
-        <li> message from crush</li>
-        <li> message from crush</li>
-        <li> message from crush</li>
-        <li> message from crush</li>
-        <li> message from crush</li>
-        <li> message from crush</li>
+        {% for message in messages %}
+        <li>{{ message.message }}</li>
+        {% endfor %}
     <ul>
+
+    <h2>Send a message</h2>
+    <form action="/messages/" method="post" accept-charset="utf-8">
+        <input type="text" name="to" value="">
+        <textarea name="body" rows="8" cols="40"></textarea>
+    
+    <p><input type="submit" value="Send &rarr;"></p>
+    </form>
     
 </div>

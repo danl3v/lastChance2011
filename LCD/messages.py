@@ -7,10 +7,16 @@ import models, view, session, emailfunctions
 
 class Inbox(webapp.RequestHandler):
     def get(self):
-            template_values = { }
-            view.renderTemplate(self, 'inbox.html', template_values)
+        
+        template_values = { }
+        view.renderTemplate(self, 'inbox.html', template_values)
     def post(self):
-        pass
+        newMessage = models.Message()
+        newMessage.target = self.request.get("to")
+        newMessage.message = self.request.get("body")
+        newMessage.put()
+        template_values = { }
+        view.renderTemplate(self, 'inbox.html', template_values)
 
 application = webapp.WSGIApplication(
                                      [('/messages/', Inbox) ],
