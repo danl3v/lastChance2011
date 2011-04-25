@@ -16,6 +16,7 @@
   {% if user %}
     {% if paired %}
     <li><a href="/settings">Settings</a></li>
+    <li>{{ carlName }}</li>
     {% else %}
     <li class="alert"><a href="/settings">Settings</a><span>you need to pair your account</span></li>
     {% endif %}

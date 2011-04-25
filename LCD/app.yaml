@@ -31,6 +31,10 @@ handlers:
 - url: /privacy|/contact
   script: welcome.py
 
+- url: /messages.*
+  script: messages.py
+  login: required
+
 - url: /.+
   script: main.py
   login: required

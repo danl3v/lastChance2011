@@ -17,8 +17,11 @@ class Carl2Carl(db.Model):
     target = db.StringProperty()
 
 class Message(db.Model):
-    target = db.StringProperty()
+    read = db.BooleanProperty() 
+    source = db.StringProperty("completelyAnonymousForNow")  # hash(Carl.googleID)
+    target = db.StringProperty()  # Carl.googleID
     message = db.StringProperty()
+    created = db.DateTimeProperty(auto_now_add=True)
 
 
 # Things that access data, either from the session or the database
@@ -41,6 +44,11 @@ def get_user_by_CID(username):
     carl = Carl.all()
     carl.filter("carletonID =",username)
     return carl.get()
+
+def get_messages_by_CID(username):
+    messages = Message.all()
+    #messages = Message.all().filter("target =",username)
+    return messages.fetch(1000)
 
 
 ### Other ###
