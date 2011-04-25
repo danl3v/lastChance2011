@@ -8,13 +8,15 @@ def getHeaderFooterData(self):
     gets and returns the template values to render the header and footer, which are standard on all pages
     '''
     user = session.get_current_user()
+    carlName = ''  # bad fix for now  anonymous sessions don't ahve access to carlName
     if user:
         login_url = session.create_logout_url("/")
         login_url_linktext = 'Logout'
         
         if session.isPaired():
             paired = True
-            pair_url_linktext = "Unpair Account With " + session.getCarl().carletonID.title()
+            carlName = session.getCarl().carletonID.title()
+            pair_url_linktext = "Unpair Account With " + carlName
         else:
             paired = False
             pair_url_linktext = "You Need to Pair Your Account"
@@ -41,6 +43,7 @@ def getHeaderFooterData(self):
 
     template_values =  {
         'user': user,
+        'carlName': carlName,
         'admin': admin,
         'login_url': login_url,
         'login_url_linktext': login_url_linktext,

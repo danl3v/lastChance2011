@@ -31,16 +31,20 @@
 <ul>
   <li><a href="/">Main</a></li>
   {% if user %}
-  <li><a href="pair">{{ pair_url_linktext }}</a></li>
-  {% if paired %}
-  <li><a href="optout">{{ active_url_linktext }}</a></li>
-  {% if active %}
-  <li><a href="crushes">Crushes</a></li>
-  {% endif %}
-  {% endif %}
-  {% if admin %}
-  <li><a href="admin">Admin</a></li>
-  {% endif %}
+      {% if paired %}
+          <li><a href="pair">Unpair Account With {{ carlName }}</a></li>
+          {% if active %}
+              <li><a href="optout">Opt Out</a></li>
+              <li><a href="crushes">Crushes</a></li>
+          {% else %} <!-- people who've opted out can only opt back in -->
+              <li><a href="optout">Opt In</a></li>
+          {% endif %}
+          {% else %} <!-- not paired -->
+          <li><a href="pair">You Need to Pair Your Account</a></li>
+      {% endif %}
+      {% if admin %}
+          <li><a href="admin">Admin</a></li>
+      {% endif %}
   {% endif %}
   <li><a href="{{ login_url }}">{{ login_url_linktext }}</a></li>
 </ul>
