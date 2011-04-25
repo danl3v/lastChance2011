@@ -4,21 +4,17 @@
 
   {% if optedout %}
   <h2>Opt In</h2>
-  <form action="/settings/optin" method="post">
-  <p><input type="submit" value="Opt In ^_^"></p>
-  </form>
+  <form action="/settings/optin" method="post"><input type="submit" value="Opt In ^_^"></form>
 
   {% else %}
   <h2>Opt Out</h2>
-  <form action="/settings/optout" method="post">
-  <p><input type="submit" value="Opt Out T_T" onclick="if(!confirm('Do you really want to opt out?')){return false;};"></p>
-  </form>
+  <form action="/settings/optout" method="post"><input type="submit" value="Opt Out T_T" onclick="if(!confirm('Do you really want to opt out?')){return false;};"></form>
   {% endif %}
 
-  <h2>UnPair Your Account</h2>
+  <h2>Un-Pair Your Account</h2>
   <form action="/settings/unpair" method="post">
   <p>Enter Your Carleton ID: <input type="text" name="carletonID"></p>
-  <p><input type="submit" value="UnPair Account" onclick="if(!confirm('Do you really want to unpair this google account?')){return false;};"></p>
+  <p><input type="submit" value="Un-Pair Account" onclick="if(!confirm('Do you really want to un-pair this Google ID from this Carleton ID?')){return false;};"></p>
   </form>
 
 {% else %}
