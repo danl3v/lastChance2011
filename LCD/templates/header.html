@@ -17,7 +17,7 @@
     {% if paired %}
     <li><a href="/settings">Settings</a></li>
     {% else %}
-    <li><a href="/settings" class="alert">Settings</a></li>
+    <li class="alert"><a href="/settings">Settings</a><span>you need to pair your account</span></li>
     {% endif %}
     {% if active and paired %}
       <li><a href="/crushes">Crushes</a></li>
