@@ -18,9 +18,11 @@
         [-] check input against database. validate actual usernames
     [+] messages
         [-] get crush messages working
-	[-] viewing messages
-	[-] posting messages
-	[-] deleting unwanted messages
+            [-] Message: source(hashed), target, contents, date
+            [-] Ability to respond? (responses would have to be in the form of non-hashed responder... or i guess if it was hashed and that person randomly started trying to talk to them they'd both see how they were both trying to conspire to get the other to pick them.  That'd be cute)
+        [-] viewing messages
+        [-] posting messages
+        [-] deleting unwanted messages
     [-] fucking make it secure
     [-] figure out how to dev-server.py --enable-sendmail for mail testing
     [-] break admin functions into different pages.  admin page is expensive to the database
