@@ -1,4 +1,5 @@
 from google.appengine.api import mail
+import session
 
 def sendInvite(carletonAccount):
     username = carletonAccount.carletonID
@@ -53,3 +54,17 @@ Last Chance Dance 2011
 """ % (carletonID)
     
     mail.send_mail(sender_address, user_address, subject, body)
+
+def sendContactForm(subject, body):
+    '''
+    Sends a contact form.
+    '''
+    to_address = "contact@lastchance2011.com"
+    if session.get_current_user():
+        from_address = session.get_current_user().email()
+        subject = "[LCD Feedback] " + subject
+    else:
+        from_address = "contact@lastchance2011.com"
+        subject = "[LCD Feedback] [Anonymous] " + subject
+    
+    mail.send_mail(from_address, to_address, subject, body)

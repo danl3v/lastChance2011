@@ -2,7 +2,7 @@ from google.appengine.ext.webapp import template
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-import view
+import view, session, emailfunctions
 
 class MainPage(webapp.RequestHandler):
     def get(self):
@@ -18,6 +18,10 @@ class Contact(webapp.RequestHandler):
     def get(self):
         template_values = {}
         view.renderTemplate(self, 'contact.html', template_values)
+    def post(self):
+        emailfunctions.sendContactForm(self.request.get("subject"), self.request.get("body"))
+        template_values = {}
+        view.renderTemplate(self, 'contact_success.html', template_values)
 
 
 application = webapp.WSGIApplication(

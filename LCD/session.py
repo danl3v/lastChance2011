@@ -28,7 +28,7 @@ def isPaired():
 
     assert count in [0,1], "this google account is paired with more than one carleton account"
 
-    return True if count == 1 else False  # Actually, you could return count if you wanted.  1 == True and 0 == False already.
+    return count # 1 if paired, 0 if not paired
 
 def is_active():
     '''
