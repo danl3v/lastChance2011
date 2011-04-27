@@ -1,55 +1,39 @@
-html, body
-{
-    height: 100%;
-}
+/*
+Project: MAIN CSS Template
+Project Website: http://lastchance2011.com
+Last updated: 2011-04-27
+File: main.css
+*/
 
-html
-{
-    overflow: -moz-scrollbars-vertical;
-    overflow-y: scroll;
-}
+/* GENERAL OBJECTS */
+html, body { height: 100%; margin: 0; padding: 0; }
+html { overflow: -moz-scrollbars-vertical; overflow-y: scroll; }
+body { font-family: Arial, sans-serif; width: 56em; margin-left: auto; margin-right: auto; }
+table { border: 1px solid #000000; border-collapse: collapse; }
+table th, table td { border: 1px solid #000000; padding: 5px; }
 
-body
-{
-    font-family: Arial, sans-serif;
-    width: 56em;
-    margin-left: auto;
-    margin-right: auto;
-}
+/* LAYOUT */
+div#container { min-height: 100%; position: relative; }
+div#header { float: left; margin-top: 5em; }
+div#nav { float: right; margin-top: 5.4em; }
+div#main { display: block; margin: 0px auto; clear: both; padding-top: 10px; padding-bottom: 60px; }
+div#footer { position: absolute; bottom: 0; padding-bottom: 1em; text-align: center; width: 100%; }
 
-h1
-{
-    margin: 0;
-    margin-top 0.5em;
-    color: #B14500;
-}
+div#mycrushes { float: left; }
+div#messages { float: right; }
 
-div#container {
-   min-height: 100%;
-   position: relative;
-}
 
-div#header
-{
-    float: left;
-    margin-top: 5em;
-}
-
+/* LAYOUT OBJECTS */
 div#header h1
 {
-    display: inline;
+    font-size: 2em;
+    color: #B14500;
 }
 
 div#header a, div#header a:hover, div#header a:visited, div#header a:active
 {
     color: #B14500;
     text-decoration: none;
-}
-
-div#nav
-{
-    float: right;
-    margin-top: 5em;
 }
 
 div#nav ul
@@ -72,7 +56,7 @@ div#nav ul li a, div#nav ul li a:hover, div#nav ul li a:visited, div#nav ul li a
     color: #FFFFFF;
     background: #04346C;
     text-decoration: none;
-    padding: 0.3em;
+    padding: 0.4em;
 }
 
 div#nav ul li.alert
@@ -123,48 +107,14 @@ div#nav ul li.alert span:after
     margin: auto;
 }
 
-div#main
-{
-    display: block;
-    margin: 0px auto;
-    clear: both;
-    padding-top: 10px;
-    padding-bottom: 60px;
-}
+div#main h2 { font-size: 1.5em; margin: 1em 0; }
+div#main p { line-height:1.2em; margin:1em 0; }
+div#main ol { margin: 1em 0 1em 2.5em; list-style-type: decimal; }
+div#main ol li { margin-top: .2em; }
 
 div#main a, div#main a:hover, div#main a:visited, div#main a:active, div#footer a, div#footer a:hover, div#footer a:visited, div#footer a:active
 {
     color: #04346C;
-}
-
-div#mycrushes
-{
-    float: left;
-}
-
-div#messages
-{
-    float: right;
-}
-
-div#footer
-{
-    position: absolute;
-    bottom: 0;
-    padding-bottom: 60px;
-    text-align: center;
-}
-
-table
-{
-    border: 1px solid #000000;
-    border-collapse: collapse;
-}
-
-table th, table td
-{
-    border: 1px solid #000000;
-    padding: 5px;
 }
 
 form.buttonForm
