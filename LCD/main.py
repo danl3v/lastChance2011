@@ -35,7 +35,7 @@ class Settings(webapp.RequestHandler):
             view.renderTemplate(self, 'optout_success.html', template_values)
 
         elif action == "pair" and not session.isPaired():
-            theCarl = models.get_user_by_CID(self.request.get('carletonID').split("@")[0])
+            theCarl = models.get_user_by_CID(self.request.get('carletonID').split("@")[0]) # check to see if the carl is already paird with another google account
             if (theCarl) and (theCarl.verificationCode == self.request.get('verificationCode')):
                 theCarl.googleID = str(session.get_current_user().user_id())
                 theCarl.put()
@@ -52,7 +52,7 @@ class Settings(webapp.RequestHandler):
                     }
                 view.renderTemplate(self, 'pair_failure.html', template_values)
 
-        elif action == "unpair" and session.isPaired():
+        elif action == "unpair" and session.isPaired(): # remove the need to supply a carleton id?
             theCarl = session.getCarl()
             if theCarl.carletonID == self.request.get('carletonID').split("@")[0]:
                 theCarl.googleID = ""

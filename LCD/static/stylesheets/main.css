@@ -1,3 +1,8 @@
+html, body
+{
+    height: 100%;
+}
+
 html
 {
     overflow: -moz-scrollbars-vertical;
@@ -10,19 +15,24 @@ body
     width: 56em;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 5em;
 }
 
 h1
 {
-    margin:0;
+    margin: 0;
     margin-top 0.5em;
     color: #B14500;
+}
+
+div#container {
+   min-height: 100%;
+   position: relative;
 }
 
 div#header
 {
     float: left;
+    margin-top: 5em;
 }
 
 div#header h1
@@ -30,10 +40,16 @@ div#header h1
     display: inline;
 }
 
+div#header a, div#header a:hover, div#header a:visited, div#header a:active
+{
+    color: #B14500;
+    text-decoration: none;
+}
+
 div#nav
 {
-    float:right;
-    margin-top: .6em;
+    float: right;
+    margin-top: 5em;
 }
 
 div#nav ul
@@ -85,10 +101,10 @@ div#nav ul li.alert span
     top: -50px;
     left: -37px;
     background: rgba(0,0,0,.8);
-    -moz-border-radius:8px;
-    -webkit-border-radius:px;
-    border-radius:10px;    
-    color: #fff;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    border-radius: 10px;    
+    color: #FFFFFF;
 }
 
 div#nav ul li.alert span:after
@@ -99,9 +115,9 @@ div#nav ul li.alert span:after
     border-color: rgba(0,0,0,.8) transparent transparent transparent;
     border-style: solid;
     border-width: 7px;
-    height:0;
-    width:0;
-    position:absolute;
+    height: 0;
+    width: 0;
+    position: absolute;
     left: 62px;
     bottom: -14px;
     margin: auto;
@@ -113,9 +129,10 @@ div#main
     margin: 0px auto;
     clear: both;
     padding-top: 10px;
+    padding-bottom: 60px;
 }
 
-div#main a, div#main a:hover, div#main a:visited, div#main a:active
+div#main a, div#main a:hover, div#main a:visited, div#main a:active, div#footer a, div#footer a:hover, div#footer a:visited, div#footer a:active
 {
     color: #04346C;
 }
@@ -128,6 +145,14 @@ div#mycrushes
 div#messages
 {
     float: right;
+}
+
+div#footer
+{
+    position: absolute;
+    bottom: 0;
+    padding-bottom: 60px;
+    text-align: center;
 }
 
 table
@@ -145,4 +170,15 @@ table th, table td
 form.buttonForm
 {
     display: inline;
+}
+
+form#contactForm input[name="subject"]
+{
+    width: 35em;
+}
+
+form#contactForm textarea
+{
+    width: 30em;
+    height: 10em;
 }
