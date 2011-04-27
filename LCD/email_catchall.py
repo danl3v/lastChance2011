@@ -7,7 +7,7 @@ from google.appengine.api import mail
 
 class alertTheAdmins(InboundMailHandler):
     def receive(self, message):
-        #Ugh I don't know
+        #Ugh I don't know [ send it to contact@lastchance2011.com]
 
 
 application = webapp.WSGIApplication([alertTheAdmins.mapping()], debug=True)

@@ -99,7 +99,7 @@ class Crushes(webapp.RequestHandler):
     def post(self):
 
         carletonID = session.getCarl().carletonID
-        old_preferences = models.getCarlCrushes(carletonID)  # retrieve existing crushes
+        old_preferences = models.getCarlCrushes(carletonID)  # retrieve existing crushes ** rename variables to crushes
         
         old_preference_ids = [old_preference.target for old_preference in old_preferences]
         new_preference_ids = [self.request.get("carl" + str(i)) for i in range(Crushes.total_spots) if self.request.get("carl" + str(i)) != ""]

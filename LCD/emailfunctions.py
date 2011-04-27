@@ -1,32 +1,34 @@
 from google.appengine.api import mail
-import session
+from google.appengine.ext.webapp import template
+import session, os
+
+last_chance_dance_email_address = "Last Chance Dance <contact@lastchance2011.com>" # this is our email
+
+def renderEmailBody(template_file, template_values):
+    '''
+    Renders the body of an email.
+    '''
+    path = os.path.join(os.path.dirname(__file__), 'email_templates/' + template_file)
+    return template.render(path, template_values)
 
 def sendInvite(carletonAccount):
+    '''
+    Sends an invitation.
+    '''
     username = carletonAccount.carletonID
     verificationCode = carletonAccount.verificationCode
 
     #user_address = carletonAccount.carletonID + "@carleton.edu"
     user_address = ["conrad.p.dean@gmail.com", "dlouislevy@gmail.com"]
 
-    sender_address = "Conerd <conrad.p.dean@gmail.com>"  # figure out a more legit email (our app can receive email, so let's do that or create a gmail
+    sender_address = last_chance_dance_email_address
     subject = "[Carleton Last Chance Dance 2011] Invitation!"
-    body = """
-Hey there!
 
-You've been invited to Carleton Last Chance Dance.
-
-To open your account, go to http://lcdance2011.appspot.com/ with the paircode below.
-
-Carleton Account: %s
-Pair Code:        %s
-
-After logging in with your Gmail account, you will be prompted to pair your account with your carleton account using the pair code above.
-
-Have fun, and remember: If you can't handle the heat, stay out of the sex kitchen.
-
-Nursing seared genitalia,
-Last Chance Dance 2011
-""" % (username,verificationCode)
+    template_values = {
+        'carleton_id': carletonAccount.carletonID,
+        'pair_code': verificationCode
+        }
+    body = renderEmailBody('invitation.html', template_values)
     
     mail.send_mail(sender_address, user_address, subject, body)
 
@@ -38,20 +40,11 @@ def sendPersonChosen(carletonID):
     #user_address = carletonID + "@carleton.edu"
     user_address = ["conrad.p.dean@gmail.com", "dlouislevy@gmail.com"]
 
-    sender_address = "Conerd <conrad.p.dean@gmail.com>"  # figure out a more legit email (our app can receive email, so let's do that or create a gmail
+    sender_address = last_chance_dance_email_address
     subject = "[Carleton Last Chance Dance 2011] Someone Chose You as a Crush"
-    body = """
-Hey there %s!
-
-Someone selected you as a crush on Carleton Last Chance Dance 2011
-
-You can select your own crushes at http://lcdance2011.appspot.com/.
-
-Have fun, and remember: If you can't handle the heat, stay out of the sex kitchen.
-
-Nursing seared genitalia,
-Last Chance Dance 2011
-""" % (carletonID)
+    
+    template_values = { 'carletonID': carletonID }
+    body = renderEmailBody('you_have_been_crushed_notification.html', template_values)
     
     mail.send_mail(sender_address, user_address, subject, body)
 
@@ -59,12 +52,12 @@ def sendContactForm(subject, body):
     '''
     Sends a contact form.
     '''
-    to_address = "contact@lastchance2011.com"
+    to_address = last_chance_dance_email_address
     if session.get_current_user():
         from_address = session.get_current_user().email()
         subject = "[LCD Feedback] " + subject
     else:
-        from_address = "contact@lastchance2011.com"
+        from_address = last_chance_dance_email_address
         subject = "[LCD Feedback] [Anonymous] " + subject
     
     mail.send_mail(from_address, to_address, subject, body)
