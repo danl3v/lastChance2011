@@ -16,10 +16,13 @@ class Privacy(webapp.RequestHandler):
 
 class Contact(webapp.RequestHandler):
     def get(self):
-        template_values = {}
+        user = session.get_current_user()
+        template_values = {
+            'user': user
+            }
         view.renderTemplate(self, 'contact.html', template_values)
     def post(self):
-        emailfunctions.sendContactForm(self.request.get("subject"), self.request.get("body"))
+        emailfunctions.sendContactForm(self.request.get("subject"), self.request.get("body"), self.request.get("anonymous"))
         template_values = {}
         view.renderTemplate(self, 'contact_success.html', template_values)
 

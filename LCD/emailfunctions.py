@@ -48,12 +48,12 @@ def sendPersonChosen(carletonID):
     
     mail.send_mail(sender_address, user_address, subject, body)
 
-def sendContactForm(subject, body):
+def sendContactForm(subject, body, anonymous):
     '''
     Sends a contact form.
     '''
     to_address = last_chance_dance_email_address
-    if session.get_current_user():
+    if session.get_current_user() and not anonymous:
         from_address = session.get_current_user().email()
         subject = "[LCD Feedback] " + subject
     else:
