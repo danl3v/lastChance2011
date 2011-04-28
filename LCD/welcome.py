@@ -6,7 +6,7 @@ import view, session, emailfunctions
 
 class MainPage(webapp.RequestHandler):
     def get(self):
-        template_values = {}
+        template_values = { 'current_page': {'main': True} }
         view.renderTemplate(self, 'index.html', template_values)
 
 class Privacy(webapp.RequestHandler):

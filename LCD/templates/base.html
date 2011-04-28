@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="/stylesheets/reset.css" />
+<link rel="stylesheet" type="text/css" href="/stylesheets/main.css" />
+</head>
+<body>
+    
+<div id="container">
+
+<div id="header">
+<h1><a href="/">Last Chance Dance</a></h1>
+</div>
+{% block navigation %}
+<div id="nav">
+<ul>
+  <li class="{% if current_page.main %}active{% else %}inactive{% endif %}"><a href="/">Main</a></li>
+  {% if user %}
+    {% if active and paired %}
+      <li class="{% if current_page.crushes %}active{% else %}inactive{% endif %}"><a href="/crushes">Crushes</a></li>
+    {% endif %}
+    {% if paired %}
+    <li class="{% if current_page.settings %}active{% else %}inactive{% endif %}"><a href="/settings">Settings</a></li>
+    {% else %}
+    <li class="alert{% if current_page.settings %} active{% else %} inactive{% endif %}"><a href="/settings">Settings</a><span>you need to pair your account</span></li>
+    {% endif %}
+  {% endif %}
+  {% if admin %}
+    <li class="{% if current_page.admin %}active{% else %}inactive{% endif %}"><a href="/admin">Admin</a></li>
+  {% endif %}
+  <li><a href="{{ login_url }}">{{ login_url_linktext }}</a></li>
+</ul>
+{% endblock %}
+
+</div>
+{% block content %}{% endblock %}
+<div id="footer">Problems? <a href="/contact">Send us an email</a></div>
+</div>
+</body>
+</html>

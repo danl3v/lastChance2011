@@ -16,7 +16,8 @@ class Settings(webapp.RequestHandler):
 
         template_values = {
             'optedout': optedout,
-            'carletonID': carletonID
+            'carletonID': carletonID,
+            'current_page': {'settings': True}
             }
 
         view.renderTemplate(self, 'settings.html', template_values)
@@ -87,7 +88,10 @@ class Crushes(webapp.RequestHandler):
             slots = ['' for i in range(Crushes.total_spots)]
             carls2carls = results + slots[len(results):]  # has empty trailing slots
 
-            template_values = { 'carls2carls': carls2carls }
+            template_values = {
+                'carls2carls': carls2carls,
+                'current_page': {'crushes': True}
+                }
             view.renderTemplate(self, 'crushes.html', template_values)
         else:
             self.response.out.write('You need to <a href="/settings">pair your account</a> before entering crushes.')

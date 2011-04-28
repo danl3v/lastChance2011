@@ -14,7 +14,8 @@ class Admin(webapp.RequestHandler):
     def get(self):
         carls = models.Carl.all()
         template_values = {
-            'carls' : carls
+            'carls' : carls,
+            'current_page': {'admin': True}
         }
         view.renderTemplate(self, 'admin.html', template_values)
 
