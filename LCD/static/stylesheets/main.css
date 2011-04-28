@@ -122,13 +122,15 @@ form.buttonForm
     display: inline;
 }
 
+form#contactForm { width: 25em; }
+
 form#contactForm input[name="subject"]
 {
-    width: 35em;
+    width: 100%;
 }
 
 form#contactForm textarea
 {
-    width: 30em;
+    width: 100%;
     height: 10em;
 }

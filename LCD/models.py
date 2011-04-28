@@ -3,7 +3,7 @@ from google.appengine.api import users
 
 # What the data looks like:
 
-class Carl(db.Model):
+class Carl(db.Model): #add first name and last name for autocomplete
     googleID = db.StringProperty()
     carletonID = db.StringProperty()
     verificationCode = db.StringProperty() # set default to generateVerificationCode?

@@ -2,7 +2,6 @@ import cgi, os
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
-
 import models, view, session, emailfunctions
 
 class Settings(webapp.RequestHandler):
@@ -12,8 +11,12 @@ class Settings(webapp.RequestHandler):
         if session.is_active(): optedout = False
         else: optedout = True
 
+        if session.isPaired(): carletonID = session.getCarl().carletonID
+        else: carletonID = None
+
         template_values = {
-            'optedout': optedout
+            'optedout': optedout,
+            'carletonID': carletonID
             }
 
         view.renderTemplate(self, 'settings.html', template_values)
@@ -54,21 +57,14 @@ class Settings(webapp.RequestHandler):
 
         elif action == "unpair" and session.isPaired(): # remove the need to supply a carleton id?
             theCarl = session.getCarl()
-            if theCarl.carletonID == self.request.get('carletonID').split("@")[0]:
-                theCarl.googleID = ""
-                theCarl.put()
-                template_values = {
-                    'carletonID': theCarl.carletonID,
-                    'googleEmail': session.get_current_user().email()
-                    }
-                view.renderTemplate(self, 'unpair_success.html', template_values)
-            else:
-                template_values = {
-                    'carletonID_Requested': self.request.get('carletonID').split("@")[0],
-                    'carletonID_Actual': theCarl.carletonID,
-                    'googleEmail': session.get_current_user().email()
-                    }
-                view.renderTemplate(self, 'unpair_failure.html', template_values)
+            theCarl.googleID = ""
+            theCarl.put()
+            template_values = {
+                'carletonID': theCarl.carletonID,
+                'googleEmail': session.get_current_user().email()
+                }
+            view.renderTemplate(self, 'unpair_success.html', template_values)
+            # delete unpair_failure.html
 
         elif action == "sendcode":
             carletonAccount = models.get_user_by_CID(self.request.get('carletonID').split("@")[0])
@@ -133,9 +129,22 @@ class Crushes(webapp.RequestHandler):
             }
         view.renderTemplate(self, 'preferences_success.html', template_values)
 
+class AutoFill(webapp.RequestHandler):
+    def get(self):
+        users = models.Carl.all()
+        # do some filtering self.request.get("term")
+        users = users.fetch(10)
+
+        theJSON = "["
+        for user in users:
+            theJSON += '{"uid":"' + user.carletonID + '","value":"' + user.carletonID + '"},'
+        theJSON = theJSON[:-1] + "]"
+        self.response.out.write(theJSON)
+
 application = webapp.WSGIApplication(
                                      [('/crushes', Crushes),
                                       ('/settings', Settings),
+                                      ('/autofill', AutoFill),
                                       ('/settings/(.*)', Settings)],
                                      debug=True)
 
