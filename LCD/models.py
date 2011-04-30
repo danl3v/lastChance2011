@@ -17,8 +17,8 @@ class Carl2Carl(db.Model):
 
 class Message(db.Model):
     read = db.BooleanProperty() 
-    source = db.StringProperty("completelyAnonymousForNow")  # hash(Carl.googleID)
-    target = db.StringProperty()  # Carl.googleID
+    source = db.StringProperty()  # hash(Carl.carletonID)
+    target = db.StringProperty()  # Carl.carletonID
     message = db.StringProperty()
     created = db.DateTimeProperty(auto_now_add=True)
 

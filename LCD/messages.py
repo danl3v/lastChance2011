@@ -4,6 +4,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
 import models, view, session, emailfunctions
+#import sitemessages
 
 class Inbox(webapp.RequestHandler):
 
@@ -11,10 +12,22 @@ class Inbox(webapp.RequestHandler):
         if session.isPaired():
             carleton_id = session.getCarl().carletonID
             messages = models.get_messages_by_CID(carleton_id)
+
+            # when i git pulled, there was a conflict here. i'll let you resolve it.
+            '''
+            import hashlib
+            carl = session.getCarl().carletonID
+            messages = models.get_messages_by_CID(carl)
+            # hide sender
+            for m in messages:
+            m.source = hashlib.md5(m.source).hexdigest()
+            #m.source = hashlib.md5(m.source+m.target).hexdigest() # If we want to be really cute
+            # maybe go one step further so hashes are readable 
+            '''        
         
             template_values = {
                'messages': messages,
-               'current_page': {'messages': True}
+               'current_page': {'inbox': True}
             }
             view.renderTemplate(self, 'inbox.html', template_values)
         else:
@@ -22,6 +35,9 @@ class Inbox(webapp.RequestHandler):
 
 class Send(webapp.RequestHandler):
     def post(self):
+
+        # not sure if we need sitemessages.py. i feel like session and models is keeping things complicated enough already. thoughts?
+
         if session.isPaired():
             newMessage = models.Message()
             newMessage.source = "nobody"

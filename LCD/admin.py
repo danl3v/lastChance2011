@@ -6,9 +6,7 @@ from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-import models
-import view
-import session
+import models, view, session, emailfunctions
 
 class Admin(webapp.RequestHandler):
     def get(self):
@@ -51,7 +49,8 @@ class UnPairCarl(webapp.RequestHandler):
 
 class Invite(webapp.RequestHandler):
     def post(self):
-        emailfunctions.sendInvite(self.request.get("carletonID"))
+        carletonAccount = models.get_user_by_CID(self.request.get("carletonID"))
+        emailfunctions.sendInvite(carletonAccount)
         self.response.out.write('Invitation sent to ' + self.request.get("carletonID") + '! <a href="/admin">Back to admin</a>.')
 
 application = webapp.WSGIApplication(

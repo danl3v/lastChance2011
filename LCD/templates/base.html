@@ -19,7 +19,7 @@
   {% if user %}
     {% if active and paired %}
       <li class="{% if current_page.crushes %}active{% else %}inactive{% endif %}"><a href="/crushes">Crushes</a></li>
-      <li class="{% if current_page.messages %}active{% else %}inactive{% endif %}"><a href="/messages">Messages</a></li>
+      <li class="{% if current_page.inbox %}active{% else %}inactive{% endif %}"><a href="/messages">Inbox</a></li>
     {% endif %}
     {% if paired %}
     <li class="{% if current_page.settings %}active{% else %}inactive{% endif %}"><a href="/settings">Settings</a></li>
