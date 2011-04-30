@@ -24,6 +24,8 @@ class AddCarl(webapp.RequestHandler):
         carl = models.Carl() # NEED TO CHECK IF USER WITH THAT ID ALREADY EXISTS IN DB, or for empty user
         carl.carletonID = self.request.get('carletonID')
         carl.verificationCode = models.generateVerificationCode() # do we want to generate an authentication code here or when we send out an invite?
+        carl.first_name = self.request.get("first_name")
+        carl.last_name = self.request.get("last_name")
         carl.put()
         self.redirect('/admin')
 
@@ -47,12 +49,18 @@ class UnPairCarl(webapp.RequestHandler):
         carl.put()
         self.redirect('/admin')
 
+class Invite(webapp.RequestHandler):
+    def post(self):
+        emailfunctions.sendInvite(self.request.get("carletonID"))
+        self.response.out.write('Invitation sent to ' + self.request.get("carletonID") + '! <a href="/admin">Back to admin</a>.')
+
 application = webapp.WSGIApplication(
                                       [('/admin', Admin),
                                        ('/admin/', Admin),
                                        ('/admin/addcarl', AddCarl),
                                        ('/admin/newpaircode', NewPairCode),
                                        ('/admin/deletecarl', DeleteCarl),
+                                       ('/admin/invite', Invite),
                                        ('/admin/unpaircarl', UnPairCarl)],
                                      debug=True)
 

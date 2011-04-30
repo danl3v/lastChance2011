@@ -2,21 +2,21 @@
 
 {% block content %}
 <div id="main">
-
+    <div class="leftcol">
     <h2>Inbox</h2>
-    <ul id="message_list">
+    <ul id="messages">
         {% for message in messages %}
-        <li><span class="sender">{{message.source}}</span> <span class="message">{{ message.message }}</span></li>
+        <li class="message">{{ message.message }} @ {{ message.created }} <span class="actions">[reply] [delete] [block user]</span></li>
         {% endfor %}
     </ul>
-
-    <h2>Send a message</h2>
+    </div>
+    <div class="rightcol">
+    <h2>Send anonymous message</h2>
     <form action="/messages/send" method="post" accept-charset="utf-8">
-        <p>To: <input type="text" name="to" value=""></p>
-        <textarea name="body" rows="8" cols="40"></textarea>
-    
-    <p><input type="submit" value="Send &rarr;"></p>
+        <p>To:<br><input type="text" name="to" value=""></p>
+        <p>Body:<br><textarea name="body" rows="8" cols="40"></textarea></p>
+        <p><input type="submit" value="Send Message"></p>
     </form>
-    
+    </div>
 </div>
 {% endblock %}

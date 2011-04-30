@@ -18,8 +18,7 @@ def sendInvite(carletonAccount):
     username = carletonAccount.carletonID
     verificationCode = carletonAccount.verificationCode
 
-    #user_address = carletonAccount.carletonID + "@carleton.edu"
-    user_address = ["conrad.p.dean@gmail.com", "dlouislevy@gmail.com"]
+    user_address = [carletonAccount.carletonID + "@carleton.edu", "contact@lastchance2011.com"]
 
     sender_address = last_chance_dance_email_address
     subject = "[Carleton Last Chance Dance 2011] Invitation!"

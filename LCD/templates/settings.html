@@ -5,6 +5,9 @@
 
 {% if paired %}
 
+  <h2>Name</h2>
+  <p>{{ first_name }} {{ last_name }} <small>(If this is incorrect, please <a href="/contact">contact lcDance</a>)</small></p>
+
   {% if optedout %}
   <h2>Opt In</h2>
   <form action="/settings/optin" method="post">
@@ -30,8 +33,8 @@
   <h2>Pair Your Account</h2>
   <form action="/settings/pair" method="post">
   <p>Your account is currently not paired with a Carleton ID. Enter your the information below so you can start using Last Chance Dance!</p>
-  <p>Carleton ID: <input type="text" name="carletonID"></p>
-  <p>Pair Code: <input type="text" name="verificationCode"></p>
+  <p>Carleton ID:<input type="text" name="carletonID"></p>
+  <p>Pair Code:<input type="text" name="verificationCode"></p>
   <p><input type="submit" value="Pair Account"></p>
   </form>
 

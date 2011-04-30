@@ -6,11 +6,10 @@ from google.appengine.api import users
 class Carl(db.Model): #add first name and last name for autocomplete
     googleID = db.StringProperty()
     carletonID = db.StringProperty()
+    first_name = db.StringProperty()
+    last_name = db.StringProperty()
     verificationCode = db.StringProperty() # set default to generateVerificationCode?
     active = db.BooleanProperty(default=True) # if the user opts out, this is set to false
-
-# Might want to put "isPaired" here?
-# the function for seeing if the session user has paired their account is both a model and a session-based peice of code. tricky to find its home
 
 class Carl2Carl(db.Model):
     source = db.StringProperty()
@@ -23,11 +22,7 @@ class Message(db.Model):
     message = db.StringProperty()
     created = db.DateTimeProperty(auto_now_add=True)
 
-
-# Things that access data, either from the session or the database
-
 ### Get stuff from the Database ###
-
 
 def getCarlCrushes(user):
     # returns carl2carl model instances for a given user's preferences
@@ -45,13 +40,10 @@ def get_user_by_CID(username):
     carl.filter("carletonID =",username)
     return carl.get()
 
-def get_messages_by_CID(username):
+def get_messages_by_CID(carleton_id):
     messages = Message.all()
-    #messages = Message.all().filter("target =",username)
+    messages = Message.all().filter("target =", carleton_id)
     return messages.fetch(1000)
-
-
-### Other ###
 
 def generateVerificationCode():  # maybe this is more of a 'controller' function
     # Dumb for now - make it a random string or something in the future

@@ -3,25 +3,14 @@
 {% block content %}
 <div id="main">
 
-<div id="mycrushes">
-<h2>My Crushes</h2>
 <form action="/crushes" method="post">
+  <h2>My Crushes</h2>
+  <p>Having trouble adding a crush? Maybe they are not on stalkernet. <a href="/contact">Send us an anonymous email</a>.</p>
   {% for name in carls2carls %} 
     <div>{{ forloop.counter }}. <input type="text" class="crush" name="carl{{ forloop.counter0 }}" value="{{ name }}"></div>
   {% endfor %}
-  <input type="submit" value="Submit">
+  <input type="submit" value="Save">
 </form>
-</div>
-
-<div id="messages">
-<h2>Messages from people who have crushes on me</h2>
-<ul>
-<li>message 1 [delete]</li>
-<li>message 2 [delete]</li>
-<li>message 3 [delete]</li>
-</ul>
-
-</div>
 
 </div>
 <link rel="stylesheet" type="text/css" href="/stylesheets/jquery/jquery-ui-1.8.12.custom.css" />
@@ -31,7 +20,12 @@
 
 $(document).ready(function() {
     $(".crush").autocomplete({
-        source: "/autofill"
+        source: "/autofill",
+        minLength: 1,
+        select: function(event, ui) {
+            $(this).val(ui.item.uid);
+            return false; // tells autocomplete not to update the field with the selected value
+        }
     });
 });
 

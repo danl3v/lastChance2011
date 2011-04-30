@@ -9,13 +9,18 @@ def getHeaderFooterData(self):
     '''
     user = session.get_current_user()
     carleton_id = None
+    first_name = None
+    last_name = None
     if user:
         login_url = session.create_logout_url("/")
         login_url_linktext = 'Logout'
         active = session.is_active()        
         if session.isPaired():
             paired = True
-            carleton_id = session.getCarl().carletonID
+            carl = session.getCarl()
+            carleton_id = carl.carletonID
+            first_name = carl.first_name
+            last_name = carl.last_name
         else: paired = False
     else:
         login_url = session.create_login_url(self.request.uri)
@@ -28,6 +33,8 @@ def getHeaderFooterData(self):
     template_values =  {
         'user': user,
         'carleton_id': carleton_id,
+        'first_name': first_name,
+        'last_name': last_name,
         'admin': admin,
         'login_url': login_url,
         'login_url_linktext': login_url_linktext,

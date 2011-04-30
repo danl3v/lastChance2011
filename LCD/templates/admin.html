@@ -2,19 +2,21 @@
 
 {% block content %}
 <div id="main">
-    <h2>Admin</h2>
 
-    <h3>Tools</h3>
-    <ul>
-    <li><a href="#">Generate Matches</a></li>
-    <li><form action="/admin/addcarl" method="post"><input type="text" name="carletonID"><input type="submit" value="Add CarletonID"></form></li>
-    </ul>
+    <h2>New User</h2>
+    <form action="/admin/addcarl" method="post">
+      CarletonID:<input type="text" name="carletonID"><br>
+      First Name:<input type="text" name="first_name"><br>
+      Last Name:<input type="text" name="last_name"><br>
+      <input type="submit" value="Add User">
+    </form>
 
-    <h3>Existing Users</h3>
+    <h2>Existing Users</h2>
     <table>
-      <tr><th>Carleton ID</th><th>Paired?</th><th>Google ID</th><th>Actions</th></tr>
+      <tr><th>Carleton ID</th><th>Name</th><th>Paired?</th><th>Google ID</th><th>Actions</th></tr>
       {% for carl in carls %}
         <tr><td>{{ carl.carletonID }}</td>
+	<td>{{ carl.first_name }} {{ carl.last_name }}</td>
         {% if carl.googleID %}
           <td>PAIRED</td><td>{{ carl.googleID }}</td>
         {% else %}
@@ -24,7 +26,7 @@
 	  <form class="buttonForm" action="/admin/unpaircarl" method="post"><input type="hidden" name="carletonID" value="{{ carl.carletonID }}"><input type="submit" value="UnPair"></form>
 	  <form class="buttonForm" action="/admin/newpaircode" method="post"><input type="hidden" name="carletonID" value="{{ carl.carletonID }}"><input type="submit" value="NewPairCode"></form>
 	  <form class="buttonForm" action="/admin/deletecarl" method="post"><input type="hidden" name="carletonID" value="{{ carl.carletonID }}"><input type="submit" value="Delete"></form>
-	  <form class="buttonForm"><input type="hidden" name="carletonID" value="{{ carl.carletonID }}"><input type="submit" value="Send Invitation"></form>
+	  <form class="buttonForm" action"/admin/invite" method="post"><input type="hidden" name="carletonID" value="{{ carl.carletonID }}"><input type="submit" value="Invite"></form>
 	</tr>
       {% endfor %}
     </table>

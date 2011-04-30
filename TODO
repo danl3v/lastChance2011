@@ -39,7 +39,10 @@
     [-] check on the day before -- if one of your prefs has not paired account/logged in/opted out, alert the user
     [-] alert user if that user does log in at a later time
     
-[+] Plan out webapp structure
+[+] Technical Stuff
+    [+] Rewrite get user functions to wrap both functions into one
+    	[-] so we get the nickname, email, googleid number and all the carleton info in one object
+	[-] also contains if they are paired or not, active, so we can avoid getting none type errors
 
 [+] Write documentation
     [-] How to build and host

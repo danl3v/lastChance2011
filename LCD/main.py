@@ -2,7 +2,7 @@ import cgi, os
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
-import models, view, session, emailfunctions
+import models, view, session, emailfunctions, re
 
 class Settings(webapp.RequestHandler):
 
@@ -135,14 +135,21 @@ class Crushes(webapp.RequestHandler):
 
 class AutoFill(webapp.RequestHandler):
     def get(self):
+        terms = self.request.get("term").lower().split()
         users = models.Carl.all()
-        # do some filtering self.request.get("term")
-        users = users.fetch(10)
+        users.order("-first_name")
+        results = users.fetch(1000) #if we have more that 1000 users, we need to fetch multiple times until we run out of fetches
+        theJSON = ""
 
-        theJSON = "["
-        for user in users:
-            theJSON += '{"uid":"' + user.carletonID + '","value":"' + user.carletonID + '"},'
-        theJSON = theJSON[:-1] + "]"
+        for user in users: # use list comprehension here to speed things up
+            send = 0
+            for term in terms:
+                if (term in user.carletonID.lower()) or (term in user.first_name.lower()) or (term in user.last_name.lower()):
+                    send += 1
+            if send == len(terms):
+                theJSON += '{"value":"' + user.first_name + ' ' + user.last_name + ' (' + user.carletonID + ')","uid":"' + user.carletonID + '"},'
+
+        theJSON = "[" + theJSON[:-1] + "]"
         self.response.out.write(theJSON)
 
 application = webapp.WSGIApplication(

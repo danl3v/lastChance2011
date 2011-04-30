@@ -77,18 +77,17 @@ div#footer
     width: 100%;
 }
 
-div#mycrushes
+/* LAYOUT OBJECTS */
+div.leftcol
 {
     float: left;
 }
 
-div#messages
+div.rightcol
 {
     float: right;
 }
 
-
-/* LAYOUT OBJECTS */
 div#header h1
 {
     font-size: 2em;
@@ -181,10 +180,20 @@ div#main h2
     margin: 1em 0;
 }
 
+div#main h3
+{
+    margin: 1em 0;
+}
+
 div#main p
 {
     line-height:1.2em;
-    margin:1em 0;
+    margin: 1em 0;
+}
+
+div#main small
+{
+    font-size: .8em
 }
 
 div#main ol
@@ -208,9 +217,29 @@ form.buttonForm
     display: inline;
 }
 
+ul#messages li.message
+{
+    border: 1px solid #CCCCCC;
+    padding: .5em;
+    margin: .5em 0;
+}
+
+ul#messages li.message span.actions
+{
+    opacity: 0;
+    -webkit-transition: all 0.2s ease;
+    -moz-transition: all 0.2s ease;
+    -o-transition: all 0.2s ease;
+}
+
+ul#messages li.message:hover > span.actions
+{
+    opacity: 1;
+}
+
 form#contactForm
 {
-width: 25em;
+    width: 25em;
 }
 
 form#contactForm input[name="subject"]
