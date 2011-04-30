@@ -46,8 +46,7 @@ def get_user_by_CID(username):
     return carl.get()
 
 def get_messages_by_CID(username):
-    messages = Message.all()
-    #messages = Message.all().filter("target =",username)
+    messages = Message.all().filter("target =",username)
     return messages.fetch(1000)
 
 
