@@ -35,7 +35,7 @@
 
 </div>
 {% block content %}{% endblock %}
-<div id="footer">Problems? <a href="/contact">Send us an email</a></div>
+<div id="footer">{% if user %}Logged in as: {{ user.email }} | {% endif %}{% if paired %}Paired with: {{ carleton_id }} | {% endif %}Problems? <a href="/contact">Send us an email</a></div>
 </div>
 </body>
 </html>
