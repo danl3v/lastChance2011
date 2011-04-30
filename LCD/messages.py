@@ -4,6 +4,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
 import models, view, session, emailfunctions
+import sitemessages
 
 class Inbox(webapp.RequestHandler):
     def get(self):
@@ -23,12 +24,9 @@ class Inbox(webapp.RequestHandler):
 
 class Send(webapp.RequestHandler):
     def post(self):
-        newMessage = models.Message()
-        newMessage.source = session.getCarl().carletonID
-        newMessage.target = self.request.get("to")
-        newMessage.message = self.request.get("body")
-        newMessage.read = False
-        newMessage.put()
+        target = self.request.get("to")
+        message = self.request.get("body")
+        sitemessages.sendMessage(target,message)
         self.redirect("/messages/")
 
 application = webapp.WSGIApplication(
