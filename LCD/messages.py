@@ -13,8 +13,7 @@ class Inbox(webapp.RequestHandler):
             carleton_id = session.getCarl().carletonID
             messages = models.get_messages_by_CID(carleton_id)
 
-            # when i git pulled, there was a conflict here. i'll let you resolve it.
-            '''
+            ''' #Leaving this here till we figure out if we need it or not
             import hashlib
             carl = session.getCarl().carletonID
             messages = models.get_messages_by_CID(carl)

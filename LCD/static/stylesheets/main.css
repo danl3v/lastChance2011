@@ -39,7 +39,6 @@ table th, table td
     padding: 5px;
 }
 
-
 /* LAYOUT */
 div#container
 {
@@ -78,14 +77,14 @@ div#footer
 }
 
 /* LAYOUT OBJECTS */
-div.leftcol
-{
-    float: left;
-}
 
+
+div.leftcol,
 div.rightcol
 {
-    float: right;
+    display: inline-block;
+    vertical-align: top;
+    width: 49%;
 }
 
 div#header h1
@@ -99,6 +98,8 @@ div#header a, div#header a:hover, div#header a:visited, div#header a:active
     color: #B14500;
     text-decoration: none;
 }
+
+/* nav section */
 
 div#nav ul
 {
