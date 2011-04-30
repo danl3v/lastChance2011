@@ -10,8 +10,11 @@ class Inbox(webapp.RequestHandler):
         import hashlib
         carl = session.getCarl().carletonID
         messages = models.get_messages_by_CID(carl)
+        # hide sender
         for m in messages:
-            m.source = hashlib.sha224(m.source).hexdigest()
+            m.source = hashlib.md5(m.source).hexdigest()
+            #m.source = hashlib.md5(m.source+m.target).hexdigest() # If we want to be really cute
+            ''' maybe go one step further so hashes are readable '''
         
         template_values = {
            'messages': messages }
