@@ -35,11 +35,9 @@ class Inbox(webapp.RequestHandler):
 class Send(webapp.RequestHandler):
     def post(self):
 
-        # not sure if we need sitemessages.py. i feel like session and models is keeping things complicated enough already. thoughts?
-
         if session.isPaired():
             newMessage = models.Message()
-            newMessage.source = "nobody"
+            newMessage.source = session.getCarl().carletonID
             newMessage.target = self.request.get("to")
             newMessage.message = self.request.get("body")
             newMessage.read = False
