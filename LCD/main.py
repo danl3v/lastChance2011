@@ -81,15 +81,20 @@ class Crushes(webapp.RequestHandler):
 
     def get(self):
         if session.isPaired():
-            student = session.getCarl().carletonID  # this is its own line only because it's sort of a session-based/model operation
-            results = models.getCarlCrushes(student)
+            carleton_id = session.getCarl().carletonID  # this is its own line only because it's sort of a session-based/model operation
 
+            # get the crushes
+            results = models.getCarlCrushes(carleton_id)
             results = [pair.target for pair in results]
             slots = ['' for i in range(Crushes.total_spots)]
             carls2carls = results + slots[len(results):]  # has empty trailing slots
 
+            # get the messages
+            messages = models.get_messages_by_CID(carleton_id)
+
             template_values = {
                 'carls2carls': carls2carls,
+                'messages': messages,
                 'current_page': {'crushes': True}
                 }
             view.renderTemplate(self, 'crushes.html', template_values)
@@ -133,6 +138,32 @@ class Crushes(webapp.RequestHandler):
             }
         view.renderTemplate(self, 'preferences_success.html', template_values)
 
+def hasCrush(source, target):
+    carl2carl = models.Carl2Carl.all()
+    carl2carl.filter("source =", source)
+    carl2carl.filter("target =", target)
+    carl = carl2carl.get()
+    return carl
+
+class AddCrush(webapp.RequestHandler):
+    def post(self):
+        carleton_id = session.getCarl().carletonID
+        if hasCrush(carleton_id, self.request.get("crush")): self.redirect('/crushes') # alert that the crush already exists
+        elif not models.get_user_by_CID(self.request.get("crush")): self.redirect('/crushes') # alert that crush does not exist
+        else:
+            edge = models.Carl2Carl()
+            edge.source = carleton_id
+            edge.target = self.request.get('crush')
+            edge.put()
+            self.redirect('/crushes') # add a flash that says who was added
+
+class RemoveCrush(webapp.RequestHandler):
+    def post(self):
+        carleton_id = session.getCarl().carletonID
+        carl = hasCrush(carleton_id, self.request.get("crush"))
+        carl.delete()
+        self.redirect('/crushes') # add a flash that says who was deleted
+
 class AutoFill(webapp.RequestHandler):
     def get(self):
         terms = self.request.get("term").lower().split()
@@ -153,7 +184,9 @@ class AutoFill(webapp.RequestHandler):
         self.response.out.write(theJSON)
 
 application = webapp.WSGIApplication(
-                                     [('/crushes', Crushes),
+                                     [('/crushes/add', AddCrush),
+                                      ('/crushes/remove', RemoveCrush),
+                                      ('/crushes', Crushes),
                                       ('/settings', Settings),
                                       ('/autofill', AutoFill),
                                       ('/settings/(.*)', Settings)],

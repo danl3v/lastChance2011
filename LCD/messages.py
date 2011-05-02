@@ -35,14 +35,15 @@ class Inbox(webapp.RequestHandler):
 class Send(webapp.RequestHandler):
     def post(self):
 
-        if session.isPaired():
+        if session.isPaired(): # also check to see if user exists
             newMessage = models.Message()
             newMessage.source = session.getCarl().carletonID
             newMessage.target = self.request.get("to")
             newMessage.message = self.request.get("body")
             newMessage.read = False
             newMessage.put()
-            self.redirect("/messages/")
+            #self.redirect("/messages/")
+            self.response.out.write("0")
         else:
             self.response.out.write('You need to <a href="/settings">pair your account</a> before using messages.')
 
