@@ -50,11 +50,9 @@
     [-] Make it so it is not carleton only specific -- generalize to other schools, etc
 
 [+] Recently finished features for CONRAD's REIVEW - delete after reading
-    [+] page organization (navigation, user account links)
-        [+] merge pairing/opting out pages into one page and call it settings.
-	[+] settings can be have a red background when you need to pair your account
-    [-] Get webapp to receive emails (contact@lastchance2011.com)
     [-] when someone picks you, you get notified
+        [-] Maybe have a cron thing send out notifications
+        [-] concerned about accidental crush-addings sending out false notifications
     [-] invitations done -- except for a small formatting issue, which i left above (username and pair code are not tabbed correctly)
     [-] added email templates, so now we can template emails
     
