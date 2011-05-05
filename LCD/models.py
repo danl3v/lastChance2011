@@ -46,5 +46,18 @@ def get_messages_by_CID(carleton_id):
     return messages.fetch(1000)
 
 def generateVerificationCode():  # maybe this is more of a 'controller' function
-    # Dumb for now - make it a random string or something in the future
-    return "apples"
+    '''
+    # this is really cool, but it does not work cuz gapp engine does not have bytearray NameError: global name 'bytearray' is not defined
+
+    import random, base64
+    leng = 10
+    nbits = leng * 6 + 1
+    bits = random.getrandbits(nbits)
+    uc = u"%0x" % bits
+    newlen = int(len(uc) / 2) * 2 # we have to make the string an even length
+    ba = bytearray.fromhex(uc[:newlen])
+    return base64.urlsafe_b64encode(str(ba))[:leng]
+    '''
+    import random, string
+    N = 20
+    return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(N))

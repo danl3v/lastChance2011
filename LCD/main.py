@@ -39,9 +39,11 @@ class Settings(webapp.RequestHandler):
             view.renderTemplate(self, 'optout_success.html', template_values)
 
         elif action == "pair" and not session.isPaired():
+            ## make this a function so we are not redundant in pairing code below!
             theCarl = models.get_user_by_CID(self.request.get('carletonID').split("@")[0]) # check to see if the carl is already paird with another google account
             if (theCarl) and (theCarl.verificationCode == self.request.get('verificationCode')):
                 theCarl.googleID = str(session.get_current_user().user_id())
+                theCarl.verificationCode = models.generateVerificationCode()
                 theCarl.put()
                 template_values = {
                     'carletonID': theCarl.carletonID,
@@ -58,6 +60,7 @@ class Settings(webapp.RequestHandler):
 
         elif action == "unpair" and session.isPaired(): # remove the need to supply a carleton id?
             theCarl = session.getCarl()
+            theCarl.verificationCode = models.generateVerificationCode()
             theCarl.googleID = ""
             theCarl.put()
             template_values = {
@@ -75,6 +78,30 @@ class Settings(webapp.RequestHandler):
 
         else: self.response.out.write('You are not allowed to perform this action given your current user state. Please go back to <a href="/main">main</a> and try again')
 
+class AutoPair(webapp.RequestHandler):
+    def get(self, user="", pair_code=""):
+        ## make this a function so we are not redundant in pairing code above!
+        if not session.isPaired():
+            theCarl = models.get_user_by_CID(user) # check to see if the carl is already paird with another google account
+            if (theCarl) and (theCarl.verificationCode == pair_code):
+                theCarl.googleID = str(session.get_current_user().user_id())
+                theCarl.verificationCode = models.generateVerificationCode()
+                theCarl.put()
+                template_values = {
+                    'carletonID': theCarl.carletonID,
+                    'googleEmail': session.get_current_user().email()
+                    }                
+                view.renderTemplate(self, 'pair_success.html', template_values)
+            else:
+                template_values = {
+                    'pairCode' : pair_code,
+                    'carletonID' : user,
+                    'googleEmail' : session.get_current_user().email()
+                    }
+                view.renderTemplate(self, 'pair_failure.html', template_values)
+        else:
+            self.response.out.write('Your Google ID is already paired to another Carleton ID')
+            
 class Crushes(webapp.RequestHandler):
     total_spots = 5  # this is the number of people someone can select
 
@@ -187,6 +214,7 @@ application = webapp.WSGIApplication(
                                       ('/crushes/remove', RemoveCrush),
                                       ('/crushes', Crushes),
                                       ('/settings', Settings),
+                                      ('/pair/(.*)/(.*)', AutoPair),
                                       ('/autofill', AutoFill),
                                       ('/settings/(.*)', Settings)],
                                      debug=True)

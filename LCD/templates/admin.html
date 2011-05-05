@@ -13,14 +13,15 @@
 
     <h2>Existing Users</h2>
     <table>
-      <tr><th>Carleton ID</th><th>Name</th><th>Paired?</th><th>Google ID</th><th>Actions</th></tr>
+      <tr><th>Carleton ID</th><th>Name</th><th>Pair Code</th><th>Google ID</th><th>Actions</th></tr>
       {% for carl in carls %}
         <tr><td>{{ carl.carletonID }}</td>
-	<td>{{ carl.first_name }} {{ carl.last_name }}</td>
+	    <td>{{ carl.first_name }} {{ carl.last_name }}</td>
+	    <td>{{ carl.verificationCode }}</td>
         {% if carl.googleID %}
-          <td>PAIRED</td><td>{{ carl.googleID }}</td>
+          <td>{{ carl.googleID }}</td>
         {% else %}
-         <td>CODE [{{ carl.verificationCode }}]</td><td>NOT PAIRED</td>
+          <td>NOT PAIRED</td>
         {% endif %}
         <td>
 	  <form class="buttonForm" action="/admin/unpaircarl" method="post"><input type="hidden" name="carletonID" value="{{ carl.carletonID }}"><input type="submit" value="UnPair"></form>
