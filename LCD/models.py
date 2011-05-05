@@ -19,16 +19,16 @@ class Message(db.Model):
     read = db.BooleanProperty() 
     source = db.StringProperty()  # hash(Carl.carletonID)
     target = db.StringProperty()  # Carl.carletonID
-    message = db.StringProperty()
+    message = db.StringProperty(multiline=True)
     created = db.DateTimeProperty(auto_now_add=True)
 
 ### Get stuff from the Database ###
 
-def getCarlCrushes(user):
+def getCarlCrushes(user): # do a join in here so we can get usernames too
     # returns carl2carl model instances for a given user's preferences
     carl2carl = Carl2Carl.all()
     carl2carl.filter("source =", user)
-    results = carl2carl.fetch(20)
+    results = carl2carl.fetch(20) # there should not be more than 5
     preferences = [] if results is None else results  # type checking if there's no preferences in DB
     return preferences
 

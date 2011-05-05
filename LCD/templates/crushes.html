@@ -4,8 +4,7 @@
 <link rel="stylesheet" type="text/css" href="/stylesheets/jquery/jquery-ui-1.8.12.custom.css" />
 <style>
   div#new-message-form label, div#new-message-form input { display:block; }
-  div#new-message-form input.text { margin-bottom:12px; width:95%; padding: .4em; }
-  div#new-message-form textarea { display: block; width: 95%; height: 4em; }
+  div#new-message-form select, div#new-message-form textarea { display: block; width: 95%; }
   div#new-message-form fieldset { padding:0; border:0; margin-top:25px; }
   div#new-message-form h1 { font-size: 1.2em; margin: .6em 0; }
   h2 { display: inline; }
@@ -21,12 +20,13 @@
 
 <div class="leftcol">
 <h2>Crushes</h2>
-<span id="new-crush">new crush: <form action="/crushes/add" method="post"><input type="text" class="crush" name="crush"><input type="submit" value="add"></form></span>
+<span id="new-crush">new crush: <input type="text" class="crush" name="crush"></span>
+
+<div id="crushes">
 {% for name in carls2carls %}
-    {% if name %}
-    <div class="crushdiv"><img src="https://apps.carleton.edu/stock/ldapimage.php?id={{ name }}" width="100" height="100"><br>{{ name }} <form class="remove-crush-form" action="/crushes/remove" method="post"><input type="hidden" name="crush" value="{{ name }}"><input type="submit" value="remove"></form></div>
-    {% endif %}
+  <div class="crushdiv"><img src="https://apps.carleton.edu/stock/ldapimage.php?id={{ name }}" width="100" height="100"><br>{{ name }}<button class="removeCrush" value="{{ name }}">remove</button></div>
 {% endfor %}
+</div>
 
 </div>
 
@@ -45,9 +45,13 @@
   <form>
   <fieldset>
     <label for="to">To</label>
-    <input type="text" name="to" id="to" class="text ui-widget-content ui-corner-all crush" /><!-- maybe take away autocomplete and put in a menu so you can only select crushes-->
+    <select name="to" id="to" class="ui-select-menu ui-widget-content ui-corner-all">
+    {% for name in carls2carls %}
+      <option value="{{ name }}">{{ name }}</option>
+    {% endfor %}
+    </select>
     <label for="body">Body</label>
-    <textarea name="body" id="body" class="text ui-widget-content ui-corner-all" /></textarea>
+    <textarea name="body" id="body" class="text ui-widget-content ui-corner-all"></textarea>
   </fieldset>
 </form>
 </div>
@@ -60,31 +64,51 @@ $(document).ready(function() {
         source: "/autofill",
         minLength: 1,
         select: function(event, ui) {
-            $(this).val(ui.item.uid);
-            // make a post request here to add the crush -- then update using ajax
+            $(this).val("");
+            $.post("/crushes/add", { "crush": ui.item.uid }, function(data) {
+                if (data.success == 0) {
+                    $("#crushes").append('<div class="crushdiv"><img src="https://apps.carleton.edu/stock/ldapimage.php?id=' + ui.item.uid + '" width="100" height="100"><br>' + ui.item.uid + '<button class="removeCrush" value="' + ui.item.uid + '">remove</button></div>');
+                    $("#to").append('<option value="' + ui.item.uid + '">' + ui.item.uid + '</option>');
+                    $(".removeCrush:button:last").click(crushRemoveListener);
+                }
+                else if (data.success == 1) { alert(ui.item.uid + " is already one of your crushes."); }
+                else if (data.success == 2) { alert(ui.item.uid + " is not in our database."); }
+            }, "json");
             return false; // tells autocomplete not to update the field with the selected value
         }
     });
 
-    $( "#new-message-form" ).dialog({
+    $("#new-message-form").dialog({
         autoOpen: false,
         height: 400,
         width: 450,
         modal: true,
         buttons: {
-            Cancel: function() { $( this ).dialog( "close" ); },
+            Cancel: function() { $(this).dialog("close"); },
             "Send Message": function() {
-                                $.post("/messages/send", { "to": $("input[name='to']").val(), "body": $("textarea[name='body']").val() }, function(data) { alert(data); }); // check for success
-                                $(this).dialog("close");
-                                alert("message sent"); // make an alert on the page using jquery ui stuff
-                                window.location.reload() // actually append the message next time if it it so self or just do not allow sending to self. crushes only and cannot crush yourself
+                                $.post("/messages/send", { "to": $("select[name='to']").val(), "body": $("textarea[name='body']").val() }, function(data) {
+                                    if (data.success == 0) {
+                                        $("#new-message-form").dialog("close");
+                                    }
+                                    else if (data.success == 1) {
+                                        alert("Your account must be paired in order to send messages.");
+                                    }
+                                }, "json");
                             }
         },
         close: function() { $("#to").val(""); $("#body").val(""); }
     });
 
-    $( "#new-message-button" ).click(function() { $( "#new-message-form" ).dialog( "open" ); });
+    $("#new-message-button").click(function() { $("#new-message-form").dialog("open"); });
+
+    $(".removeCrush:button").click(crushRemoveListener);
 });
+
+function crushRemoveListener() {
+    $(this).parent().slideUp(function() { $(this).remove(); });
+    $('#to option:contains("' + $(this).val() + '")').remove();
+    $.post("/crushes/remove", { "crush": $(this).val() });
+}
 
 </script>
 {% endblock %}

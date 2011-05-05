@@ -65,7 +65,6 @@ class Settings(webapp.RequestHandler):
                 'googleEmail': session.get_current_user().email()
                 }
             view.renderTemplate(self, 'unpair_success.html', template_values)
-            # delete unpair_failure.html
 
         elif action == "sendcode":
             carletonAccount = models.get_user_by_CID(self.request.get('carletonID').split("@")[0])
@@ -86,16 +85,16 @@ class Crushes(webapp.RequestHandler):
             # get the crushes
             results = models.getCarlCrushes(carleton_id)
             results = [pair.target for pair in results]
-            slots = ['' for i in range(Crushes.total_spots)]
-            carls2carls = results + slots[len(results):]  # has empty trailing slots
+            #slots = ['' for i in range(Crushes.total_spots)]
+            #carls2carls = results + slots[len(results):]  # has empty trailing slots
 
             # get the messages
             messages = models.get_messages_by_CID(carleton_id)
 
             template_values = {
-                'carls2carls': carls2carls,
+                'carls2carls': results,
                 'messages': messages,
-                'current_page': {'crushes': True}
+                'current_page': { 'crushes': True }
                 }
             view.renderTemplate(self, 'crushes.html', template_values)
         else:
@@ -148,21 +147,21 @@ def hasCrush(source, target):
 class AddCrush(webapp.RequestHandler):
     def post(self):
         carleton_id = session.getCarl().carletonID
-        if hasCrush(carleton_id, self.request.get("crush")): self.redirect('/crushes') # alert that the crush already exists
-        elif not models.get_user_by_CID(self.request.get("crush")): self.redirect('/crushes') # alert that crush does not exist
+        if hasCrush(carleton_id, self.request.get("crush")): self.response.out.write('{"success":1}')
+        elif not models.get_user_by_CID(self.request.get("crush")): self.response.out.write('{"success":2}')
         else:
             edge = models.Carl2Carl()
             edge.source = carleton_id
             edge.target = self.request.get('crush')
             edge.put()
-            self.redirect('/crushes') # add a flash that says who was added
+            self.response.out.write('{"success":0}')
 
 class RemoveCrush(webapp.RequestHandler):
     def post(self):
         carleton_id = session.getCarl().carletonID
         carl = hasCrush(carleton_id, self.request.get("crush"))
         carl.delete()
-        self.redirect('/crushes') # add a flash that says who was deleted
+        self.out.response.write('{"success":0}')
 
 class AutoFill(webapp.RequestHandler):
     def get(self):
