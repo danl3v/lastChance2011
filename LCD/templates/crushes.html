@@ -12,6 +12,12 @@
   #new-crush { margin-left: 2em; }
   .crushdiv { float: left; padding: 5px; width: 10em; text-align: center; }
   span#new-crush form, div.crushdiv form, input { display: inline; }
+  ul#icons {margin: 0; padding: 0;}
+  ul#icons li {margin: 2px; position: relative; padding: 4px 0; cursor: pointer; float: left;  list-style: none;}
+  ul#icons span.ui-icon {float: left; margin: 0 4px;}
+  li.message { clear: both; }
+  .timestamp { float: left; }
+  .actions { float: right; }
 </style>
 {% endblock %}
 
@@ -34,7 +40,17 @@
     <h2>Messages</h2><button id="new-message-button">New Message</button>
     <ul id="messages">
        {% for message in messages %}
-       <li class="message">{{ message.message }} @ {{ message.created }} <span class="actions">[reply] [delete] [block user]</span></li>
+       <li class="message">
+	 <div class="timestamp">{{ message.created }}</div>
+	 <div class="actions">
+	   <ul id="icons" class="ui-widget ui-helper-clearfix">
+	     <li class="ui-state-default ui-corner-all" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>
+	     <li class="ui-state-default ui-corner-all" title="Delete"><span class="ui-icon ui-icon-trash"></span></li>
+	     <li class="ui-state-default ui-corner-all" title="Block User"><span class="ui-icon ui-icon-cancel"></span></li>
+	   </ul>
+	 </div>
+         <br>{{ message.message }}
+       </li>
        {% endfor %}
     </ul>
 </div>

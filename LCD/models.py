@@ -42,7 +42,9 @@ def get_user_by_CID(username):
 
 def get_messages_by_CID(carleton_id):
     messages = Message.all()
-    messages = Message.all().filter("target =", carleton_id)
+    messages.filter("target =", carleton_id)
+    #messages.order("-created") # we want to sort the messages my date
+
     return messages.fetch(1000)
 
 def generateVerificationCode():  # maybe this is more of a 'controller' function
