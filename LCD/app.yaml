@@ -6,9 +6,10 @@ api_version: 1
 inbound_services:
 - mail
 
+builtins:
+- datastore_admin: on
+
 handlers:
-
-
 - url: /_ah/mail/c@.*lcdance2011\.appspotmail.com
   script: email_c.py
   login: admin
@@ -26,6 +27,9 @@ handlers:
 
 - url: /stylesheets
   static_dir: static/stylesheets
+
+- url: /user_images
+  static_dir: static/user_images
 
 - url: /js
   static_dir: static/jquery/js
