@@ -8,6 +8,18 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 
 import models, view, session, emailfunctions
 
+def addCarl(first_name, last_name, carleton_id):
+    if models.get_user_by_CID(carleton_id.strip()):
+        return False
+    else:
+        carl = models.Carl()
+        carl.carletonID = carleton_id.strip()
+        carl.verificationCode = models.generateVerificationCode()
+        carl.first_name = first_name.strip()
+        carl.last_name = last_name.strip()
+        carl.put()
+        return True
+
 class Admin(webapp.RequestHandler):
     def get(self):
         carls = models.Carl.all()
@@ -19,12 +31,16 @@ class Admin(webapp.RequestHandler):
 
 class AddCarl(webapp.RequestHandler):
     def post(self):
-        carl = models.Carl() # NEED TO CHECK IF USER WITH THAT ID ALREADY EXISTS IN DB, or for empty user
-        carl.carletonID = self.request.get('carletonID')
-        carl.verificationCode = models.generateVerificationCode() # do we want to generate an authentication code here or when we send out an invite?
-        carl.first_name = self.request.get("first_name")
-        carl.last_name = self.request.get("last_name")
-        carl.put()
+        addCarl(self.request.get("first_name"), self.request.get("last_name"), self.request.get('carletonID'))
+        self.redirect('/admin')
+
+class AddUsers(webapp.RequestHandler):
+    def post(self):
+        users = self.request.get("users").split("\n")
+        for user in users:
+            if user == "": continue
+            (first_name, last_name, carleton_id) = user.split(",")
+            addCarl(first_name, last_name, carleton_id)
         self.redirect('/admin')
 
 class DeleteCarl(webapp.RequestHandler):
@@ -57,6 +73,7 @@ application = webapp.WSGIApplication(
                                       [('/admin', Admin),
                                        ('/admin/', Admin),
                                        ('/admin/addcarl', AddCarl),
+                                       ('/admin/addusers', AddUsers),
                                        ('/admin/newpaircode', NewPairCode),
                                        ('/admin/deletecarl', DeleteCarl),
                                        ('/admin/invite', Invite),

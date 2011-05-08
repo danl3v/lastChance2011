@@ -2,7 +2,7 @@
 
 {% block content %}
 <div id="main">
-
+  <div class="leftcol">
     <h2>New User</h2>
     <form action="/admin/addcarl" method="post">
       CarletonID:<input type="text" name="carletonID"><br>
@@ -10,26 +10,35 @@
       Last Name:<input type="text" name="last_name"><br>
       <input type="submit" value="Add User">
     </form>
+  </div>
 
-    <h2>Existing Users</h2>
-    <table>
-      <tr><th>Carleton ID</th><th>Name</th><th>Pair Code</th><th>Google ID</th><th>Actions</th></tr>
-      {% for carl in carls %}
-        <tr><td>{{ carl.carletonID }}</td>
-	    <td>{{ carl.first_name }} {{ carl.last_name }}</td>
-	    <td>{{ carl.verificationCode }}</td>
-        {% if carl.googleID %}
-          <td>{{ carl.googleID }}</td>
-        {% else %}
-          <td>NOT PAIRED</td>
-        {% endif %}
-        <td>
-	  <form class="buttonForm" action="/admin/unpaircarl" method="post"><input type="hidden" name="carletonID" value="{{ carl.carletonID }}"><input type="submit" value="UnPair"></form>
-	  <form class="buttonForm" action="/admin/newpaircode" method="post"><input type="hidden" name="carletonID" value="{{ carl.carletonID }}"><input type="submit" value="NewPairCode"></form>
-	  <form class="buttonForm" action="/admin/deletecarl" method="post"><input type="hidden" name="carletonID" value="{{ carl.carletonID }}"><input type="submit" value="Delete"></form>
-	  <form class="buttonForm" action="/admin/invite" method="post"><input type="hidden" name="carletonID" value="{{ carl.carletonID }}"><input type="submit" value="Invite"></form>
-	</tr>
-      {% endfor %}
-    </table>
+  <div class="rightcol">
+    <h2>Batch add Users</h2>
+    <form action="/admin/addusers" method="post">
+      FORMAT: (first_name, last_name, user_id):<br>
+      <textarea name="users" cols="40" rows="10"></textarea><br>
+      <input type="submit" value="Add Users">
+    </form>
+  </div>
+
+  <h2>Existing Users</h2>
+  <table>
+    <tr><th>Carleton ID</th><th>Name</th><th>Pair Code</th><th>Google ID</th><th>Actions</th></tr>
+    {% for carl in carls %}
+    <tr>
+      <td>{{ carl.carletonID }}</td>
+      <td>{{ carl.first_name }} {{ carl.last_name }}</td>
+      <td>{{ carl.verificationCode }}</td>
+      {% if carl.googleID %}<td>{{ carl.googleID }}</td>{% else %}<td>NOT PAIRED</td>
+      {% endif %}
+      <td>
+        <form class="buttonForm" action="/admin/unpaircarl" method="post"><input type="hidden" name="carletonID" value="{{ carl.carletonID }}"><input type="submit" value="UnPair"></form>
+        <form class="buttonForm" action="/admin/newpaircode" method="post"><input type="hidden" name="carletonID" value="{{ carl.carletonID }}"><input type="submit" value="NewCode"></form>
+        <form class="buttonForm" action="/admin/deletecarl" method="post"><input type="hidden" name="carletonID" value="{{ carl.carletonID }}"><input type="submit" value="Rm"></form>
+        <form class="buttonForm" action="/admin/invite" method="post"><input type="hidden" name="carletonID" value="{{ carl.carletonID }}"><input type="submit" value="Invite"></form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
 </div>
 {% endblock %}
