@@ -18,6 +18,16 @@
   li.message { clear: both; }
   .timestamp { float: left; }
   .actions { float: right; }
+
+  .ui-autocomplete
+  {
+      max-height: 20em;
+      overflow-y: auto;
+      /* prevent horizontal scrollbar */
+      overflow-x: hidden;
+      /* add padding to account for vertical scrollbar */
+      padding-right: 20px;
+  }
 </style>
 {% endblock %}
 
