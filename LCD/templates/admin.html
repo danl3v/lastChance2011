@@ -1,5 +1,14 @@
 {% extends "base.html" %}
 
+{% block extrahead %}
+
+<style>
+
+#existing_users { font-size: .9em; width: 100%;}
+</style>
+
+{% endblock %}
+
 {% block content %}
 <div id="main">
   <div class="leftcol">
@@ -22,7 +31,7 @@
   </div>
 
   <h2>Existing Users</h2>
-  <table>
+  <table id="existing_users">
     <tr><th>Carleton ID</th><th>Name</th><th>Pair Code</th><th>Google ID</th><th>Actions</th></tr>
     {% for carl in carls %}
     <tr>
@@ -32,10 +41,10 @@
       {% if carl.googleID %}<td>{{ carl.googleID }}</td>{% else %}<td>NOT PAIRED</td>
       {% endif %}
       <td>
-        <form class="buttonForm" action="/admin/unpaircarl" method="post"><input type="hidden" name="carletonID" value="{{ carl.carletonID }}"><input type="submit" value="UnPair"></form>
-        <form class="buttonForm" action="/admin/newpaircode" method="post"><input type="hidden" name="carletonID" value="{{ carl.carletonID }}"><input type="submit" value="NewCode"></form>
-        <form class="buttonForm" action="/admin/deletecarl" method="post"><input type="hidden" name="carletonID" value="{{ carl.carletonID }}"><input type="submit" value="Rm"></form>
-        <form class="buttonForm" action="/admin/invite" method="post"><input type="hidden" name="carletonID" value="{{ carl.carletonID }}"><input type="submit" value="Invite"></form>
+        <form class="buttonForm" action="/admin/unpaircarl" method="post"><input type="hidden" name="carletonID" value="{{ carl.carletonID }}"><input type="submit" value="upair"></form>
+        <form class="buttonForm" action="/admin/newpaircode" method="post"><input type="hidden" name="carletonID" value="{{ carl.carletonID }}"><input type="submit" value="ncode"></form>
+        <form class="buttonForm" action="/admin/deletecarl" method="post"><input type="hidden" name="carletonID" value="{{ carl.carletonID }}"><input type="submit" value="rm"></form>
+        <form class="buttonForm" action="/admin/invite" method="post"><input type="hidden" name="carletonID" value="{{ carl.carletonID }}"><input type="submit" value="inv"></form>
       </td>
     </tr>
     {% endfor %}

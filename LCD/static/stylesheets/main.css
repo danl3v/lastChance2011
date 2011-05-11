@@ -251,3 +251,31 @@ form#contactForm textarea
     width: 100%;
     height: 10em;
 }
+
+/* CRUSHES */
+#new-crush { margin-left: 2em; }
+div#crushes div.crushdiv { float: left; padding: 5px; width: 10em; text-align: center; }
+
+/* MESSAGES */
+ul#messages li.message { clear: both; }
+ul#messages li.message div.timestamp { float: left; }
+ul#messages li.message div.actions { float: right; }
+
+ul#messages div.actions ul#icons {margin: 0; padding: 0;}
+ul#messages div.actions ul#icons li {margin: 2px; position: relative; padding: 4px 0; cursor: pointer; float: left;  list-style: none;}
+ul#messages div.actions ul#icons span.ui-icon { float: left; margin: 0 4px; }
+
+div#new-message-form label, div#new-message-form input { display:block; }
+div#new-message-form select, div#new-message-form textarea { display: block; width: 95%; }
+div#new-message-form fieldset { padding:0; border:0; margin-top:25px; }
+div#new-message-form h1 { font-size: 1.2em; margin: .6em 0; }
+
+/* JQUERY UI AUTOCOMPLETE */
+
+.ui-autocomplete
+{
+    max-height: 20em;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 20px;
+}

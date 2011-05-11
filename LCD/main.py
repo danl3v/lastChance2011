@@ -39,8 +39,7 @@ class Settings(webapp.RequestHandler):
             view.renderTemplate(self, 'optout_success.html', template_values)
 
         elif action == "pair" and not session.isPaired():
-            ## make this a function so we are not redundant in pairing code below!
-            theCarl = models.get_user_by_CID(self.request.get('carletonID').split("@")[0]) # check to see if the carl is already paird with another google account
+            theCarl = models.get_user_by_CID(self.request.get('carletonID').split("@")[0])
             if (theCarl) and (theCarl.verificationCode == self.request.get('verificationCode')):
                 theCarl.googleID = str(session.get_current_user().user_id())
                 theCarl.verificationCode = models.generateVerificationCode()
@@ -58,7 +57,7 @@ class Settings(webapp.RequestHandler):
                     }
                 view.renderTemplate(self, 'pair_failure.html', template_values)
 
-        elif action == "unpair" and session.isPaired(): # remove the need to supply a carleton id?
+        elif action == "unpair" and session.isPaired():
             theCarl = session.getCarl()
             theCarl.verificationCode = models.generateVerificationCode()
             theCarl.googleID = ""
@@ -71,18 +70,21 @@ class Settings(webapp.RequestHandler):
 
         elif action == "sendcode":
             carletonAccount = models.get_user_by_CID(self.request.get('carletonID').split("@")[0])
-            carletonAccount.verificationCode = models.generateVerificationCode()
-            carletonAccount.put()
-            emailfunctions.sendInvite(carletonAccount)
-            self.response.out.write('A pair code has been sent to ' + self.request.get('carletonID').split("@")[0] + '@carleton.edu. Once you get the email, go to <a href="/settings">settings</a> to enter your pair code.')
+            if carletonAccount:
+                carletonAccount.verificationCode = models.generateVerificationCode()
+                carletonAccount.put()
+                emailfunctions.sendInvite(carletonAccount)
+                self.response.out.write('A pair code has been sent to ' + self.request.get('carletonID').split("@")[0] + '@carleton.edu. Once you get the email, go to <a href="/settings">settings</a> to enter your pair code.')
+            else:
+                self.response.out.write('<p>Our database does not have the user ' + self.request.get('carletonID').split("@")[0] + '. This is either beacuse you are not a senior or because you are not on stalkernet.</p>')
+                self.response.out.write('<p>If you think this is our fault, <a href="/contact">contact us</a> and convince us that you are a senior.</p>')
 
         else: self.response.out.write('You are not allowed to perform this action given your current user state. Please go back to <a href="/main">main</a> and try again')
 
 class AutoPair(webapp.RequestHandler):
     def get(self, user="", pair_code=""):
-        ## make this a function so we are not redundant in pairing code above!
         if not session.isPaired():
-            theCarl = models.get_user_by_CID(user) # check to see if the carl is already paird with another google account
+            theCarl = models.get_user_by_CID(user)
             if (theCarl) and (theCarl.verificationCode == pair_code):
                 theCarl.googleID = str(session.get_current_user().user_id())
                 theCarl.verificationCode = models.generateVerificationCode()
@@ -126,43 +128,6 @@ class Crushes(webapp.RequestHandler):
             view.renderTemplate(self, 'crushes.html', template_values)
         else:
             self.response.out.write('You need to <a href="/settings">pair your account</a> before entering crushes.')
-
-    def post(self):
-
-        carletonID = session.getCarl().carletonID
-        old_preferences = models.getCarlCrushes(carletonID)  # retrieve existing crushes ** rename variables to crushes
-        
-        old_preference_ids = [old_preference.target for old_preference in old_preferences]
-        new_preference_ids = [self.request.get("carl" + str(i)) for i in range(Crushes.total_spots) if self.request.get("carl" + str(i)) != ""]
-
-        addedList = []
-        removedList = []
-        failedList = []
-
-        for new_preference_id in new_preference_ids: # add new preferences
-            if models.get_user_by_CID(new_preference_id):
-                if new_preference_id not in old_preference_ids and new_preference_id not in addedList:
-                    edge = models.Carl2Carl()
-                    edge.source = carletonID
-                    edge.target = new_preference_id
-                    edge.put()
-                    #emailfunctions.sendPersonChosen(edge.target) # tested, turned off for now
-                    addedList.append(new_preference_id)
-            else:
-                    failedList.append(new_preference_id)
-
-        for old_preference in old_preferences: # delete the leftovers
-                if old_preference.target not in new_preference_ids:
-                    old_preference.delete()
-                    removedList.append(old_preference.target)
-
-        template_values = {
-            'no_updates': False if addedList or removedList or failedList else True,
-            'added': addedList,
-            'removed': removedList,
-            'failed': failedList
-            }
-        view.renderTemplate(self, 'preferences_success.html', template_values)
 
 def hasCrush(source, target):
     carl2carl = models.Carl2Carl.all()
