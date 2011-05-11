@@ -105,23 +105,13 @@ class AutoPair(webapp.RequestHandler):
             self.response.out.write('Your Google ID is already paired to another Carleton ID')
             
 class Crushes(webapp.RequestHandler):
-    total_spots = 5  # this is the number of people someone can select
-
     def get(self):
         if session.isPaired():
-            carleton_id = session.getCarl().carletonID  # this is its own line only because it's sort of a session-based/model operation
-
-            # get the crushes
-            results = models.getCarlCrushes(carleton_id)
-            results = [pair.target for pair in results]
-            #slots = ['' for i in range(Crushes.total_spots)]
-            #carls2carls = results + slots[len(results):]  # has empty trailing slots
-
-            # get the messages
+            carleton_id = session.getCarl().carletonID
+            crushes = models.getCarlCrushes(carleton_id)
             messages = models.get_messages_by_CID(carleton_id)
-
             template_values = {
-                'carls2carls': results,
+                'crushes': crushes,
                 'messages': messages,
                 'current_page': { 'crushes': True }
                 }
@@ -129,18 +119,12 @@ class Crushes(webapp.RequestHandler):
         else:
             self.response.out.write('You need to <a href="/settings">pair your account</a> before entering crushes.')
 
-def hasCrush(source, target):
-    carl2carl = models.Carl2Carl.all()
-    carl2carl.filter("source =", source)
-    carl2carl.filter("target =", target)
-    carl = carl2carl.get()
-    return carl
-
 class AddCrush(webapp.RequestHandler):
     def post(self):
         carleton_id = session.getCarl().carletonID
         if hasCrush(carleton_id, self.request.get("crush")): self.response.out.write('{"success":1}')
         elif not models.get_user_by_CID(self.request.get("crush")): self.response.out.write('{"success":2}')
+        # check to see if adding a crush that is opted out here and output success:3 if crush has opted out
         else:
             edge = models.Carl2Carl()
             edge.source = carleton_id
@@ -166,13 +150,19 @@ class AutoFill(webapp.RequestHandler):
         for user in users: # use list comprehension here to speed things up
             send = 0
             for term in terms:
-                if (term in user.carletonID.lower()) or (term in user.first_name.lower()) or (term in user.last_name.lower()):
-                    send += 1
+                if (term in user.carletonID.lower()) or (term in user.first_name.lower()) or (term in user.last_name.lower()): send += 1
             if send == len(terms):
-                theJSON += '{"value":"' + user.first_name + ' ' + user.last_name + ' (' + user.carletonID + ')","uid":"' + user.carletonID + '"},'
+                theJSON += '{"value":"' + user.first_name + ' ' + user.last_name + ' (' + user.carletonID + ')","carletonID":"' + user.carletonID + '","first_name":"' + user.first_name + '","last_name":"' + user.last_name + '","active":' + str(int(user.active)) + '},'
 
         theJSON = "[" + theJSON[:-1] + "]"
         self.response.out.write(theJSON)
+
+def hasCrush(source, target):
+    carl2carl = models.Carl2Carl.all()
+    carl2carl.filter("source =", source)
+    carl2carl.filter("target =", target)
+    carl = carl2carl.get()
+    return carl
 
 application = webapp.WSGIApplication(
                                      [('/crushes/add', AddCrush),

@@ -47,6 +47,7 @@
     [+] Rewrite get user functions to wrap both functions into one
     	[-] so we get the nickname, email, googleid number and all the carleton info in one user object
 	[-] also contains if they are paired or not, active, so we can avoid getting none type errors
+    [+] Respect my privacy?
 
 [+] Write documentation
     [-] How to build and host
