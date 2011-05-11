@@ -12,11 +12,10 @@
     [-] When to codefreeze?
     [-] Featurefreeze?
 
-[+] Get crushes working
-    [-] change all preferences references to crushes now.
-    [-] clean input (lowercase, strip anything unneccessary)
-    [-] check input against database. validate actual usernames
-    [-] finish renaming preferences to crushes
+[+] Opting Out
+    [-] how should this ideally work
+    [-] right now, if you try to add opted out crush, you cannot
+    [-] if someone adds, then the crush opts out, what should happen?
 
 [+] Crush Messages
     [-] Message: source(hashed), target, contents, date
