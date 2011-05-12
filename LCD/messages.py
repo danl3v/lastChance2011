@@ -7,15 +7,19 @@ import models, view, session, emailfunctions
 
 class Send(webapp.RequestHandler):
     def post(self):
-
-        if session.isPaired(): # also check to see if user exists
-            newMessage = models.Message()
-            newMessage.source = session.getCarl().carletonID
-            newMessage.target = self.request.get("to")
-            newMessage.message = self.request.get("body")
-            newMessage.read = False
-            newMessage.put()
-            self.response.out.write('{"success":0}')
+        if session.isPaired() and session.is_active():
+            carleton_id = session.getCarl().carletonID
+            if not models.get_user_by_CID(self.request.get("to")): self.response.out.write('{"success":2}')
+            elif not models.get_user_by_CID(self.request.get("to")).active: self.response.out.write('{"success":3}')
+            elif not models.hasCrush(carleton_id, self.request.get("to")): self.response.out.write('{"success":4}')
+            else:
+                message = models.Message()
+                message.source = carleton_id
+                message.target = self.request.get("to")
+                message.message = self.request.get("body")
+                message.read = False
+                message.put()
+                self.response.out.write('{"success":0}')
         else:
             self.response.out.write('{"success":1}')
 

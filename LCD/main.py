@@ -29,14 +29,14 @@ class Settings(webapp.RequestHandler):
             theCarl.active = True
             theCarl.put()
             template_values = {}
-            view.renderTemplate(self, 'optin_success.html', template_values)
+            self.redirect("/settings")
             
         elif action == "optout" and session.is_active() and session.isPaired():
             theCarl = session.getCarl()
             theCarl.active = False
             theCarl.put()
             template_values = {}
-            view.renderTemplate(self, 'optout_success.html', template_values)
+            self.redirect("/settings")
 
         elif action == "pair" and not session.isPaired():
             theCarl = models.get_user_by_CID(self.request.get('carletonID').split("@")[0])
@@ -79,7 +79,7 @@ class Settings(webapp.RequestHandler):
                 self.response.out.write('<p>Our database does not have the user ' + self.request.get('carletonID').split("@")[0] + '. This is either beacuse you are not a senior or because you are not on stalkernet.</p>')
                 self.response.out.write('<p>If you think this is our fault, <a href="/contact">contact us</a> and convince us that you are a senior.</p>')
 
-        else: self.response.out.write('You are not allowed to perform this action given your current user state. Please go back to <a href="/main">main</a> and try again')
+        else: self.response.out.write('You are not allowed to perform this action. Please go back to <a href="/settings">settings</a> and try again.')
 
 class AutoPair(webapp.RequestHandler):
     def get(self, user="", pair_code=""):
@@ -106,7 +106,7 @@ class AutoPair(webapp.RequestHandler):
             
 class Crushes(webapp.RequestHandler):
     def get(self):
-        if session.isPaired():
+        if session.isPaired() and session.is_active():
             carleton_id = session.getCarl().carletonID
             crushes = models.getCarlCrushes(carleton_id)
             messages = models.get_messages_by_CID(carleton_id)
@@ -117,27 +117,33 @@ class Crushes(webapp.RequestHandler):
                 }
             view.renderTemplate(self, 'crushes.html', template_values)
         else:
-            self.response.out.write('You need to <a href="/settings">pair your account</a> before entering crushes.')
+            self.response.out.write('Your account must be paired and opted-in before adding crushes. Go to <a href="/settings">settings</a> to resolve this issue.')
 
 class AddCrush(webapp.RequestHandler):
     def post(self):
-        carleton_id = session.getCarl().carletonID
-        if hasCrush(carleton_id, self.request.get("crush")): self.response.out.write('{"success":1}')
-        elif not models.get_user_by_CID(self.request.get("crush")): self.response.out.write('{"success":2}')
-        # check to see if adding a crush that is opted out here and output success:3 if crush has opted out
+        if session.isPaired() and session.is_active():
+            carleton_id = session.getCarl().carletonID
+            if models.hasCrush(carleton_id, self.request.get("crush")): self.response.out.write('{"success":2}')
+            elif not models.get_user_by_CID(self.request.get("crush")): self.response.out.write('{"success":3}')
+            elif not models.get_user_by_CID(self.request.get("crush")).active: self.response.out.write('{"success":4}')
+            else:
+                edge = models.Carl2Carl()
+                edge.source = carleton_id
+                edge.target = self.request.get('crush')
+                edge.put()
+                self.response.out.write('{"success":0}')
         else:
-            edge = models.Carl2Carl()
-            edge.source = carleton_id
-            edge.target = self.request.get('crush')
-            edge.put()
-            self.response.out.write('{"success":0}')
+            self.response.out.write('{"success":1}')    
 
 class RemoveCrush(webapp.RequestHandler):
     def post(self):
-        carleton_id = session.getCarl().carletonID
-        carl = hasCrush(carleton_id, self.request.get("crush"))
-        carl.delete()
-        self.out.response.write('{"success":0}')
+        if session.isPaired() and session.is_active():
+            carleton_id = session.getCarl().carletonID
+            carl = models.hasCrush(carleton_id, self.request.get("crush"))
+            carl.delete()
+            self.response.out.write('{"success":0}')
+        else:
+            self.response.out.write('{"success":1}')
 
 class AutoFill(webapp.RequestHandler):
     def get(self):
@@ -152,17 +158,10 @@ class AutoFill(webapp.RequestHandler):
             for term in terms:
                 if (term in user.carletonID.lower()) or (term in user.first_name.lower()) or (term in user.last_name.lower()): send += 1
             if send == len(terms):
-                theJSON += '{"value":"' + user.first_name + ' ' + user.last_name + ' (' + user.carletonID + ')","carletonID":"' + user.carletonID + '","first_name":"' + user.first_name + '","last_name":"' + user.last_name + '","active":' + str(int(user.active)) + '},'
+                theJSON += '{"value":"' + user.first_name + ' ' + user.last_name + ' (' + user.carletonID + ')","carletonID":"' + user.carletonID + '","first_name":"' + user.first_name + '","last_name":"' + user.last_name + '"},'
 
         theJSON = "[" + theJSON[:-1] + "]"
         self.response.out.write(theJSON)
-
-def hasCrush(source, target):
-    carl2carl = models.Carl2Carl.all()
-    carl2carl.filter("source =", source)
-    carl2carl.filter("target =", target)
-    carl = carl2carl.get()
-    return carl
 
 application = webapp.WSGIApplication(
                                      [('/crushes/add', AddCrush),

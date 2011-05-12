@@ -1,7 +1,7 @@
 /*
 Project: MAIN CSS Template
 Project Website: http://lastchance2011.com
-Last updated: 2011-04-27
+Last updated: 2011-05-12
 File: main.css
 */
 
@@ -76,15 +76,15 @@ div#footer
     width: 100%;
 }
 
-/* LAYOUT OBJECTS */
-div.leftcol,
-div.rightcol
+/* GENERAL LAYOUT OBJECTS */
+div.leftcol, div.rightcol
 {
     display: inline-block;
     vertical-align: top;
     width: 49%;
 }
 
+/* HEADER LAYOUT OBJECTS */
 div#header h1
 {
     font-size: 2em;
@@ -97,8 +97,7 @@ div#header a, div#header a:hover, div#header a:visited, div#header a:active
     text-decoration: none;
 }
 
-/* nav section */
-
+/* NAV LAYOUT OBJECTS */
 div#nav ul
 {
     display: inline;
@@ -137,7 +136,6 @@ div#nav ul li.alert span
 {
     display: block;
     position: absolute;
-
     padding: .75em;
     content: attr(title);
     min-width: 120px;
@@ -152,7 +150,6 @@ div#nav ul li.alert span
     -moz-border-radius: 8px;
     -webkit-border-radius: 8px;
     border-radius: 10px;
-   
     color: #FFFFFF;
 }
 
@@ -173,6 +170,7 @@ div#nav ul li.alert span:after
     margin: auto;
 }
 
+/* MAIN LAYOUT OBJECTS */
 div#main h2
 {
     font-size: 1.5em;
@@ -211,31 +209,100 @@ div#main a, div#main a:hover, div#main a:visited, div#main a:active, div#footer 
     color: #04346C;
 }
 
-form.buttonForm
+/* CRUSHES LAYOUT OBJECTS */
+#new-crush
 {
-    display: inline;
+    margin-left: 2em;
 }
 
-ul#messages li.message
+div#crushes div.crushdiv
 {
+    float: left;
+    padding: 5px;
+    width: 10em;
+    text-align: center;
+}
+
+/* MESSAGES LAYOUT OBJECTS */
+ul#messages li.message {
     border: 1px solid #CCCCCC;
     padding: .5em;
     margin: .5em 0;
+    clear: both;
 }
 
-ul#messages li.message span.actions
+ul#messages li.message:hover > div.actions
+{
+    opacity: 1;
+}
+
+ul#messages li.message div.timestamp
+{
+    float: left;
+}
+
+ul#messages li.message div.actions
 {
     opacity: 0;
     -webkit-transition: all 0.2s ease;
     -moz-transition: all 0.2s ease;
     -o-transition: all 0.2s ease;
+    float: right;
 }
 
-ul#messages li.message:hover > span.actions
+ul#messages div.actions ul#icons
 {
-    opacity: 1;
+    margin: 0;
+    padding: 0;
 }
 
+ul#messages div.actions ul#icons li
+{
+    margin: 2px;
+    position: relative;
+    padding: 4px 0;
+    cursor: pointer;
+    float: left;
+    list-style: none;
+}
+
+ul#messages div.actions ul#icons span.ui-icon
+{
+    float: left;
+    margin: 0 4px;
+}
+
+div#new-message-form label, div#new-message-form input
+{
+    display: block;
+}
+
+div#new-message-form select, div#new-message-form textarea
+{
+    display: block;
+    width: 95%;
+}
+
+div#new-message-form fieldset
+{
+    padding: 0;
+    border: 0;
+    margin-top: 25px;
+}
+
+div#new-message-form h1
+{
+    font-size: 1.2em;
+    margin: .6em 0;
+}
+
+div#new-message-form p
+{
+    font-size: .8em;
+    margin-top: 1em;
+}
+
+/* CONTACT LAYOUT OBJECTS */
 form#contactForm
 {
     width: 25em;
@@ -252,23 +319,11 @@ form#contactForm textarea
     height: 10em;
 }
 
-/* CRUSHES */
-#new-crush { margin-left: 2em; }
-div#crushes div.crushdiv { float: left; padding: 5px; width: 10em; text-align: center; }
-
-/* MESSAGES */
-ul#messages li.message { clear: both; }
-ul#messages li.message div.timestamp { float: left; }
-ul#messages li.message div.actions { float: right; }
-
-ul#messages div.actions ul#icons {margin: 0; padding: 0;}
-ul#messages div.actions ul#icons li {margin: 2px; position: relative; padding: 4px 0; cursor: pointer; float: left;  list-style: none;}
-ul#messages div.actions ul#icons span.ui-icon { float: left; margin: 0 4px; }
-
-div#new-message-form label, div#new-message-form input { display:block; }
-div#new-message-form select, div#new-message-form textarea { display: block; width: 95%; }
-div#new-message-form fieldset { padding:0; border:0; margin-top:25px; }
-div#new-message-form h1 { font-size: 1.2em; margin: .6em 0; }
+/* MISC LAYOUT OBJECTS */
+form.buttonForm
+{
+    display: inline;
+}
 
 /* JQUERY UI AUTOCOMPLETE */
 

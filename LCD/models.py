@@ -30,10 +30,14 @@ def getCarlCrushes(user): # do a join in here so we can get usernames too
     results = carl2carl.fetch(20) # there should not be more than 5
     return [get_user_by_CID(result.target) for result in results]
 
+def hasCrush(source, target):
+    carl2carl = Carl2Carl.all()
+    carl2carl.filter("source =", source)
+    carl2carl.filter("target =", target)
+    carl = carl2carl.get()
+    return carl
+
 def get_user_by_CID(username):
-    '''
-    returns a user row given their carleton id
-    '''
     carl = Carl.all()
     carl.filter("carletonID =",username)
     return carl.get()
