@@ -1,7 +1,12 @@
 import os
+os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
+
+from google.appengine.dist import use_library
+use_library('django', '1.2')
+
 from google.appengine.ext.webapp import template
 
-import session
+import models, session
 
 def getHeaderFooterData(self):
     '''
@@ -11,6 +16,7 @@ def getHeaderFooterData(self):
     carleton_id = None
     first_name = None
     last_name = None
+    num_crushes = models.num_crushes()
     if user:
         login_url = session.create_logout_url("/")
         login_url_linktext = 'Logout'
@@ -40,6 +46,7 @@ def getHeaderFooterData(self):
         'login_url_linktext': login_url_linktext,
         'paired': paired,
         'active': active,
+        'num_crushes': num_crushes
         }
 
     return template_values

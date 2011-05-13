@@ -26,15 +26,14 @@
     <h2>Messages</h2><button id="new-message-button">New Message</button>
     <ul id="messages">
        {% for message in messages %}
-       <li class="message">
-	 <div class="timestamp">{{ message.created }}</div>
-	 <div class="actions">
-	   <ul id="icons" class="ui-widget ui-helper-clearfix">
-	     <li class="ui-state-default ui-corner-all" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>
-	     <li class="ui-state-default ui-corner-all" title="Delete"><span class="ui-icon ui-icon-trash"></span></li>
-	     <li class="ui-state-default ui-corner-all" title="Block User"><span class="ui-icon ui-icon-cancel"></span></li>
-	   </ul>
-	 </div>
+       <li class="message" mid="{{ message.key.id }}">
+         <div class="timestamp">{{ message.created|date:"M d \@ g:i:s A"}}</div>
+         <div class="actions">
+           <ul id="icons" class="ui-widget ui-helper-clearfix">
+             <li class="ui-state-default ui-corner-all delete-button" title="Delete"><span class="ui-icon ui-icon-trash"></span></li>
+             <li class="ui-state-default ui-corner-all block-button" title="Block User"><span class="ui-icon ui-icon-cancel"></span></li>
+           </ul>
+         </div>
          <br>{{ message.message }}
        </li>
        {% endfor %}
@@ -73,6 +72,7 @@ $(document).ready(function() {
                     else if (data.success == 2) { alert(ui.item.value + " is already one of your crushes."); }
                     else if (data.success == 3) { alert(ui.item.value + " is not in our database."); }
                     else if (data.success == 4) { alert(ui.item.value + " has opted out. Try again later. Maybe they will have opted back in."); }
+                    else if (data.success == 5) { alert("You cannot choose yourself as a crush."); }
                     else { alert("There was an error in adding your crush. Please try again."); }
                 }, "json");
             return false; // tells autocomplete not to update the field with the selected value
@@ -104,6 +104,8 @@ $(document).ready(function() {
         else { alert("You must add crushes to send a message."); }
     });
     $(".removeCrush:button").click(crushRemoveListener);
+    $(".delete-button").click(messageRemoveListener);
+    $(".block-button").click(blockUserListener);
 });
 
 function crushRemoveListener() {
@@ -114,5 +116,20 @@ function crushRemoveListener() {
     });
 }
 
+function messageRemoveListener() {
+    if (confirm("Do you really want to delete this message?")) {
+        var message = $(this).parent().parent().parent();
+        $.post("/messages/delete", { "mid": message.attr("mid") }, function(data) {
+            if (data.success == 0) { message.fadeOut("fast", function() { message.remove(); }); }
+            else if (data.success == 1) { alert("Your account must be paired and opted-in in order to delete messages."); }
+            else if (data.success == 2) { alert("Message does not exist or you tried to delete another user's message."); }
+            else { alert("Error in deleting message. Try again."); }
+        }, "json");
+    }
+}
+
+function blockUserListener() {
+    alert("feature not working now");
+}
 </script>
 {% endblock %}

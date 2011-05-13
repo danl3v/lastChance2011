@@ -16,7 +16,7 @@ class Carl2Carl(db.Model):
     target = db.StringProperty()
 
 class Message(db.Model):
-    read = db.BooleanProperty() 
+    deleted = db.BooleanProperty(default=False) 
     source = db.StringProperty()  # hash(Carl.carletonID)
     target = db.StringProperty()  # Carl.carletonID
     message = db.StringProperty(multiline=True)
@@ -24,12 +24,14 @@ class Message(db.Model):
 
 ### Get stuff from the Database ###
 
+# rename get_crushes_for_user
 def getCarlCrushes(user): # do a join in here so we can get usernames too
     carl2carl = Carl2Carl.all()
     carl2carl.filter("source =", user)
     results = carl2carl.fetch(20) # there should not be more than 5
     return [get_user_by_CID(result.target) for result in results]
 
+#rename has_crush
 def hasCrush(source, target):
     carl2carl = Carl2Carl.all()
     carl2carl.filter("source =", source)
@@ -45,11 +47,21 @@ def get_user_by_CID(username):
 def get_messages_by_CID(carleton_id):
     messages = Message.all()
     messages.filter("target =", carleton_id)
-    #messages.order("-created") # we want to sort the messages my date
-
+    messages.filter("deleted =", False)
+    messages.order("-created")
     return messages.fetch(1000)
 
+# rename generate_verification_code
 def generateVerificationCode():  # maybe this is more of a 'controller' function
     import random, string
     N = 20
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(N))
+
+# def calculate_matches()
+
+# def num_matches()
+
+def num_crushes():
+    return Carl2Carl.all().count()
+
+# def num_active_users()

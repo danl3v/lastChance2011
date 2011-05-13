@@ -87,8 +87,16 @@ div.leftcol, div.rightcol
 /* HEADER LAYOUT OBJECTS */
 div#header h1
 {
+    display: inline;
     font-size: 2em;
     color: #B14500;
+    vertical-align: middle;
+}
+
+div#header small
+{
+    font-size: .9em;
+    vertical-align: middle;
 }
 
 div#header a, div#header a:hover, div#header a:visited, div#header a:active
@@ -239,6 +247,7 @@ ul#messages li.message:hover > div.actions
 ul#messages li.message div.timestamp
 {
     float: left;
+    font-size: .6em;
 }
 
 ul#messages li.message div.actions

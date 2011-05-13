@@ -44,10 +44,11 @@ class Settings(webapp.RequestHandler):
                 theCarl.googleID = str(session.get_current_user().user_id())
                 theCarl.verificationCode = models.generateVerificationCode()
                 theCarl.put()
+                # send a notification that account was paired
                 template_values = {
                     'carletonID': theCarl.carletonID,
                     'googleEmail': session.get_current_user().email()
-                    }                
+                    }
                 view.renderTemplate(self, 'pair_success.html', template_values)
             else:
                 template_values = {
@@ -62,6 +63,7 @@ class Settings(webapp.RequestHandler):
             theCarl.verificationCode = models.generateVerificationCode()
             theCarl.googleID = ""
             theCarl.put()
+            # send a notification that account was unpaired
             template_values = {
                 'carletonID': theCarl.carletonID,
                 'googleEmail': session.get_current_user().email()
@@ -122,10 +124,11 @@ class Crushes(webapp.RequestHandler):
 class AddCrush(webapp.RequestHandler):
     def post(self):
         if session.isPaired() and session.is_active():
-            carleton_id = session.getCarl().carletonID
-            if models.hasCrush(carleton_id, self.request.get("crush")): self.response.out.write('{"success":2}')
-            elif not models.get_user_by_CID(self.request.get("crush")): self.response.out.write('{"success":3}')
-            elif not models.get_user_by_CID(self.request.get("crush")).active: self.response.out.write('{"success":4}')
+            carleton_id = session.getCarl().carletonID # can optimize this a bit since hasCrush returns the target user if the crush exists
+            if models.hasCrush(carleton_id, self.request.get("crush")): self.response.out.write('{"success":2}') # cannot choose someone who is already a crush
+            elif not models.get_user_by_CID(self.request.get("crush")): self.response.out.write('{"success":3}') # crush must exist
+            elif not models.get_user_by_CID(self.request.get("crush")).active: self.response.out.write('{"success":4}') # crush must not be opted out
+            elif carleton_id == self.request.get("crush"): self.response.out.write('{"success":5}') # can't choose yourself as a crush
             else:
                 edge = models.Carl2Carl()
                 edge.source = carleton_id
