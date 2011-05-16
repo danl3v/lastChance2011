@@ -44,7 +44,7 @@ class Settings(webapp.RequestHandler):
                 theCarl.googleID = str(session.get_current_user().user_id())
                 theCarl.verificationCode = models.generateVerificationCode()
                 theCarl.put()
-                # send a notification that account was paired
+                emailfunctions.send_paired(theCarl.carletonID, session.get_current_user().email())
                 template_values = {
                     'carletonID': theCarl.carletonID,
                     'googleEmail': session.get_current_user().email()
@@ -63,7 +63,7 @@ class Settings(webapp.RequestHandler):
             theCarl.verificationCode = models.generateVerificationCode()
             theCarl.googleID = ""
             theCarl.put()
-            # send a notification that account was unpaired
+            emailfunctions.send_unpaired(theCarl.carletonID, session.get_current_user().email())
             template_values = {
                 'carletonID': theCarl.carletonID,
                 'googleEmail': session.get_current_user().email()
@@ -91,6 +91,7 @@ class AutoPair(webapp.RequestHandler):
                 theCarl.googleID = str(session.get_current_user().user_id())
                 theCarl.verificationCode = models.generateVerificationCode()
                 theCarl.put()
+                emailfunctions.send_paired(theCarl.carletonID, session.get_current_user().email())
                 template_values = {
                     'carletonID': theCarl.carletonID,
                     'googleEmail': session.get_current_user().email()

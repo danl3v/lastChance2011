@@ -3,6 +3,7 @@ from google.appengine.ext.webapp import template
 import session, os
 
 last_chance_dance_email_address = "Last Chance Dance <contact@lastchance2011.com>" # this is our email
+subject_prefix = "[lcD 2011] "
 
 def renderEmailBody(template_file, template_values):
     '''
@@ -21,7 +22,7 @@ def sendInvite(carletonAccount):
     user_address = [carletonAccount.carletonID + "@carleton.edu", "contact@lastchance2011.com"]
 
     sender_address = last_chance_dance_email_address
-    subject = "[Carleton Last Chance Dance 2011] Invitation!"
+    subject = subject_prefix + "Invitation!"
 
     template_values = {
         'carleton_id': carletonAccount.carletonID,
@@ -35,12 +36,11 @@ def sendPersonChosen(carletonID):
     '''
     Sends an email to a user who has been chosen by someone else.
     '''
-
     #user_address = carletonID + "@carleton.edu"
     user_address = ["conrad.p.dean@gmail.com", "dlouislevy@gmail.com"]
 
     sender_address = last_chance_dance_email_address
-    subject = "[Carleton Last Chance Dance 2011] Someone Chose You as a Crush"
+    subject = subject_prefix + "Someone Chose You as a Crush"
     
     template_values = { 'carletonID': carletonID }
     body = renderEmailBody('you_have_been_crushed_notification.html', template_values)
@@ -54,9 +54,40 @@ def sendContactForm(subject, body, anonymous):
     to_address = last_chance_dance_email_address
     if session.get_current_user() and not anonymous:
         from_address = session.get_current_user().email()
-        subject = "[LCD Feedback] " + subject
+        subject = subject_prefix + "[Feedback] " + subject
     else:
         from_address = last_chance_dance_email_address
-        subject = "[LCD Feedback] [Anonymous] " + subject
+        subject = subject_prefix + "[Feedback] [Anonymous] " + subject
     
+    mail.send_mail(from_address, to_address, subject, body)
+
+def send_paired(carleton_id, google_id):
+    '''
+    Sends a notification that an account was paired
+    '''
+    from_address = last_chance_dance_email_address
+    to_address = carleton_id + "@carleton.edu"
+    subject = subject_prefix + "Account Paired"
+
+    template_values = { 'carleton_id': carleton_id,
+                        'google_id': google_id
+                        }
+    body = renderEmailBody('paired_notification.html', template_values)
+
+    mail.send_mail(from_address, to_address, subject, body)
+
+
+def send_unpaired(carleton_id, google_id):
+    '''
+    Sends a notification that an account was unpaired
+    '''
+    from_address = last_chance_dance_email_address
+    to_address = carleton_id + "@carleton.edu"
+    subject = subject_prefix + "Account Un-Paired"
+
+    template_values = { 'carleton_id': carleton_id,
+                        'google_id': google_id
+                        }
+    body = renderEmailBody('unpaired_notification.html', template_values)
+
     mail.send_mail(from_address, to_address, subject, body)

@@ -57,16 +57,23 @@
 
 <script>
 $(document).ready(function() {
+    var cache = {}, lastXhr;
     $(".crush").autocomplete({
-        source: "/autofill",
         minLength: 1,
+        source: function(request, response) {
+            var term = request.term;
+            if (term in cache) { response(cache[term]); return; }
+            lastXhr = $.getJSON("/autofill", request, function(data, status, xhr) {
+                cache[term] = data;
+                if (xhr === lastXhr) { response(data); }
+            });
+        },
         select: function(event, ui) {
             $(this).val("");
                 $.post("/crushes/add", { "crush": ui.item.carletonID }, function(data) {
                     if (data.success == 0) {
                         $("#crushes").append('<div class="crushdiv"><img src="/user_images/' + ui.item.carletonID + '.jpg" width="100" height="100"><br>' + ui.item.carletonID + '<button class="removeCrush" value="' + ui.item.carletonID + '">remove</button></div>');
                         $("#to").append('<option value="' + ui.item.carletonID + '">' + ui.item.value + '</option>');
-                        $(".removeCrush:button:last").click(crushRemoveListener);
                     }
                     else if (data.success == 1) { alert("Your account must be paired and opted-in in order to add crushes."); }
                     else if (data.success == 2) { alert(ui.item.value + " is already one of your crushes."); }
@@ -103,9 +110,9 @@ $(document).ready(function() {
         if ($("#to option").length) { $("#new-message-form").dialog("open"); }
         else { alert("You must add crushes to send a message."); }
     });
-    $(".removeCrush:button").click(crushRemoveListener);
-    $(".delete-button").click(messageRemoveListener);
-    $(".block-button").click(blockUserListener);
+    $(".removeCrush:button").live('click', crushRemoveListener);
+    $(".delete-button").live('click', messageRemoveListener);
+    $(".block-button").live('click', blockUserListener);
 });
 
 function crushRemoveListener() {
