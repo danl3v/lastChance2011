@@ -15,6 +15,10 @@ class Carl2Carl(db.Model):
     source = db.StringProperty()
     target = db.StringProperty()
 
+#class Crush(db.Model):
+#    source = db.ReferenceProperty(Carl);
+#    target = db.ReferenceProperty(Carl);
+
 class Message(db.Model):
     deleted = db.BooleanProperty(default=False) 
     source = db.StringProperty()  # hash(Carl.carletonID)
@@ -24,15 +28,13 @@ class Message(db.Model):
 
 ### Get stuff from the Database ###
 
-# rename get_crushes_for_user
-def getCarlCrushes(user): # do a join in here so we can get usernames too
+def get_crushes_for_user(user):
     carl2carl = Carl2Carl.all()
     carl2carl.filter("source =", user)
     results = carl2carl.fetch(20) # there should not be more than 5
     return [get_user_by_CID(result.target) for result in results]
 
-#rename has_crush
-def hasCrush(source, target):
+def has_crush(source, target):
     carl2carl = Carl2Carl.all()
     carl2carl.filter("source =", source)
     carl2carl.filter("target =", target)
@@ -51,17 +53,14 @@ def get_messages_by_CID(carleton_id):
     messages.order("-created")
     return messages.fetch(1000)
 
-# rename generate_verification_code
-def generateVerificationCode():  # maybe this is more of a 'controller' function
+def generate_pair_code():
     import random, string
     N = 20
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(N))
 
-# def calculate_matches()
-
-# def num_matches()
+def calculate_matches():
+    crushes = Carl2Carl.all()
+    return [(crush.source, crush.target) for crush in crushes if has_crush(crush.target, crush.source)]
 
 def num_crushes():
     return Carl2Carl.all().count()
-
-# def num_active_users()

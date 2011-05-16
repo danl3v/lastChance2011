@@ -42,7 +42,7 @@ class Settings(webapp.RequestHandler):
             theCarl = models.get_user_by_CID(self.request.get('carletonID').split("@")[0])
             if (theCarl) and (theCarl.verificationCode == self.request.get('verificationCode')):
                 theCarl.googleID = str(session.get_current_user().user_id())
-                theCarl.verificationCode = models.generateVerificationCode()
+                theCarl.verificationCode = models.generate_pair_code()
                 theCarl.put()
                 emailfunctions.send_paired(theCarl.carletonID, session.get_current_user().email())
                 template_values = {
@@ -60,7 +60,7 @@ class Settings(webapp.RequestHandler):
 
         elif action == "unpair" and session.isPaired():
             theCarl = session.getCarl()
-            theCarl.verificationCode = models.generateVerificationCode()
+            theCarl.verificationCode = models.generate_pair_code()
             theCarl.googleID = ""
             theCarl.put()
             emailfunctions.send_unpaired(theCarl.carletonID, session.get_current_user().email())
@@ -73,7 +73,7 @@ class Settings(webapp.RequestHandler):
         elif action == "sendcode":
             carletonAccount = models.get_user_by_CID(self.request.get('carletonID').split("@")[0])
             if carletonAccount:
-                carletonAccount.verificationCode = models.generateVerificationCode()
+                carletonAccount.verificationCode = models.generate_pair_code()
                 carletonAccount.put()
                 emailfunctions.sendInvite(carletonAccount)
                 self.response.out.write('A pair code has been sent to ' + self.request.get('carletonID').split("@")[0] + '@carleton.edu. Once you get the email, go to <a href="/settings">settings</a> to enter your pair code.')
@@ -89,7 +89,7 @@ class AutoPair(webapp.RequestHandler):
             theCarl = models.get_user_by_CID(user)
             if (theCarl) and (theCarl.verificationCode == pair_code):
                 theCarl.googleID = str(session.get_current_user().user_id())
-                theCarl.verificationCode = models.generateVerificationCode()
+                theCarl.verificationCode = models.generate_pair_code()
                 theCarl.put()
                 emailfunctions.send_paired(theCarl.carletonID, session.get_current_user().email())
                 template_values = {
@@ -111,7 +111,7 @@ class Crushes(webapp.RequestHandler):
     def get(self):
         if session.isPaired() and session.is_active():
             carleton_id = session.getCarl().carletonID
-            crushes = models.getCarlCrushes(carleton_id)
+            crushes = models.get_crushes_for_user(carleton_id)
             messages = models.get_messages_by_CID(carleton_id)
             template_values = {
                 'crushes': crushes,
@@ -125,11 +125,12 @@ class Crushes(webapp.RequestHandler):
 class AddCrush(webapp.RequestHandler):
     def post(self):
         if session.isPaired() and session.is_active():
-            carleton_id = session.getCarl().carletonID # can optimize this a bit since hasCrush returns the target user if the crush exists
-            if models.hasCrush(carleton_id, self.request.get("crush")): self.response.out.write('{"success":2}') # cannot choose someone who is already a crush
+            carleton_id = session.getCarl().carletonID
+            if models.has_crush(carleton_id, self.request.get("crush")): self.response.out.write('{"success":2}') # cannot choose someone who is already a crush
             elif not models.get_user_by_CID(self.request.get("crush")): self.response.out.write('{"success":3}') # crush must exist
             elif not models.get_user_by_CID(self.request.get("crush")).active: self.response.out.write('{"success":4}') # crush must not be opted out
             elif carleton_id == self.request.get("crush"): self.response.out.write('{"success":5}') # can't choose yourself as a crush
+            elif len(models.get_crushes_for_user(carleton_id)) >= 5: self.response.out.write('{"success":6}') # can't have more than 5 crushes
             else:
                 edge = models.Carl2Carl()
                 edge.source = carleton_id
@@ -143,7 +144,7 @@ class RemoveCrush(webapp.RequestHandler):
     def post(self):
         if session.isPaired() and session.is_active():
             carleton_id = session.getCarl().carletonID
-            carl = models.hasCrush(carleton_id, self.request.get("crush"))
+            carl = models.has_crush(carleton_id, self.request.get("crush"))
             carl.delete()
             self.response.out.write('{"success":0}')
         else:

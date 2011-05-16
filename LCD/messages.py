@@ -11,7 +11,7 @@ class Send(webapp.RequestHandler):
             carleton_id = session.getCarl().carletonID
             if not models.get_user_by_CID(self.request.get("to")): self.response.out.write('{"success":2}')
             elif not models.get_user_by_CID(self.request.get("to")).active: self.response.out.write('{"success":3}')
-            elif not models.hasCrush(carleton_id, self.request.get("to")): self.response.out.write('{"success":4}')
+            elif not models.has_crush(carleton_id, self.request.get("to")): self.response.out.write('{"success":4}')
             else:
                 message = models.Message()
                 message.source = carleton_id

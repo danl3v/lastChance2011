@@ -13,18 +13,25 @@ def addCarl(first_name, last_name, carleton_id):
     else:
         carl = models.Carl()
         carl.carletonID = carleton_id.strip()
-        carl.verificationCode = models.generateVerificationCode()
+        carl.verificationCode = models.generate_pair_code()
         carl.first_name = first_name.strip()
         carl.last_name = last_name.strip()
         carl.put()
         return True
+
+class CalculateCrushes(webapp.RequestHandler):
+    def get(self):
+        matches = models.calculate_matches()
+        for match in matches:
+            self.response.out.write(match[0] + " --> " + match[1] + "<br>")
+            # send emails here
 
 class Admin(webapp.RequestHandler):
     def get(self):
         carls = models.Carl.all()
         template_values = {
             'carls' : carls,
-            'current_page': {'admin': True}
+            'current_page': { 'admin': True }
         }
         view.renderTemplate(self, 'admin.html', template_values)
 
@@ -51,7 +58,7 @@ class DeleteCarl(webapp.RequestHandler):
 class NewPairCode(webapp.RequestHandler):
     def post(self):
         carl = models.get_user_by_CID(self.request.get('carletonID'))
-        carl.verificationCode = models.generateVerificationCode()
+        carl.verificationCode = models.generate_pair_code()
         carl.put()
         self.redirect('/admin')
 
@@ -76,7 +83,8 @@ application = webapp.WSGIApplication(
                                        ('/admin/newpaircode', NewPairCode),
                                        ('/admin/deletecarl', DeleteCarl),
                                        ('/admin/invite', Invite),
-                                       ('/admin/unpaircarl', UnPairCarl)],
+                                       ('/admin/unpaircarl', UnPairCarl),
+                                       ('/admin/calculate', CalculateCrushes)],
                                      debug=True)
 
 def main():

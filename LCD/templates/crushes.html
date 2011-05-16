@@ -80,6 +80,7 @@ $(document).ready(function() {
                     else if (data.success == 3) { alert(ui.item.value + " is not in our database."); }
                     else if (data.success == 4) { alert(ui.item.value + " has opted out. Try again later. Maybe they will have opted back in."); }
                     else if (data.success == 5) { alert("You cannot choose yourself as a crush."); }
+                    else if (data.success == 6) { alert("Sorry. You can't have more than 5 crushes. Please remove one before adding another."); }
                     else { alert("There was an error in adding your crush. Please try again."); }
                 }, "json");
             return false; // tells autocomplete not to update the field with the selected value
