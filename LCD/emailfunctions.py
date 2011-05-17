@@ -91,3 +91,35 @@ def send_unpaired(carleton_id, google_id):
     body = renderEmailBody('unpaired_notification.html', template_values)
 
     mail.send_mail(from_address, to_address, subject, body)
+
+def send_opted_out(source, target):
+    '''
+    Sends a notification that someone opted out
+    '''
+    from_address = last_chance_dance_email_address
+    #to_address = source.carletonID + "@carleton.edu"
+    to_address = "levyd@carleton.edu"
+    subject = subject_prefix + "Crush Opted Out"
+
+    template_values = { 'source': source,
+                        'target': target
+                        }
+    body = renderEmailBody('opted_out_notification.html', template_values)
+
+    mail.send_mail(from_address, to_address, subject, body)
+
+def send_opted_in(source, target):
+    '''
+    Sends a notification that someone opted back in
+    '''
+    from_address = last_chance_dance_email_address
+    #to_address = source.carletonID + "@carleton.edu"
+    to_address = "levyd@carleton.edu"
+    subject = subject_prefix + "Crush Opted Back In!"
+
+    template_values = { 'source': source,
+                        'target': target
+                        }
+    body = renderEmailBody('opted_in_notification.html', template_values)
+
+    mail.send_mail(from_address, to_address, subject, body)

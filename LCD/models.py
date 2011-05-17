@@ -34,6 +34,12 @@ def get_crushes_for_user(user):
     results = carl2carl.fetch(20) # there should not be more than 5
     return [get_user_by_CID(result.target) for result in results]
 
+def get_crushes_for_user_by_target(user):
+    carl2carl = Carl2Carl.all()
+    carl2carl.filter("target =", user)
+    results = carl2carl.fetch(1000) # there should not be more than num users in db
+    return [get_user_by_CID(result.source) for result in results]
+
 def has_crush(source, target):
     carl2carl = Carl2Carl.all()
     carl2carl.filter("source =", source)

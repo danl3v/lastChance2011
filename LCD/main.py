@@ -28,6 +28,13 @@ class Settings(webapp.RequestHandler):
             theCarl = session.getCarl()
             theCarl.active = True
             theCarl.put()
+
+            ''' #tested
+            sources = models.get_crushes_for_user_by_target(theCarl.carletonID) # send opted in notifications
+            for source in sources:
+                emailfunctions.send_opted_in(source, theCarl)
+            '''
+
             template_values = {}
             self.redirect("/settings")
             
@@ -35,6 +42,13 @@ class Settings(webapp.RequestHandler):
             theCarl = session.getCarl()
             theCarl.active = False
             theCarl.put()
+
+            ''' #tested
+            sources = models.get_crushes_for_user_by_target(theCarl.carletonID) # send opted out notifications
+            for source in sources:
+                emailfunctions.send_opted_out(source, theCarl)
+            '''
+                
             template_values = {}
             self.redirect("/settings")
 
