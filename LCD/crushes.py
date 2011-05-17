@@ -5,7 +5,7 @@ class Crushes(webapp.RequestHandler):
     def get(self):
         if session.isPaired() and session.opted_in():
             carleton_id = session.getCarl().carletonID
-            crushes = get_crushes_for_user(carleton_id)
+            crushes = get_crushes_for_user(session.getCarl())
             messages = get_messages_by_CID(carleton_id)
             template_values = {
                 'crushes': crushes,
@@ -19,30 +19,27 @@ class Crushes(webapp.RequestHandler):
 class AddCrush(webapp.RequestHandler):
     def post(self):
         if session.isPaired() and session.opted_in():
-            carleton_id = session.getCarl().carletonID
-            if functions.has_crush(carleton_id, self.request.get("crush")): self.response.out.write('{"success":2}') # cannot choose someone who is already a crush
-            elif not functions.get_user_by_CID(self.request.get("crush")): self.response.out.write('{"success":3}') # crush must exist
-            elif carleton_id == self.request.get("crush"): self.response.out.write('{"success":4}') # can't choose yourself as a crush
-            elif len(get_crushes_for_user(carleton_id)) >= 5: self.response.out.write('{"success":5}') # can't have more than 5 crushes
+            source = session.getCarl()
+            target = functions.get_user_by_CID(self.request.get("crush"))
+            if functions.has_crush(source, target): self.response.out.write('{"success":2}') # cannot choose someone who is already a crush
+            elif not target: self.response.out.write('{"success":3}') # crush must exist
+            elif source.carletonID == target.carletonID: self.response.out.write('{"success":4}') # can't choose yourself as a crush
+            elif len(get_crushes_for_user(source)) >= 5: self.response.out.write('{"success":5}') # can't have more than 5 crushes
             else:
-                crush = functions.get_user_by_CID(self.request.get("crush"))
-                if not crush.googleID: status = "not_paired"
-                elif not crush.opted_in: status = "opted_out"
-                else: status = "available"
-                
-                edge = models.Carl2Carl()
-                edge.source = carleton_id
-                edge.target = self.request.get('crush')
+                edge = models.Crush()
+                edge.source = source
+                edge.target = target
                 edge.put()
-                self.response.out.write('{"success":0, "status":"' + status + '"}')
+                self.response.out.write('{"success":0, "status":"' + get_status(target) + '"}')
         else:
             self.response.out.write('{"success":1}')    
 
 class RemoveCrush(webapp.RequestHandler):
     def post(self):
         if session.isPaired() and session.opted_in():
-            carleton_id = session.getCarl().carletonID
-            carl = functions.has_crush(carleton_id, self.request.get("crush"))
+            source = session.getCarl()
+            target = functions.get_user_by_CID(self.request.get("crush"))
+            carl = functions.has_crush(source, target)
             carl.delete()
             self.response.out.write('{"success":0}')
         else:
@@ -57,11 +54,15 @@ class AutoFill(webapp.RequestHandler):
         theJSON = "[" + theJSON[:-1] + "]"
         self.response.out.write(theJSON)
 
+def get_status(user):
+    if not user.googleID: return "not_paired"
+    elif not user.opted_in: return "opted_out"
+    else: return "available"
+
 def get_crushes_for_user(user):
-    carl2carl = models.Carl2Carl.all()
-    carl2carl.filter("source =", user)
-    results = carl2carl.fetch(20) # there should not be more than 5
-    return [functions.get_user_by_CID(result.target) for result in results]
+    crushes = models.Crush.all()
+    crushes.filter("source =", user)
+    return crushes.fetch(20) # there should not be more than 5
 
 def get_messages_by_CID(carleton_id):
     messages = models.Message.all()

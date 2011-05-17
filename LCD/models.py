@@ -9,9 +9,9 @@ class Carl(db.Model):
     pair_code = db.StringProperty() # set default to generateVerificationCode?
     opted_in = db.BooleanProperty(default=True)
 
-class Carl2Carl(db.Model): # change to crush
-    source = db.StringProperty() # change to reference properties
-    target = db.StringProperty()
+class Crush(db.Model):
+    source = db.ReferenceProperty(Carl, collection_name="source")
+    target = db.ReferenceProperty(Carl, collection_name="target")
 
 class Message(db.Model):
     deleted = db.BooleanProperty(default=False) 

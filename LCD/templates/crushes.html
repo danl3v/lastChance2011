@@ -22,15 +22,15 @@
     <div id="crushes">
     {% for crush in crushes %}
     <div class="crushdiv">
-        <img src="/user_images/{{ crush.carletonID }}.jpg" width="120" height="120"><br>
-        {{ crush.first_name }} {{ crush.last_name }}<br>
-        {% if not crush.opted_in %}<span style="color:red;">opted out</span><br>
+        <img src="/user_images/{{ crush.target.carletonID }}.jpg" width="120" height="120"><br>
+        {{ crush.target.first_name }} {{ crush.target.last_name }}<br>
+        {% if not crush.target.opted_in %}<span style="color:red;">opted out</span><br>
         {% else %}
-            {% if not crush.googleID %}<span style="color:red;">not yet registered</span><br>
+            {% if not crush.target.googleID %}<span style="color:red;">not yet registered</span><br>
             {% else %}<span style="color:green;">available!</span><br>
             {% endif %}
         {% endif %}
-        <button class="removeCrush" value="{{ crush.carletonID }}">remove</button>
+        <button class="removeCrush" value="{{ crush.target.carletonID }}">remove</button>
     </div>
     {% endfor %}
     </div>
@@ -61,7 +61,7 @@
   <fieldset>
     <label for="to">To</label>
     <select name="to" id="to" class="ui-select-menu ui-widget-content ui-corner-all">
-    {% for crush in crushes %}<option value="{{ crush.carletonID }}">{{ crush.first_name }} {{ crush.last_name }} ({{ crush.carletonID }})</option>{% endfor %}
+    {% for crush in crushes %}<option value="{{ crush.target.carletonID }}">{{ crush.target.first_name }} {{ crush.target.last_name }} ({{ crush.target.carletonID }})</option>{% endfor %}
     </select>
     <label for="body">Body</label><textarea name="body" id="body" class="text ui-widget-content ui-corner-all"></textarea>
   </fieldset>

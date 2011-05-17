@@ -26,9 +26,9 @@ class Settings(webapp.RequestHandler):
             theCarl.put()
 
             ''' #tested
-            sources = get_crushes_for_user_by_target(theCarl.carletonID) # send opted in notifications
-            for source in sources:
-                emailfunctions.send_opted_in(source, theCarl)
+            crushes = get_crushes_for_user_by_target(theCarl) # send opted in notifications
+            for crush in crushes:
+                emailfunctions.send_opted_in(crush.source, crush.target)
             '''
 
             self.redirect("/settings")
@@ -39,9 +39,9 @@ class Settings(webapp.RequestHandler):
             theCarl.put()
 
             ''' #tested
-            sources = get_crushes_for_user_by_target(theCarl.carletonID) # send opted out notifications
-            for source in sources:
-                emailfunctions.send_opted_out(source, theCarl)
+            crushes = get_crushes_for_user_by_target(theCarl) # send opted out notifications
+            for crush in crushes:
+                emailfunctions.send_opted_out(crush.source, crush.target)
             '''
                 
             self.redirect("/settings")
@@ -113,7 +113,6 @@ class AutoPair(webapp.RequestHandler):
             view.renderTemplate(self, 'pair_failure.html', template_values)
 
 def get_crushes_for_user_by_target(user):
-    carl2carl = models.Carl2Carl.all()
-    carl2carl.filter("target =", user)
-    results = carl2carl.fetch(1000) # there should not be more than num users in db
-    return [functions.get_user_by_CID(result.source) for result in results]
+    crushes = models.Crush.all()
+    crushes.filter("target =", user)
+    return crushes.fetch(1000) # there should not be more than num users in db

@@ -23,7 +23,7 @@ class CalculateCrushes(webapp.RequestHandler):
     def get(self):
         matches = calculate_matches()
         for match in matches:
-            self.response.out.write(match[0] + " --> " + match[1] + "<br>")
+            self.response.out.write(match.source.carletonID + " --> " + match.target.carletonID + "<br>")
             # send emails here
 
 class Admin(webapp.RequestHandler):
@@ -76,8 +76,8 @@ class Invite(webapp.RequestHandler):
         self.response.out.write('Invitation sent to ' + self.request.get("carletonID") + '! <a href="/admin">Back to admin</a>.')
 
 def calculate_matches():
-    crushes = models.Carl2Carl.all()
-    return [(crush.source, crush.target) for crush in crushes if functions.has_crush(crush.target, crush.source)]
+    crushes = models.Crush.all()
+    return [crush for crush in crushes if functions.has_crush(crush.target, crush.source)]
 
 def main():
     application = webapp.WSGIApplication([

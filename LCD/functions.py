@@ -1,10 +1,10 @@
 import models
 
 def has_crush(source, target):
-    carl2carl = models.Carl2Carl.all()
-    carl2carl.filter("source =", source)
-    carl2carl.filter("target =", target)
-    carl = carl2carl.get()
+    crushes = models.Crush.all()
+    crushes.filter("source =", source)
+    crushes.filter("target =", target)
+    carl = crushes.get()
     return carl
 
 def get_user_by_CID(username):
