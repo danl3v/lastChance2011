@@ -8,7 +8,7 @@
   input { display: inline; }
   li.message { background-color: #EEEEEE; }
   .crushdiv { border: 1px solid #CCCCCC; margin: 5px; background-color: #EEEEEE; height: 13em; }
-  .crushdiv span { display: block;}
+  .crushdiv span { displeay: block;}
 </style>
 <script type="text/javascript" src="/js/jquery-1.5.1.min.js"></script>
 <script type="text/javascript" src="/js/jquery-ui-1.8.12.custom.min.js"></script>
@@ -16,7 +16,6 @@
 
 {% block content %}
 <div id="main">
-
 <div class="leftcol">
 <h2>Crushes</h2>
     <span id="new-crush">new crush: <input type="text" class="crush" name="crush"></span>
@@ -24,7 +23,7 @@
     {% for crush in crushes %}
     <div class="crushdiv">
         <img src="/user_images/{{ crush.carletonID }}.jpg" width="120" height="120"><br>
-        {{ crush.first_name }} {{ crush.last_name }}
+        {{ crush.first_name }} {{ crush.last_name }}<br>
         {% if not crush.active %}<span style="color:red;">opted out</span><br>
         {% else %}
             {% if not crush.googleID %}<span style="color:red;">not yet registered</span><br>
@@ -44,7 +43,7 @@
        <li class="message" mid="{{ message.key.id }}">
          <div class="timestamp">{{ message.created|date:"M d \@ g:i:s A"}}</div>
          <div class="actions">
-           <ul id="icons" class="ui-widget ui-helper-clearfix">
+           <ul class="ui-widget ui-helper-clearfix">
              <li class="ui-state-default ui-corner-all delete-button" title="Delete"><span class="ui-icon ui-icon-trash"></span></li>
              <li class="ui-state-default ui-corner-all block-button" title="Block User"><span class="ui-icon ui-icon-cancel"></span></li>
            </ul>
@@ -72,37 +71,33 @@
 
 <script>
 $(document).ready(function() {
-    var cache = {}, lastXhr;
-    $(".crush").autocomplete({
-        minLength: 1,
-        source: function(request, response) {
-            var term = request.term;
-            if (term in cache) { response(cache[term]); return; }
-            lastXhr = $.getJSON("/autofill", request, function(data, status, xhr) {
-                cache[term] = data;
-                if (xhr === lastXhr) { response(data); }
-            });
-        },
-        select: function(event, ui) {
-            $(this).val("");
-                $.post("/crushes/add", { "crush": ui.item.carletonID }, function(data) {
-                    if (data.success == 0) {
-                        var status;
-                        if (data.status == "not_paired") { status = '<span style="color:red;">not yet registered</span><br>'; }
-                        else if (data.status == "opted_out") { status = '<span style="color:red;">opted out</span><br>'; }
-                        else { status = '<span style="color:green;">available!</span><br>'; }
-                        $("#crushes").append('<div class="crushdiv"><img src="/user_images/' + ui.item.carletonID + '.jpg" width="120" height="120"><br>' + ui.item.first_name + " " + ui.item.last_name + " " + status + '<button class="removeCrush" value="' + ui.item.carletonID + '">remove</button></div>');
-                        $("#to").append('<option value="' + ui.item.carletonID + '">' + ui.item.value + '</option>');
-                    }
-                    else if (data.success == 1) { alert("Your account must be paired and opted-in in order to add crushes."); }
-                    else if (data.success == 2) { alert(ui.item.value + " is already one of your crushes."); }
-                    else if (data.success == 3) { alert(ui.item.value + " is not in our database."); }
-                    else if (data.success == 4) { alert("You cannot choose yourself as a crush."); }
-                    else if (data.success == 5) { alert("Sorry. You can't have more than 5 crushes. Please remove one before adding another."); }
-                    else { alert("There was an error in adding your crush. Please try again."); }
-                }, "json");
-            return false; // tells autocomplete not to update the field with the selected value
-        }
+
+    $.getJSON('/autofill', function(data) {
+        $(".crush").autocomplete({
+            minLength: 1,
+            delay: 0,
+            source: data,
+            select: function(event, ui) {
+                $(this).val("");
+                    $.post("/crushes/add", { "crush": ui.item.carletonID }, function(data) {
+                        if (data.success == 0) {
+                            var status;
+                            if (data.status == "not_paired") { status = '<span style="color:red;">not yet registered</span><br>'; }
+                            else if (data.status == "opted_out") { status = '<span style="color:red;">opted out</span><br>'; }
+                            else { status = '<span style="color:green;">available!</span><br>'; }
+                            $("#crushes").append('<div class="crushdiv"><img src="/user_images/' + ui.item.carletonID + '.jpg" width="120" height="120"><br>' + ui.item.first_name + " " + ui.item.last_name + "<br>" + status + '<button class="removeCrush" value="' + ui.item.carletonID + '">remove</button></div>');
+                            $("#to").append('<option value="' + ui.item.carletonID + '">' + ui.item.value + '</option>');
+                        }
+                        else if (data.success == 1) { alert("Your account must be paired and opted-in in order to add crushes."); }
+                        else if (data.success == 2) { alert(ui.item.value + " is already one of your crushes."); }
+                        else if (data.success == 3) { alert(ui.item.value + " is not in our database."); }
+                        else if (data.success == 4) { alert("You cannot choose yourself as a crush."); }
+                        else if (data.success == 5) { alert("Sorry. You can't have more than 5 crushes. Please remove one before adding another."); }
+                        else { alert("There was an error in adding your crush. Please try again."); }
+                    }, "json");
+                return false; // tells autocomplete not to update the field with the selected value
+            }
+        });
     });
 
     $("#new-message-form").dialog({
