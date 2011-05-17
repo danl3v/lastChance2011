@@ -72,19 +72,12 @@ class UnPairCarl(webapp.RequestHandler):
 class Invite(webapp.RequestHandler):
     def post(self):
         carletonAccount = functions.get_user_by_CID(self.request.get("carletonID"))
-        emailfunctions.sendInvite(carletonAccount)
+        emailfunctions.send_invitation(carletonAccount)
         self.response.out.write('Invitation sent to ' + self.request.get("carletonID") + '! <a href="/admin">Back to admin</a>.')
-
-def has_crush(source, target):
-    carl2carl = models.Carl2Carl.all()
-    carl2carl.filter("source =", source)
-    carl2carl.filter("target =", target)
-    carl = carl2carl.get()
-    return carl
 
 def calculate_matches():
     crushes = models.Carl2Carl.all()
-    return [(crush.source, crush.target) for crush in crushes if has_crush(crush.target, crush.source)]
+    return [(crush.source, crush.target) for crush in crushes if functions.has_crush(crush.target, crush.source)]
 
 application = webapp.WSGIApplication(
                                       [('/admin', Admin),

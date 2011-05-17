@@ -52,10 +52,8 @@ class AutoFill(webapp.RequestHandler):
     def get(self):
         users = models.Carl.all()
         users.order("first_name")
-        results = users.fetch(1000) #if we have more that 1000 users, we need to fetch multiple times until we run out of fetches
-
+        results = users.fetch(1000) #if we have more than 1000 users, we need to fetch multiple times until we run out of fetches
         theJSON = ''.join(['{"value":"' + user.first_name + ' ' + user.last_name + ' (' + user.carletonID + ')","carletonID":"' + user.carletonID + '","first_name":"' + user.first_name + '","last_name":"' + user.last_name + '"},' for user in users])
-
         theJSON = "[" + theJSON[:-1] + "]"
         self.response.out.write(theJSON)
 
@@ -70,4 +68,4 @@ def get_messages_by_CID(carleton_id):
     messages.filter("target =", carleton_id)
     messages.filter("deleted =", False)
     messages.order("-created")
-    return messages.fetch(1000)
+    return messages.fetch(1000) # if we have more than 1000 messages, we need to fetch multiple times

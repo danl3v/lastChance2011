@@ -5,49 +5,43 @@ import session, os
 last_chance_dance_email_address = "Last Chance Dance <contact@lastchance2011.com>" # this is our email
 subject_prefix = "[lcD 2011] "
 
-def renderEmailBody(template_file, template_values):
+def render_email_body(template_file, template_values):
     '''
     Renders the body of an email.
     '''
     path = os.path.join(os.path.dirname(__file__), 'email_templates/' + template_file)
     return template.render(path, template_values)
 
-def sendInvite(carletonAccount):
+def send_invitation(carletonAccount):
     '''
     Sends an invitation.
     '''
-    username = carletonAccount.carletonID
-    verificationCode = carletonAccount.verificationCode
-
-    user_address = [carletonAccount.carletonID + "@carleton.edu", "contact@lastchance2011.com"]
+    user_address = carletonAccount.carletonID + "@carleton.edu"
 
     sender_address = last_chance_dance_email_address
     subject = subject_prefix + "Invitation!"
 
-    template_values = {
-        'carleton_id': carletonAccount.carletonID,
-        'pair_code': verificationCode
-        }
-    body = renderEmailBody('invitation.html', template_values)
+    template_values = { 'user': carletonAccount }
+    body = render_email_body('invitation.html', template_values)
     
     mail.send_mail(sender_address, user_address, subject, body)
 
-def sendPersonChosen(carletonID):
+def send_crushed_upon(carletonAccount):
     '''
     Sends an email to a user who has been chosen by someone else.
     '''
-    #user_address = carletonID + "@carleton.edu"
+    #user_address = carletonAccount.carletonID + "@carleton.edu"
     user_address = ["conrad.p.dean@gmail.com", "dlouislevy@gmail.com"]
 
     sender_address = last_chance_dance_email_address
     subject = subject_prefix + "Someone Chose You as a Crush"
     
-    template_values = { 'carletonID': carletonID }
-    body = renderEmailBody('you_have_been_crushed_notification.html', template_values)
+    template_values = { 'carletonAccount': carletonAccount }
+    body = render_email_body('you_have_been_crushed_notification.html', template_values)
     
     mail.send_mail(sender_address, user_address, subject, body)
 
-def sendContactForm(subject, body, anonymous):
+def send_contact_form(subject, body, anonymous):
     '''
     Sends a contact form.
     '''
@@ -61,40 +55,40 @@ def sendContactForm(subject, body, anonymous):
     
     mail.send_mail(from_address, to_address, subject, body)
 
-def send_paired(carleton_id, google_id):
+def send_paired(carletonAccount, googleAccount):
     '''
     Sends a notification that an account was paired
     '''
     from_address = last_chance_dance_email_address
-    to_address = carleton_id + "@carleton.edu"
+    to_address = carletonAccount.carletonID + "@carleton.edu"
     subject = subject_prefix + "Account Paired"
 
-    template_values = { 'carleton_id': carleton_id,
-                        'google_id': google_id
+    template_values = { 'carletonAccount': carletonAccount,
+                        'googleAccount': googleAccount
                         }
-    body = renderEmailBody('paired_notification.html', template_values)
+    body = render_email_body('paired_notification.html', template_values)
 
     mail.send_mail(from_address, to_address, subject, body)
 
 
-def send_unpaired(carleton_id, google_id):
+def send_unpaired(carletonAccount, googleAccount):
     '''
     Sends a notification that an account was unpaired
     '''
     from_address = last_chance_dance_email_address
-    to_address = carleton_id + "@carleton.edu"
+    to_address = carletonAccount.carletonID + "@carleton.edu"
     subject = subject_prefix + "Account Un-Paired"
 
-    template_values = { 'carleton_id': carleton_id,
-                        'google_id': google_id
+    template_values = { 'carletonAccount': carletonAccount,
+                        'googleAccount': googleAccount
                         }
-    body = renderEmailBody('unpaired_notification.html', template_values)
+    body = render_email_body('unpaired_notification.html', template_values)
 
     mail.send_mail(from_address, to_address, subject, body)
 
 def send_opted_out(source, target):
     '''
-    Sends a notification that someone opted out
+    Sends a notification that someone opted out. source and target are Carl objects.
     '''
     from_address = last_chance_dance_email_address
     #to_address = source.carletonID + "@carleton.edu"
@@ -104,13 +98,13 @@ def send_opted_out(source, target):
     template_values = { 'source': source,
                         'target': target
                         }
-    body = renderEmailBody('opted_out_notification.html', template_values)
+    body = render_email_body('opted_out_notification.html', template_values)
 
     mail.send_mail(from_address, to_address, subject, body)
 
 def send_opted_in(source, target):
     '''
-    Sends a notification that someone opted back in
+    Sends a notification that someone opted back in. source and target are Carl objects.
     '''
     from_address = last_chance_dance_email_address
     #to_address = source.carletonID + "@carleton.edu"
@@ -120,6 +114,6 @@ def send_opted_in(source, target):
     template_values = { 'source': source,
                         'target': target
                         }
-    body = renderEmailBody('opted_in_notification.html', template_values)
+    body = render_email_body('opted_in_notification.html', template_values)
 
     mail.send_mail(from_address, to_address, subject, body)

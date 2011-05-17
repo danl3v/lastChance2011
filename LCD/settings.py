@@ -12,9 +12,9 @@ class Settings(webapp.RequestHandler):
         else: carletonID = None
 
         template_values = {
-            'optedout': optedout,
+            'optedout': optedout, # active is always passed in, should resolve this issue
             'carletonID': carletonID,
-            'current_page': {'settings': True}
+            'current_page': { 'settings': True }
             }
 
         view.renderTemplate(self, 'settings.html', template_values)
@@ -32,7 +32,6 @@ class Settings(webapp.RequestHandler):
                 emailfunctions.send_opted_in(source, theCarl)
             '''
 
-            template_values = {}
             self.redirect("/settings")
             
         elif action == "optout" and session.is_active() and session.isPaired():
@@ -46,7 +45,6 @@ class Settings(webapp.RequestHandler):
                 emailfunctions.send_opted_out(source, theCarl)
             '''
                 
-            template_values = {}
             self.redirect("/settings")
 
         elif action == "pair" and not session.isPaired():
@@ -55,7 +53,7 @@ class Settings(webapp.RequestHandler):
                 theCarl.googleID = str(session.get_current_user().user_id())
                 theCarl.verificationCode = functions.generate_pair_code()
                 theCarl.put()
-                emailfunctions.send_paired(theCarl.carletonID, session.get_current_user().email())
+                emailfunctions.send_paired(theCarl, session.get_current_user())
                 template_values = {
                     'carletonID': theCarl.carletonID,
                     'googleEmail': session.get_current_user().email()
@@ -74,7 +72,7 @@ class Settings(webapp.RequestHandler):
             theCarl.verificationCode = functions.generate_pair_code()
             theCarl.googleID = ""
             theCarl.put()
-            emailfunctions.send_unpaired(theCarl.carletonID, session.get_current_user().email())
+            emailfunctions.send_unpaired(theCarl, session.get_current_user())
             template_values = {
                 'carletonID': theCarl.carletonID,
                 'googleEmail': session.get_current_user().email()
@@ -86,7 +84,7 @@ class Settings(webapp.RequestHandler):
             if carletonAccount:
                 carletonAccount.verificationCode = functions.generate_pair_code()
                 carletonAccount.put()
-                emailfunctions.sendInvite(carletonAccount)
+                emailfunctions.send_invitation(carletonAccount)
                 self.response.out.write('A pair code has been sent to ' + self.request.get('carletonID').split("@")[0] + '@carleton.edu. Once you get the email, go to <a href="/settings">settings</a> to enter your pair code.')
             else:
                 self.response.out.write('<p>Our database does not have the user ' + self.request.get('carletonID').split("@")[0] + '. This is either beacuse you are not a senior or because you are not on stalkernet.</p>')
@@ -101,7 +99,7 @@ class AutoPair(webapp.RequestHandler):
             theCarl.googleID = str(session.get_current_user().user_id())
             theCarl.verificationCode = functions.generate_pair_code()
             theCarl.put()
-            emailfunctions.send_paired(theCarl.carletonID, session.get_current_user().email())
+            emailfunctions.send_paired(theCarl, session.get_current_user())
             template_values = {
                 'carletonID': theCarl.carletonID,
                 'googleEmail': session.get_current_user().email()
@@ -116,7 +114,7 @@ class AutoPair(webapp.RequestHandler):
             view.renderTemplate(self, 'pair_failure.html', template_values)
 
 def get_crushes_for_user_by_target(user):
-    carl2carl = Carl2Carl.all()
+    carl2carl = models.Carl2Carl.all()
     carl2carl.filter("target =", user)
     results = carl2carl.fetch(1000) # there should not be more than num users in db
-    return [get_user_by_CID(result.source) for result in results]
+    return [functions.get_user_by_CID(result.source) for result in results]
