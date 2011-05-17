@@ -24,7 +24,7 @@
     <div class="crushdiv">
         <img src="/user_images/{{ crush.carletonID }}.jpg" width="120" height="120"><br>
         {{ crush.first_name }} {{ crush.last_name }}<br>
-        {% if not crush.active %}<span style="color:red;">opted out</span><br>
+        {% if not crush.opted_in %}<span style="color:red;">opted out</span><br>
         {% else %}
             {% if not crush.googleID %}<span style="color:red;">not yet registered</span><br>
             {% else %}<span style="color:green;">available!</span><br>

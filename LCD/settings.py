@@ -5,14 +5,13 @@ class Settings(webapp.RequestHandler):
 
     def get(self, action=None):
 
-        if session.is_active(): optedout = False
+        if session.opted_in(): optedout = False
         else: optedout = True
 
         if session.isPaired(): carletonID = session.getCarl().carletonID
         else: carletonID = None
 
         template_values = {
-            'optedout': optedout, # active is always passed in, should resolve this issue
             'carletonID': carletonID,
             'current_page': { 'settings': True }
             }
@@ -21,9 +20,9 @@ class Settings(webapp.RequestHandler):
 
     def post(self, action=None):
 
-        if action == "optin" and not session.is_active() and session.isPaired():
+        if action == "optin" and not session.opted_in() and session.isPaired():
             theCarl = session.getCarl()
-            theCarl.active = True
+            theCarl.opted_in = True
             theCarl.put()
 
             ''' #tested
@@ -34,9 +33,9 @@ class Settings(webapp.RequestHandler):
 
             self.redirect("/settings")
             
-        elif action == "optout" and session.is_active() and session.isPaired():
+        elif action == "optout" and session.opted_in() and session.isPaired():
             theCarl = session.getCarl()
-            theCarl.active = False
+            theCarl.opted_in = False
             theCarl.put()
 
             ''' #tested
@@ -49,9 +48,9 @@ class Settings(webapp.RequestHandler):
 
         elif action == "pair" and not session.isPaired():
             theCarl = functions.get_user_by_CID(self.request.get('carletonID').split("@")[0])
-            if (theCarl) and (theCarl.verificationCode == self.request.get('verificationCode')):
+            if (theCarl) and (theCarl.pair_code == self.request.get('pair_code')):
                 theCarl.googleID = str(session.get_current_user().user_id())
-                theCarl.verificationCode = functions.generate_pair_code()
+                theCarl.pair_code = functions.generate_pair_code()
                 theCarl.put()
                 emailfunctions.send_paired(theCarl, session.get_current_user())
                 template_values = {
@@ -61,7 +60,7 @@ class Settings(webapp.RequestHandler):
                 view.renderTemplate(self, 'pair_success.html', template_values)
             else:
                 template_values = {
-                    'pairCode' : self.request.get('verificationCode'),
+                    'pairCode' : self.request.get('pair_code'),
                     'carletonID' : self.request.get('carletonID').split("@")[0],
                     'googleEmail' : session.get_current_user().email()
                     }
@@ -69,7 +68,7 @@ class Settings(webapp.RequestHandler):
 
         elif action == "unpair" and session.isPaired():
             theCarl = session.getCarl()
-            theCarl.verificationCode = functions.generate_pair_code()
+            theCarl.pair_code = functions.generate_pair_code()
             theCarl.googleID = ""
             theCarl.put()
             emailfunctions.send_unpaired(theCarl, session.get_current_user())
@@ -82,7 +81,7 @@ class Settings(webapp.RequestHandler):
         elif action == "sendcode":
             carletonAccount = functions.get_user_by_CID(self.request.get('carletonID').split("@")[0])
             if carletonAccount:
-                carletonAccount.verificationCode = functions.generate_pair_code()
+                carletonAccount.pair_code = functions.generate_pair_code()
                 carletonAccount.put()
                 emailfunctions.send_invitation(carletonAccount)
                 self.response.out.write('A pair code has been sent to ' + self.request.get('carletonID').split("@")[0] + '@carleton.edu. Once you get the email, go to <a href="/settings">settings</a> to enter your pair code.')
@@ -95,9 +94,9 @@ class Settings(webapp.RequestHandler):
 class AutoPair(webapp.RequestHandler):
     def get(self, user="", pair_code=""):
         theCarl = functions.get_user_by_CID(user)
-        if (theCarl) and (theCarl.verificationCode == pair_code):
+        if (theCarl) and (theCarl.pair_code == pair_code):
             theCarl.googleID = str(session.get_current_user().user_id())
-            theCarl.verificationCode = functions.generate_pair_code()
+            theCarl.pair_code = functions.generate_pair_code()
             theCarl.put()
             emailfunctions.send_paired(theCarl, session.get_current_user())
             template_values = {

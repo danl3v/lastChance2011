@@ -3,7 +3,7 @@ import models, view, session, functions
 
 class Send(webapp.RequestHandler):
     def post(self):
-        if session.isPaired() and session.is_active():
+        if session.isPaired() and session.opted_in():
             carleton_id = session.getCarl().carletonID
             if not functions.get_user_by_CID(self.request.get("to")): self.response.out.write('{"success":2}') # check if user exists
             elif not functions.has_crush(carleton_id, self.request.get("to")): self.response.out.write('{"success":3}') # you must have them as a crush
@@ -19,7 +19,7 @@ class Send(webapp.RequestHandler):
 
 class Delete(webapp.RequestHandler):
     def post(self):
-        if session.isPaired() and session.is_active():
+        if session.isPaired() and session.opted_in():
             carleton_id = session.getCarl().carletonID
             message = models.Message.get_by_id(long(self.request.get("mid"))) # maybe use key instead of key.id to find the message
             if message and message.target == carleton_id: # users can only delete their own messages

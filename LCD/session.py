@@ -30,12 +30,12 @@ def isPaired():
 
     return count # 1 if paired, 0 if not paired
 
-def is_active():
+def opted_in():
     '''
-    returns True if current user is active, False if current user us not active or if account not paired
+    returns True if current user is opted_in, False if current user is not opted_in or if account not paired
     '''
     carl = getCarl()
-    return carl.active if carl else False
+    return carl.opted_in if carl else False
 
 def getCarl(): 
     """crashes if run on anonymous sessions"""

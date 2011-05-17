@@ -6,8 +6,8 @@ class Carl(db.Model):
     carletonID = db.StringProperty()
     first_name = db.StringProperty()
     last_name = db.StringProperty()
-    verificationCode = db.StringProperty() # set default to generateVerificationCode?
-    active = db.BooleanProperty(default=True) # if the user opts out, this is set to false
+    pair_code = db.StringProperty() # set default to generateVerificationCode?
+    opted_in = db.BooleanProperty(default=True)
 
 class Carl2Carl(db.Model): # change to crush
     source = db.StringProperty() # change to reference properties

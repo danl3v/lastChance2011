@@ -13,7 +13,7 @@ def addCarl(first_name, last_name, carleton_id):
     else:
         carl = models.Carl()
         carl.carletonID = carleton_id.strip()
-        carl.verificationCode = functions.generate_pair_code()
+        carl.pair_code = functions.generate_pair_code()
         carl.first_name = first_name.strip()
         carl.last_name = last_name.strip()
         carl.put()
@@ -58,7 +58,7 @@ class DeleteCarl(webapp.RequestHandler):
 class NewPairCode(webapp.RequestHandler):
     def post(self):
         carl = functions.get_user_by_CID(self.request.get('carletonID'))
-        carl.verificationCode = functions.generate_pair_code()
+        carl.pair_code = functions.generate_pair_code()
         carl.put()
         self.redirect('/admin')
 
@@ -79,19 +79,19 @@ def calculate_matches():
     crushes = models.Carl2Carl.all()
     return [(crush.source, crush.target) for crush in crushes if functions.has_crush(crush.target, crush.source)]
 
-application = webapp.WSGIApplication(
-                                      [('/admin', Admin),
-                                       ('/admin/', Admin),
-                                       ('/admin/addcarl', AddCarl),
-                                       ('/admin/addusers', AddUsers),
-                                       ('/admin/newpaircode', NewPairCode),
-                                       ('/admin/deletecarl', DeleteCarl),
-                                       ('/admin/invite', Invite),
-                                       ('/admin/unpaircarl', UnPairCarl),
-                                       ('/admin/calculate', CalculateCrushes)],
-                                     debug=True)
-
 def main():
+    application = webapp.WSGIApplication([
+           ('/admin', Admin),
+           ('/admin/', Admin),
+           ('/admin/addcarl', AddCarl),
+           ('/admin/addusers', AddUsers),
+           ('/admin/newpaircode', NewPairCode),
+           ('/admin/deletecarl', DeleteCarl),
+           ('/admin/invite', Invite),
+           ('/admin/unpaircarl', UnPairCarl),
+           ('/admin/calculate', CalculateCrushes)
+         ], debug=True)
+         
     run_wsgi_app(application)
 
 if __name__ == "__main__":

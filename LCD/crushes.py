@@ -3,7 +3,7 @@ import session, models, view, functions
 
 class Crushes(webapp.RequestHandler):
     def get(self):
-        if session.isPaired() and session.is_active():
+        if session.isPaired() and session.opted_in():
             carleton_id = session.getCarl().carletonID
             crushes = get_crushes_for_user(carleton_id)
             messages = get_messages_by_CID(carleton_id)
@@ -18,7 +18,7 @@ class Crushes(webapp.RequestHandler):
 
 class AddCrush(webapp.RequestHandler):
     def post(self):
-        if session.isPaired() and session.is_active():
+        if session.isPaired() and session.opted_in():
             carleton_id = session.getCarl().carletonID
             if functions.has_crush(carleton_id, self.request.get("crush")): self.response.out.write('{"success":2}') # cannot choose someone who is already a crush
             elif not functions.get_user_by_CID(self.request.get("crush")): self.response.out.write('{"success":3}') # crush must exist
@@ -27,7 +27,7 @@ class AddCrush(webapp.RequestHandler):
             else:
                 crush = functions.get_user_by_CID(self.request.get("crush"))
                 if not crush.googleID: status = "not_paired"
-                elif not crush.active: status = "opted_out"
+                elif not crush.opted_in: status = "opted_out"
                 else: status = "available"
                 
                 edge = models.Carl2Carl()
@@ -40,7 +40,7 @@ class AddCrush(webapp.RequestHandler):
 
 class RemoveCrush(webapp.RequestHandler):
     def post(self):
-        if session.isPaired() and session.is_active():
+        if session.isPaired() and session.opted_in():
             carleton_id = session.getCarl().carletonID
             carl = functions.has_crush(carleton_id, self.request.get("crush"))
             carl.delete()

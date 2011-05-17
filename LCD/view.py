@@ -20,7 +20,7 @@ def getHeaderFooterData(self):
     if user:
         login_url = session.create_logout_url("/")
         login_url_linktext = 'Logout'
-        active = session.is_active()        
+        opted_in = session.opted_in()        
         if session.isPaired():
             paired = True
             carl = session.getCarl()
@@ -32,7 +32,7 @@ def getHeaderFooterData(self):
         login_url = session.create_login_url(self.request.uri)
         login_url_linktext = 'Login'
         paired = False
-        active = False
+        opted_in = False
         
     admin = session.is_current_user_admin()
 
@@ -45,7 +45,7 @@ def getHeaderFooterData(self):
         'login_url': login_url,
         'login_url_linktext': login_url_linktext,
         'paired': paired,
-        'active': active,
+        'opted_in': opted_in,
         'num_crushes': num_crushes
         }
 
