@@ -9,9 +9,8 @@ class Send(webapp.RequestHandler):
     def post(self):
         if session.isPaired() and session.is_active():
             carleton_id = session.getCarl().carletonID
-            if not models.get_user_by_CID(self.request.get("to")): self.response.out.write('{"success":2}')
-            elif not models.get_user_by_CID(self.request.get("to")).active: self.response.out.write('{"success":3}')
-            elif not models.has_crush(carleton_id, self.request.get("to")): self.response.out.write('{"success":4}')
+            if not models.get_user_by_CID(self.request.get("to")): self.response.out.write('{"success":2}') # check if user exists
+            elif not models.has_crush(carleton_id, self.request.get("to")): self.response.out.write('{"success":3}') # you must have them as a crush
             else:
                 message = models.Message()
                 message.source = carleton_id

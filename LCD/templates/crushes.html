@@ -4,8 +4,11 @@
 <link rel="stylesheet" type="text/css" href="/stylesheets/jquery/jquery-ui-1.8.12.custom.css" />
 <style> 
   h2 { display: inline; }
-  button { float: right; }
+  #new-message-button { float: right; }
   input { display: inline; }
+  li.message { background-color: #EEEEEE; }
+  .crushdiv { border: 1px solid #CCCCCC; margin: 5px; background-color: #EEEEEE; height: 13em; }
+  .crushdiv span { display: block;}
 </style>
 <script type="text/javascript" src="/js/jquery-1.5.1.min.js"></script>
 <script type="text/javascript" src="/js/jquery-ui-1.8.12.custom.min.js"></script>
@@ -18,7 +21,19 @@
 <h2>Crushes</h2>
     <span id="new-crush">new crush: <input type="text" class="crush" name="crush"></span>
     <div id="crushes">
-    {% for crush in crushes %}<div class="crushdiv"><img src="/user_images/{{ crush.carletonID }}.jpg" width="100" height="100"><br>{{ crush.carletonID }}<button class="removeCrush" value="{{ crush.carletonID }}">remove</button></div>{% endfor %}
+    {% for crush in crushes %}
+    <div class="crushdiv">
+        <img src="/user_images/{{ crush.carletonID }}.jpg" width="120" height="120"><br>
+        {{ crush.first_name }} {{ crush.last_name }}
+        {% if not crush.active %}<span style="color:red;">opted out</span><br>
+        {% else %}
+            {% if not crush.googleID %}<span style="color:red;">not yet registered</span><br>
+            {% else %}<span style="color:green;">available!</span><br>
+            {% endif %}
+        {% endif %}
+        <button class="removeCrush" value="{{ crush.carletonID }}">remove</button>
+    </div>
+    {% endfor %}
     </div>
 </div>
 
@@ -72,15 +87,18 @@ $(document).ready(function() {
             $(this).val("");
                 $.post("/crushes/add", { "crush": ui.item.carletonID }, function(data) {
                     if (data.success == 0) {
-                        $("#crushes").append('<div class="crushdiv"><img src="/user_images/' + ui.item.carletonID + '.jpg" width="100" height="100"><br>' + ui.item.carletonID + '<button class="removeCrush" value="' + ui.item.carletonID + '">remove</button></div>');
+                        var status;
+                        if (data.status == "not_paired") { status = '<span style="color:red;">not yet registered</span><br>'; }
+                        else if (data.status == "opted_out") { status = '<span style="color:red;">opted out</span><br>'; }
+                        else { status = '<span style="color:green;">available!</span><br>'; }
+                        $("#crushes").append('<div class="crushdiv"><img src="/user_images/' + ui.item.carletonID + '.jpg" width="120" height="120"><br>' + ui.item.first_name + " " + ui.item.last_name + " " + status + '<button class="removeCrush" value="' + ui.item.carletonID + '">remove</button></div>');
                         $("#to").append('<option value="' + ui.item.carletonID + '">' + ui.item.value + '</option>');
                     }
                     else if (data.success == 1) { alert("Your account must be paired and opted-in in order to add crushes."); }
                     else if (data.success == 2) { alert(ui.item.value + " is already one of your crushes."); }
                     else if (data.success == 3) { alert(ui.item.value + " is not in our database."); }
-                    else if (data.success == 4) { alert(ui.item.value + " has opted out. Try again later. Maybe they will have opted back in."); }
-                    else if (data.success == 5) { alert("You cannot choose yourself as a crush."); }
-                    else if (data.success == 6) { alert("Sorry. You can't have more than 5 crushes. Please remove one before adding another."); }
+                    else if (data.success == 4) { alert("You cannot choose yourself as a crush."); }
+                    else if (data.success == 5) { alert("Sorry. You can't have more than 5 crushes. Please remove one before adding another."); }
                     else { alert("There was an error in adding your crush. Please try again."); }
                 }, "json");
             return false; // tells autocomplete not to update the field with the selected value
@@ -99,8 +117,7 @@ $(document).ready(function() {
                                     if (data.success == 0) { $("#new-message-form").dialog("close"); }
                                     else if (data.success == 1) { alert("Your account must be paired and opted-in in order to send messages."); }
                                     else if (data.success == 2) { alert($("select[name='to']").val() + " is not in our database. Could not send message."); }
-                                    else if (data.success == 3) { alert($("select[name='to']").val() + " has opted out. Try again later. Maybe they will have opted back in."); }
-                                    else if (data.success == 4) { alert($("select[name='to']").val() + " is not one of your crushes. You can only send a message to one of your crushes."); }
+                                    else if (data.success == 3) { alert($("select[name='to']").val() + " is not one of your crushes. You can only send a message to one of your crushes."); }
                                     else { alert("There was an error in sending your message. Please try again."); }
                                 }, "json");
                             }
@@ -117,7 +134,7 @@ $(document).ready(function() {
 });
 
 function crushRemoveListener() {
-    $(this).parent().slideUp(function() { $(this).remove(); });
+    $(this).parent().fadeOut(function() { $(this).remove(); });
     $('#to option:contains("' + $(this).val() + '")').remove(); // make sure not to remove extra stuff if matches more than 1 name
     $.post("/crushes/remove", { "crush": $(this).val() }, function(data) {
         if (data.success == 1) { alert("Your account must be paired and opted-in in order to remove crushes."); }

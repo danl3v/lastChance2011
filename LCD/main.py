@@ -85,28 +85,25 @@ class Settings(webapp.RequestHandler):
 
 class AutoPair(webapp.RequestHandler):
     def get(self, user="", pair_code=""):
-        if not session.isPaired():
-            theCarl = models.get_user_by_CID(user)
-            if (theCarl) and (theCarl.verificationCode == pair_code):
-                theCarl.googleID = str(session.get_current_user().user_id())
-                theCarl.verificationCode = models.generate_pair_code()
-                theCarl.put()
-                emailfunctions.send_paired(theCarl.carletonID, session.get_current_user().email())
-                template_values = {
-                    'carletonID': theCarl.carletonID,
-                    'googleEmail': session.get_current_user().email()
-                    }                
-                view.renderTemplate(self, 'pair_success.html', template_values)
-            else:
-                template_values = {
-                    'pairCode' : pair_code,
-                    'carletonID' : user,
-                    'googleEmail' : session.get_current_user().email()
-                    }
-                view.renderTemplate(self, 'pair_failure.html', template_values)
+        theCarl = models.get_user_by_CID(user)
+        if (theCarl) and (theCarl.verificationCode == pair_code):
+            theCarl.googleID = str(session.get_current_user().user_id())
+            theCarl.verificationCode = models.generate_pair_code()
+            theCarl.put()
+            emailfunctions.send_paired(theCarl.carletonID, session.get_current_user().email())
+            template_values = {
+                'carletonID': theCarl.carletonID,
+                'googleEmail': session.get_current_user().email()
+                }                
+            view.renderTemplate(self, 'pair_success.html', template_values)
         else:
-            self.response.out.write('Your Google ID is already paired to another Carleton ID')
-            
+            template_values = {
+                'pairCode' : pair_code,
+                'carletonID' : user,
+                'googleEmail' : session.get_current_user().email()
+                }
+            view.renderTemplate(self, 'pair_failure.html', template_values)
+
 class Crushes(webapp.RequestHandler):
     def get(self):
         if session.isPaired() and session.is_active():
@@ -128,15 +125,19 @@ class AddCrush(webapp.RequestHandler):
             carleton_id = session.getCarl().carletonID
             if models.has_crush(carleton_id, self.request.get("crush")): self.response.out.write('{"success":2}') # cannot choose someone who is already a crush
             elif not models.get_user_by_CID(self.request.get("crush")): self.response.out.write('{"success":3}') # crush must exist
-            elif not models.get_user_by_CID(self.request.get("crush")).active: self.response.out.write('{"success":4}') # crush must not be opted out
-            elif carleton_id == self.request.get("crush"): self.response.out.write('{"success":5}') # can't choose yourself as a crush
-            elif len(models.get_crushes_for_user(carleton_id)) >= 5: self.response.out.write('{"success":6}') # can't have more than 5 crushes
+            elif carleton_id == self.request.get("crush"): self.response.out.write('{"success":4}') # can't choose yourself as a crush
+            elif len(models.get_crushes_for_user(carleton_id)) >= 5: self.response.out.write('{"success":5}') # can't have more than 5 crushes
             else:
+                crush = models.get_user_by_CID(self.request.get("crush"))
+                if not crush.googleID: status = "not_paired"
+                elif not crush.active: status = "opted_out"
+                else: status = "available"
+                
                 edge = models.Carl2Carl()
                 edge.source = carleton_id
                 edge.target = self.request.get('crush')
                 edge.put()
-                self.response.out.write('{"success":0}')
+                self.response.out.write('{"success":0, "status":"' + status + '"}')
         else:
             self.response.out.write('{"success":1}')    
 
