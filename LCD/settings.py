@@ -1,5 +1,5 @@
 from google.appengine.ext import webapp
-import session, models, view, emailfunctions
+import session, models, view, emailfunctions, functions
 
 class Settings(webapp.RequestHandler):
 
@@ -27,7 +27,7 @@ class Settings(webapp.RequestHandler):
             theCarl.put()
 
             ''' #tested
-            sources = models.get_crushes_for_user_by_target(theCarl.carletonID) # send opted in notifications
+            sources = get_crushes_for_user_by_target(theCarl.carletonID) # send opted in notifications
             for source in sources:
                 emailfunctions.send_opted_in(source, theCarl)
             '''
@@ -41,7 +41,7 @@ class Settings(webapp.RequestHandler):
             theCarl.put()
 
             ''' #tested
-            sources = models.get_crushes_for_user_by_target(theCarl.carletonID) # send opted out notifications
+            sources = get_crushes_for_user_by_target(theCarl.carletonID) # send opted out notifications
             for source in sources:
                 emailfunctions.send_opted_out(source, theCarl)
             '''
@@ -50,10 +50,10 @@ class Settings(webapp.RequestHandler):
             self.redirect("/settings")
 
         elif action == "pair" and not session.isPaired():
-            theCarl = models.get_user_by_CID(self.request.get('carletonID').split("@")[0])
+            theCarl = functions.get_user_by_CID(self.request.get('carletonID').split("@")[0])
             if (theCarl) and (theCarl.verificationCode == self.request.get('verificationCode')):
                 theCarl.googleID = str(session.get_current_user().user_id())
-                theCarl.verificationCode = models.generate_pair_code()
+                theCarl.verificationCode = functions.generate_pair_code()
                 theCarl.put()
                 emailfunctions.send_paired(theCarl.carletonID, session.get_current_user().email())
                 template_values = {
@@ -71,7 +71,7 @@ class Settings(webapp.RequestHandler):
 
         elif action == "unpair" and session.isPaired():
             theCarl = session.getCarl()
-            theCarl.verificationCode = models.generate_pair_code()
+            theCarl.verificationCode = functions.generate_pair_code()
             theCarl.googleID = ""
             theCarl.put()
             emailfunctions.send_unpaired(theCarl.carletonID, session.get_current_user().email())
@@ -82,9 +82,9 @@ class Settings(webapp.RequestHandler):
             view.renderTemplate(self, 'unpair_success.html', template_values)
 
         elif action == "sendcode":
-            carletonAccount = models.get_user_by_CID(self.request.get('carletonID').split("@")[0])
+            carletonAccount = functions.get_user_by_CID(self.request.get('carletonID').split("@")[0])
             if carletonAccount:
-                carletonAccount.verificationCode = models.generate_pair_code()
+                carletonAccount.verificationCode = functions.generate_pair_code()
                 carletonAccount.put()
                 emailfunctions.sendInvite(carletonAccount)
                 self.response.out.write('A pair code has been sent to ' + self.request.get('carletonID').split("@")[0] + '@carleton.edu. Once you get the email, go to <a href="/settings">settings</a> to enter your pair code.')
@@ -96,10 +96,10 @@ class Settings(webapp.RequestHandler):
 
 class AutoPair(webapp.RequestHandler):
     def get(self, user="", pair_code=""):
-        theCarl = models.get_user_by_CID(user)
+        theCarl = functions.get_user_by_CID(user)
         if (theCarl) and (theCarl.verificationCode == pair_code):
             theCarl.googleID = str(session.get_current_user().user_id())
-            theCarl.verificationCode = models.generate_pair_code()
+            theCarl.verificationCode = functions.generate_pair_code()
             theCarl.put()
             emailfunctions.send_paired(theCarl.carletonID, session.get_current_user().email())
             template_values = {
@@ -114,3 +114,9 @@ class AutoPair(webapp.RequestHandler):
                 'googleEmail' : session.get_current_user().email()
                 }
             view.renderTemplate(self, 'pair_failure.html', template_values)
+
+def get_crushes_for_user_by_target(user):
+    carl2carl = Carl2Carl.all()
+    carl2carl.filter("target =", user)
+    results = carl2carl.fetch(1000) # there should not be more than num users in db
+    return [get_user_by_CID(result.source) for result in results]

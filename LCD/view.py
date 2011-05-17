@@ -16,7 +16,7 @@ def getHeaderFooterData(self):
     carleton_id = None
     first_name = None
     last_name = None
-    num_crushes = models.num_crushes()
+    num_crushes = models.Carl2Carl.all().count()
     if user:
         login_url = session.create_logout_url("/")
         login_url_linktext = 'Logout'

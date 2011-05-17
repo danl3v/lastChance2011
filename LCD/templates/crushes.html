@@ -8,7 +8,7 @@
   input { display: inline; }
   li.message { background-color: #EEEEEE; }
   .crushdiv { border: 1px solid #CCCCCC; margin: 5px; background-color: #EEEEEE; height: 13em; }
-  .crushdiv span { displeay: block;}
+  .crushdiv span { display: block;}
 </style>
 <script type="text/javascript" src="/js/jquery-1.5.1.min.js"></script>
 <script type="text/javascript" src="/js/jquery-ui-1.8.12.custom.min.js"></script>
@@ -43,7 +43,7 @@
        <li class="message" mid="{{ message.key.id }}">
          <div class="timestamp">{{ message.created|date:"M d \@ g:i:s A"}}</div>
          <div class="actions">
-           <ul class="ui-widget ui-helper-clearfix">
+           <ul id="icons" class="ui-widget ui-helper-clearfix">
              <li class="ui-state-default ui-corner-all delete-button" title="Delete"><span class="ui-icon ui-icon-trash"></span></li>
              <li class="ui-state-default ui-corner-all block-button" title="Block User"><span class="ui-icon ui-icon-cancel"></span></li>
            </ul>

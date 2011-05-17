@@ -5,15 +5,15 @@ from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-import models, view, session, emailfunctions
+import models, view, session, emailfunctions, functions
 
 def addCarl(first_name, last_name, carleton_id):
-    if models.get_user_by_CID(carleton_id.strip()):
+    if functions.get_user_by_CID(carleton_id.strip()):
         return False
     else:
         carl = models.Carl()
         carl.carletonID = carleton_id.strip()
-        carl.verificationCode = models.generate_pair_code()
+        carl.verificationCode = functions.generate_pair_code()
         carl.first_name = first_name.strip()
         carl.last_name = last_name.strip()
         carl.put()
@@ -21,7 +21,7 @@ def addCarl(first_name, last_name, carleton_id):
 
 class CalculateCrushes(webapp.RequestHandler):
     def get(self):
-        matches = models.calculate_matches()
+        matches = calculate_matches()
         for match in matches:
             self.response.out.write(match[0] + " --> " + match[1] + "<br>")
             # send emails here
@@ -51,29 +51,40 @@ class AddUsers(webapp.RequestHandler):
 
 class DeleteCarl(webapp.RequestHandler):
     def post(self):
-        carl = models.get_user_by_CID(self.request.get('carletonID'))
+        carl = functions.get_user_by_CID(self.request.get('carletonID'))
         carl.delete()
         self.redirect('/admin')
 
 class NewPairCode(webapp.RequestHandler):
     def post(self):
-        carl = models.get_user_by_CID(self.request.get('carletonID'))
-        carl.verificationCode = models.generate_pair_code()
+        carl = functions.get_user_by_CID(self.request.get('carletonID'))
+        carl.verificationCode = functions.generate_pair_code()
         carl.put()
         self.redirect('/admin')
 
 class UnPairCarl(webapp.RequestHandler):
     def post(self):
-        carl = models.get_user_by_CID(self.request.get('carletonID'))
+        carl = functions.get_user_by_CID(self.request.get('carletonID'))
         carl.googleID = ""
         carl.put()
         self.redirect('/admin')
 
 class Invite(webapp.RequestHandler):
     def post(self):
-        carletonAccount = models.get_user_by_CID(self.request.get("carletonID"))
+        carletonAccount = functions.get_user_by_CID(self.request.get("carletonID"))
         emailfunctions.sendInvite(carletonAccount)
         self.response.out.write('Invitation sent to ' + self.request.get("carletonID") + '! <a href="/admin">Back to admin</a>.')
+
+def has_crush(source, target):
+    carl2carl = models.Carl2Carl.all()
+    carl2carl.filter("source =", source)
+    carl2carl.filter("target =", target)
+    carl = carl2carl.get()
+    return carl
+
+def calculate_matches():
+    crushes = models.Carl2Carl.all()
+    return [(crush.source, crush.target) for crush in crushes if has_crush(crush.target, crush.source)]
 
 application = webapp.WSGIApplication(
                                       [('/admin', Admin),
