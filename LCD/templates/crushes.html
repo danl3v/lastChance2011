@@ -139,9 +139,9 @@ $(document).ready(function() {
 });
 
 function crushRemoveListener() {
+    $(this).parent().fadeOut(function() { $(this).remove(); }); // want to do this only after success
     $.post("/crushes/remove", { "crush": $(this).val() }, function(data) {
         if (data.success == 0) {
-            $(this).parent().fadeOut(function() { $(this).remove(); });
             $('#to option:contains("' + $(this).val() + '")').remove(); // make sure not to remove extra stuff if matches more than 1 name
             window.location='/crushes'; // just until we finish doing replies
         }

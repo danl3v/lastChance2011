@@ -23,7 +23,7 @@ class Message(db.Model): # change this back to message
     
     @property
     def replies(self):
-        return Reply.gql("WHERE message = :1", self.key()) #order the messages
+        return Reply.gql("WHERE message = :1 ORDER BY created ASC", self.key())
 
 class Reply(db.Model):
     message = db.ReferenceProperty(Message, collection_name="reply_message")
