@@ -52,7 +52,7 @@ class Settings(webapp.RequestHandler):
                 theCarl.googleID = str(session.get_current_user().user_id())
                 theCarl.pair_code = functions.generate_pair_code()
                 theCarl.put()
-                emailfunctions.send_paired(theCarl, session.get_current_user())
+                #emailfunctions.send_paired(theCarl, session.get_current_user())
                 template_values = {
                     'carletonID': theCarl.carletonID,
                     'googleEmail': session.get_current_user().email()
@@ -71,7 +71,7 @@ class Settings(webapp.RequestHandler):
             theCarl.pair_code = functions.generate_pair_code()
             theCarl.googleID = ""
             theCarl.put()
-            emailfunctions.send_unpaired(theCarl, session.get_current_user())
+            #emailfunctions.send_unpaired(theCarl, session.get_current_user())
             template_values = {
                 'carletonID': theCarl.carletonID,
                 'googleEmail': session.get_current_user().email()
@@ -98,7 +98,7 @@ class AutoPair(webapp.RequestHandler):
             theCarl.googleID = str(session.get_current_user().user_id())
             theCarl.pair_code = functions.generate_pair_code()
             theCarl.put()
-            emailfunctions.send_paired(theCarl, session.get_current_user())
+            #emailfunctions.send_paired(theCarl, session.get_current_user())
             template_values = {
                 'carletonID': theCarl.carletonID,
                 'googleEmail': session.get_current_user().email()

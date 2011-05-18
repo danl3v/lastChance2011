@@ -5,10 +5,10 @@ class Crushes(webapp.RequestHandler):
     def get(self):
         if session.isPaired() and session.opted_in():
             crushes = get_crushes_for_user(session.getCarl())
-            threads = get_threads_for_user(session.getCarl())
+            messages = get_messages_for_user(session.getCarl())
             template_values = {
                 'crushes': crushes,
-                'messages': threads, # change to threads
+                'messages': messages,
                 'current_page': { 'crushes': True }
                 }
             view.renderTemplate(self, 'crushes.html', template_values)
@@ -22,7 +22,7 @@ class AddCrush(webapp.RequestHandler):
             target = functions.get_user_by_CID(self.request.get("crush"))
             if functions.has_crush(source, target): self.response.out.write('{"success":2}') # cannot choose someone who is already a crush
             elif not target: self.response.out.write('{"success":3}') # crush must exist
-            elif source.carletonID == target.carletonID: self.response.out.write('{"success":4}') # can't choose yourself as a crush (kind of weird that we need to compare their carletonIDs instead of just comparing them)
+            #elif source.carletonID == target.carletonID: self.response.out.write('{"success":4}') # can't choose yourself as a crush (kind of weird that we need to compare their carletonIDs instead of just comparing them)
             elif len(get_crushes_for_user(source)) >= 5: self.response.out.write('{"success":5}') # can't have more than 5 crushes
             else:
                 edge = models.Crush()
@@ -63,9 +63,9 @@ def get_crushes_for_user(user):
     crushes.filter("source =", user)
     return crushes.fetch(20) # there should not be more than 5
 
-def get_threads_for_user(user):
-    threads = models.Thread.all()
-    threads.filter("target =", user)
-    threads.filter("deleted =", False)
-    threads.order("-created")
-    return threads.fetch(1000) # if we have more than 1000 threads, we need to fetch multiple times
+def get_messages_for_user(user): # need to somehow get messages by source
+    messages = models.Message.all()
+    messages.filter("target =", user)
+    messages.filter("deleted =", False)
+    messages.order("-created")
+    return messages.fetch(1000) # if we have more than 1000 messages, we need to fetch multiple times

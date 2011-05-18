@@ -13,9 +13,20 @@ class Crush(db.Model):
     source = db.ReferenceProperty(Carl, collection_name="crush_source")
     target = db.ReferenceProperty(Carl, collection_name="crush_target")
 
-class Thread(db.Model):
-    deleted = db.BooleanProperty(default=False) 
-    source = db.ReferenceProperty(Carl, collection_name="thread_source")
-    target = db.ReferenceProperty(Carl, collection_name="thread_target")
-    message = db.StringProperty(multiline=True)
+class Message(db.Model): # change this back to message
+    source = db.ReferenceProperty(Carl, collection_name="message_source")
+    target = db.ReferenceProperty(Carl, collection_name="message_target")
+    deleted = db.BooleanProperty(default=False)
+
+    body = db.StringProperty(multiline=True)
+    created = db.DateTimeProperty(auto_now_add=True)     
+    
+    @property
+    def replies(self):
+        return Reply.gql("WHERE message = :1", self.key()) #order the messages
+
+class Reply(db.Model):
+    message = db.ReferenceProperty(Message, collection_name="reply_message")
+    source = db.ReferenceProperty(Carl, collection_name="reply_source")
+    body = db.StringProperty(multiline=True)
     created = db.DateTimeProperty(auto_now_add=True)

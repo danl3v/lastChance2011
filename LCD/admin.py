@@ -5,6 +5,8 @@ from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
+# separate out the app from the controllers and put admin in main
+
 import models, view, session, emailfunctions, functions
 
 def addCarl(first_name, last_name, carleton_id):

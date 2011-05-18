@@ -1,6 +1,6 @@
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
-import crushes, settings, messages
+import crushes, settings, messages # put these in a controllers folder
 
 def main():
     application = webapp.WSGIApplication([
@@ -12,6 +12,7 @@ def main():
            ('/pair/(.*)/(.*)', settings.AutoPair),
            ('/settings/(.*)', settings.Settings),
            ('/messages/send', messages.Send),
+           ('/messages/reply', messages.Reply),
            ('/messages/delete', messages.Delete)
          ],debug=True)
 
