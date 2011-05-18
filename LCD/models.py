@@ -14,12 +14,13 @@ class Crush(db.Model):
     target = db.ReferenceProperty(Carl, collection_name="crush_target")
 
 class Message(db.Model): # change this back to message
-    source = db.ReferenceProperty(Carl, collection_name="message_source")
-    target = db.ReferenceProperty(Carl, collection_name="message_target")
+    source = db.ReferenceProperty(Carl, collection_name="in_messages")
+    target = db.ReferenceProperty(Carl, collection_name="out_messages")
     deleted = db.BooleanProperty(default=False)
 
     body = db.StringProperty(multiline=True)
-    created = db.DateTimeProperty(auto_now_add=True)     
+    created = db.DateTimeProperty(auto_now_add=True)
+    updated = db.DateTimeProperty(auto_now_add=True)
     
     @property
     def replies(self):

@@ -6,9 +6,11 @@ class Crushes(webapp.RequestHandler):
         if session.isPaired() and session.opted_in():
             crushes = get_crushes_for_user(session.getCarl())
             messages = get_messages_for_user(session.getCarl())
+            sent_messages = get_messages_from_user(session.getCarl())
             template_values = {
                 'crushes': crushes,
                 'messages': messages,
+                'sent_messages': sent_messages,
                 'current_page': { 'crushes': True }
                 }
             view.renderTemplate(self, 'crushes.html', template_values)
@@ -66,6 +68,13 @@ def get_crushes_for_user(user):
 def get_messages_for_user(user): # need to somehow get messages by source
     messages = models.Message.all()
     messages.filter("target =", user)
+    messages.filter("deleted =", False)
+    messages.order("-created")
+    return messages.fetch(1000) # if we have more than 1000 messages, we need to fetch multiple times
+
+def get_messages_from_user(user): # need to somehow get messages by source
+    messages = models.Message.all()
+    messages.filter("source =", user)
     messages.filter("deleted =", False)
     messages.order("-created")
     return messages.fetch(1000) # if we have more than 1000 messages, we need to fetch multiple times

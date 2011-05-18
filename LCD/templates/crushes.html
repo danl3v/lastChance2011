@@ -10,6 +10,7 @@
   .crushdiv { border: 1px solid #CCCCCC; margin: 5px; background-color: #EEEEEE; height: 13em; }
   .crushdiv span { display: block; }
   .reply-text { width: 95%; }
+  .sent { opacity: .5 !important; }
 </style>
 <script type="text/javascript" src="/js/jquery-1.5.1.min.js"></script>
 <script type="text/javascript" src="/js/jquery-ui-1.8.12.custom.min.js"></script>
@@ -39,10 +40,11 @@
 
 <div class="rightcol">
     <h2>Messages</h2><button id="new-message-button">New Message</button>
+    <h3>To Me</h3>
     <ul id="messages">
        {% for message in messages %}
          <li class="message" mid="{{ message.key.id }}">
-           <div class="timestamp">{{ message.created|date:"M d \@ g:i:s A"}}</div>
+           <div class="timestamp"><strong>Someone</strong> on {{ message.created|date:"M d \@ g:i:s A"}}</div>
            <div class="actions">
              <ul id="icons" class="ui-widget ui-helper-clearfix">
                {% if not message.replies.count %}<li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>{% endif %}
@@ -53,8 +55,35 @@
            <br>{{ message.body }}
          </li>
          {% for reply in message.replies %}
-           <li class="message" style="margin-left: 2em;">
-             <div class="timestamp">{{ reply.created|date:"M d \@ g:i:s A"}}</div>
+           <li class="message{% if carleton_id == reply.source.carletonID %} sent{% endif %}" style="margin-left: 2em;">
+             <div class="timestamp">
+                {% if carleton_id == reply.source.carletonID %}<strong>You</strong> on
+                {% else %}<strong>Someone</strong> on {% endif %}
+                {{ reply.created|date:"M d \@ g:i:s A"}}</div>
+	     <br>{{ reply.body }}
+	   </li>
+	 {% endfor %}
+         <li class="message reply-box" mid="{{ message.key.id }}" style="margin-left:2em;{% if not message.replies.count %}display:none;{% endif %}"><input type="text" class="reply-text"></li>
+       {% endfor %}
+    </ul>
+    
+    <h3>From Me</h3>
+    <ul id="messages">
+       {% for message in sent_messages %}
+         <li class="message sent" mid="{{ message.key.id }}">
+           <div class="timestamp"><strong>{{ message.source.first_name }} {{ message.source.last_name }}</strong> on {{ message.created|date:"M d \@ g:i:s A"}}</div>
+           <div class="actions">
+             <ul id="icons" class="ui-widget ui-helper-clearfix">
+               {% if not message.replies.count %}<li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>{% endif %}
+               <li class="ui-state-default ui-corner-all delete-button" title="Delete"><span class="ui-icon ui-icon-trash"></span></li>
+               <li class="ui-state-default ui-corner-all block-button" title="Block User"><span class="ui-icon ui-icon-cancel"></span></li>
+             </ul>
+           </div>
+           <br>{{ message.body }}
+         </li>
+         {% for reply in message.replies %}
+           <li class="message{% if carleton_id == reply.source.carletonID %} sent{% endif %}" style="margin-left:2em;">
+             <div class="timestamp"><strong>{{ reply.source.first_name }} {{ reply.source.last_name }}</strong> on {{ reply.created|date:"M d \@ g:i:s A"}}</div>
 	     <br>{{ reply.body }}
 	   </li>
 	 {% endfor %}
