@@ -17,7 +17,7 @@
     <div id="crushes">
     {% for crush in crushes %}
     <div class="crushdiv">
-        <img src="/user_images/{{ crush.target.carletonID }}.jpg" width="120" height="120"><br>
+        <img src="/user_images/{{ crush.target.carletonID }}.jpg" width="120" height="120" alt="{{ crush.target.carletonID }}"><br>
         {{ crush.target.first_name }} {{ crush.target.last_name }}<br>
         {% if not crush.target.opted_in %}<span style="color:red;">opted out</span><br>
         {% else %}
@@ -25,7 +25,7 @@
             {% else %}<span style="color:green;">available!</span><br>
             {% endif %}
         {% endif %}
-        <button class="messageCrush" value="{{ crush.target.carletonID }}">message</button>
+        <button class="messageCrush" value="{{ crush.target.carletonID }}" data-first-name="{{ crush.target.first_name }}" data-last-name="{{ crush.target.last_name }}">message</button>
         <button class="removeCrush" value="{{ crush.target.carletonID }}">remove</button>
     </div>
     {% endfor %}
@@ -43,12 +43,12 @@
     <div id="messages-to-me" class="messages-tab">
     <div class="messages">
        {% for message in messages %}
-         <div class="message" mid="{{ message.key.id }}">
+         <div class="message" data-mid="{{ message.key.id }}">
          <div class="message-item">
            <div class="message-item-header">
            <div class="message-item-info"><strong>Someone</strong> on {{ message.created|date:"M d \@ g:i:s A"}}</div>
            <div class="message-actions">
-             <ul id="icons" class="ui-widget ui-helper-clearfix">
+             <ul class="icons ui-widget ui-helper-clearfix">
                {% if not message.replies.count %}<li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>{% endif %}
                <li class="ui-state-default ui-corner-all delete-button" title="Delete"><span class="ui-icon ui-icon-trash"></span></li>
                <li class="ui-state-default ui-corner-all block-button" title="Block User"><span class="ui-icon ui-icon-cancel"></span></li>
@@ -58,7 +58,7 @@
            <div class="message-item-body">{{ message.body }}</div>
          </div>
          {% for reply in message.replies %}
-           <div class="message-item{% if carleton_id == reply.source.carletonID %} sent{% endif %}" style="margin-left: 2em;">
+           <div class="message-item{% if carleton_id == reply.source.carletonID %} reply sent{% endif %}">
              <div class="message-item-header">
              <div class="message-item-info">
                {% if carleton_id == reply.source.carletonID %}<strong>You</strong> on
@@ -77,12 +77,12 @@
     <div id="messages-from-me" class="messages-tab">
     <div class="messages">
        {% for message in sent_messages %}
-         <div class="message" mid="{{ message.key.id }}">
+         <div class="message" data-mid="{{ message.key.id }}">
          <div class="message-item sent">
            <div class="message-item-header">
            <div class="message-item-info"><strong>You</strong> to <strong>{{ message.target.first_name }} {{ message.target.last_name }}</strong> on {{ message.created|date:"M d \@ g:i:s A"}}</div>
            <div class="message-actions">
-             <ul id="icons" class="ui-widget ui-helper-clearfix">
+             <ul class="icons ui-widget ui-helper-clearfix">
                {% if not message.replies.count %}<li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>{% endif %}
                <li class="ui-state-default ui-corner-all delete-button" title="Delete"><span class="ui-icon ui-icon-trash"></span></li>
                <li class="ui-state-default ui-corner-all block-button" title="Block User"><span class="ui-icon ui-icon-cancel"></span></li>
@@ -92,7 +92,7 @@
            <div class="message-item-body">{{ message.body }}</div>
          </div>
          {% for reply in message.replies %}
-           <div class="message-item{% if carleton_id == reply.source.carletonID %} sent{% endif %}" style="margin-left:2em;">
+           <div class="message-item{% if carleton_id == reply.source.carletonID %} reply sent{% endif %}">
              <div class="message-item-header">
              <div class="message-item-info">
                {% if carleton_id == reply.source.carletonID %}<strong>You</strong> on
@@ -115,9 +115,9 @@
 <div id="new-message-form" title="New Message">
   <form>
   <fieldset>
-    <input type="hidden" name="to">
-    <label for="to_label">To</label><input type="text" name="to_label" class="text ui-widget-content ui-corner-all" disabled>
-    <label for="body">Body</label><textarea name="body" id="body" class="text ui-widget-content ui-corner-all"></textarea>
+    <input type="hidden" name="message-to" id="message-to">
+    <label for="message-to-box">To</label><input type="text" name="message-to-box" id="message-to-box" class="text ui-widget-content ui-corner-all" disabled>
+    <label for="message-body">Body</label><textarea name="message-body" id="message-body" class="text ui-widget-content ui-corner-all"></textarea>
   </fieldset>
   <p>Note: Beware of what you send. Even though messages are anonymous, users have the power to block you, so don't spam and be appropriate.</p>
 </form>
@@ -158,24 +158,25 @@ $(document).ready(function() {
         width: 450,
         modal: true,
         buttons: {
-            Cancel: function() { $(this).dialog("close"); },
             "Send Message": function() {
-                                var to = $("input[name='to']").val();
-                                var body = $("textarea[name='body']").val();
+                                var to = $("input[name='message-to']").val();
+                                var name = $("input[name='message-to-box']").val();
+                                var body = $("textarea[name='message-body']").val();
                                 $.post("/messages/send", { "to": to, "body": body }, function(data) {
                                     if (data.success == 0) {
                                         $("#new-message-form").dialog("close");
-                                        addSentMessage(to, body, data.mid);
+                                        addSentMessage(data.name, body, data.mid);
                                         showMessages('from-me');
                                     }
                                     else if (data.success == 1) { alert("Your account must be paired and opted-in in order to send messages."); }
-                                    else if (data.success == 2) { alert($("input[name='to']").val() + " is not in our database. Could not send message."); }
-                                    else if (data.success == 3) { alert($("input[name='to']").val() + " is not one of your crushes. You can only send a message to one of your crushes."); }
+                                    else if (data.success == 2) { alert(name + " is not in our database. Could not send message."); }
+                                    else if (data.success == 3) { alert(name + " is not one of your crushes. You can only send a message to one of your crushes."); }
                                     else { alert("There was an error in sending your message. Please try again."); }
                                 }, "json");
-                            }
+                            },
+            Cancel: function() { $(this).dialog("close"); }
         },
-        close: function() { $("#to").val(""); $("#body").val(""); }
+        close: function() { $("textarea[name='message-body']").val(""); }
     });
     
     $(".messageCrush:button").live('click', messageSendListener);
@@ -188,12 +189,12 @@ $(document).ready(function() {
 
 function addSentMessage(to, body, message_id) {
     var message =
-    '<div class="message" mid="' + message_id + '">' +
+    '<div class="message" data-mid="' + message_id + '">' +
     '  <div class="message-item sent">' +
     '    <div class="message-item-header">' +
     '    <div class="message-item-info"><strong>You</strong> to <strong>' + to + '</strong> just now</div>' +
     '    <div class="message-actions">' +
-    '      <ul id="icons" class="ui-widget ui-helper-clearfix">' +
+    '      <ul class="icons ui-widget ui-helper-clearfix">' +
     '        <li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>' +
     '        <li class="ui-state-default ui-corner-all delete-button" title="Delete"><span class="ui-icon ui-icon-trash"></span></li>' +
     '        <li class="ui-state-default ui-corner-all block-button" title="Block User"><span class="ui-icon ui-icon-cancel"></span></li>' +
@@ -204,7 +205,8 @@ function addSentMessage(to, body, message_id) {
 	'  </div>' +
 	'  <div class="message-item reply reply-box" style="display:none;"><input type="text" class="reply-text"></div>' +
 	'</div>';
-	$("#messages-from-me .message:first").before(message);
+	if ($("#messages-from-me .messages .message").length > 0) { $("#messages-from-me .messages .message:first").before(message); }
+	else { $("#messages-from-me .messages").html(message); }
 }
 
 function crushRemoveListener() {
@@ -220,15 +222,15 @@ function crushRemoveListener() {
 }
 
 function messageSendListener(user) {
-    $("#new-message-form input[name='to']").val($(this).val());
-    $("#new-message-form input[name='to_label']").val($(this).val()); // make this their first name and last name
+    $("#new-message-form input[name='message-to']").val($(this).val());
+    $("#new-message-form input[name='message-to-box']").val($(this).attr("data-first-name") + ' ' + $(this).attr("data-last-name")); // make this their first name and last name
     $("#new-message-form").dialog("open");
 }
 
 function messageRemoveListener() {
     if (confirm("Do you really want to delete this message?")) {
         var message = $(this).parent().parent().parent().parent().parent();
-        $.post("/messages/delete", { "mid": message.attr("mid") }, function(data) {
+        $.post("/messages/delete", { "mid": message.attr("data-mid") }, function(data) {
             if (data.success == 0) { message.fadeOut("fast", function() { message.remove(); }); }
             else if (data.success == 1) { alert("Your account must be paired and opted-in in order to delete messages."); }
             else if (data.success == 2) { alert("Message does not exist or you tried to delete another user's message."); }
@@ -252,7 +254,7 @@ function messageReplyListener() {
 function messageSendReplyListener() { // clean up vars
   $(this).keyup(function(event) {
     if (event.keyCode == 13) {
-      var message_id = $(this).parent().parent().attr("mid");
+      var message_id = $(this).parent().parent().attr("data-mid");
       var body = $(this).val();
       $(this).val("");
       $(this).parent().before('<div class="message-item sent reply"><div class="message-item-header"><div class="message-item-info"><strong>You</strong> just now</div></div><div class="message-item-body">' + body + '</div></div>');
@@ -269,5 +271,6 @@ function messageSendReplyListener() { // clean up vars
 function blockUserListener() {
     alert("feature not working now");
 }
+
 </script>
 {% endblock %}

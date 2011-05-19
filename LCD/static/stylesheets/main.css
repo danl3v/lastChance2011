@@ -345,13 +345,13 @@ div.messages div.message-item:hover > div.message-item-header div.message-action
     opacity: 1;
 }
 
-div.messages div.message-actions ul#icons
+div.messages div.message-actions ul.icons
 {
     margin: 0;
     padding: 0;
 }
 
-div.messages div.message-actions ul#icons li
+div.messages div.message-actions ul.icons li
 {
     margin: 2px;
     position: relative;
@@ -361,7 +361,7 @@ div.messages div.message-actions ul#icons li
     list-style: none;
 }
 
-div.messages div.message-actions ul#icons span.ui-icon
+div.messages div.message-actions ul.icons li span.ui-icon
 {
     float: left;
     margin: 0 4px;

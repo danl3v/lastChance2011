@@ -15,7 +15,7 @@ class Send(webapp.RequestHandler):
                 message.target = target
                 message.body = self.request.get("body")
                 message.put()
-                self.response.out.write('{"success":0,"mid":' + str(message.key().id()) + '}')
+                self.response.out.write('{"success":0,"mid":' + str(message.key().id()) + ',"name":"' + message.target.first_name + ' ' + message.target.last_name + '"}')
         else:
             self.response.out.write('{"success":1}')
 
