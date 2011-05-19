@@ -168,14 +168,14 @@ $(document).ready(function() {
 });
 
 function crushRemoveListener() {
-    $(this).parent().fadeOut(function() { $(this).remove(); }); // want to do this only after success
+    var crush = $(this);
     $.post("/crushes/remove", { "crush": $(this).val() }, function(data) {
         if (data.success == 0) {
-            $('#to option:contains("' + $(this).val() + '")').remove(); // make sure not to remove extra stuff if matches more than 1 name
-            window.location='/crushes'; // just until we finish doing replies
+            crush.parent().fadeOut(function() { $(this).remove(); });
         }
         else if (data.success == 1) { alert("Your account must be paired and opted-in in order to remove crushes."); }
-    });
+        else { alert("Error in deleting crush. Try again."); }
+    }, "json");
 }
 
 function messageSendListener(user) {
@@ -211,13 +211,18 @@ function messageReplyListener() {
 function messageSendReplyListener() {
   $(this).keyup(function(event) {
     if (event.keyCode == 13) {
-      $.post("/messages/reply", { "mid": $(this).parent().attr("mid"), "body": $(this).val() }, function(data) {
-        if (data.success == 0) {
-            window.location='/crushes';
-        }
+      var reply = $(this).parent();
+      var reply_box = $(this);
+      var reply_body = $(this).val();
+      reply_box.val("");
+      reply.after(reply.clone());
+      reply.html('<div class="timestamp"><strong>You</strong> just now</div><br>' + reply_body);
+      reply.addClass("sent");
+      $.post("/messages/reply", { "mid": reply.attr("mid"), "body": reply_body }, function(data) {
+        if (data.success == 0) { }
         else if (data.success == 1) { alert("Your account must be paired and opted-in in order to reply to messages."); }
         else if (data.success == 2) { alert("Message does not exist or you tried to reply another user's message."); }
-        else { alert("Error in replying to  message. Try again."); }
+        else { alert("Error in replying to  message. Try again. The added message will be gone when you refresh the page."); }
       }, "json");
     }
   });
