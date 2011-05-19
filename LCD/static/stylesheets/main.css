@@ -77,11 +77,23 @@ div#footer
 }
 
 /* GENERAL LAYOUT OBJECTS */
-div.leftcol, div.rightcol
+div.colwrapper
 {
-    display: inline-block;
-    vertical-align: top;
-    width: 49%;
+    overflow: auto;
+    width: 100%;
+}
+
+div.leftcol
+{
+    width: 50%;
+    float: left;
+}
+
+div.rightcol
+{
+    width: 50%;
+    float: right;
+    
 }
 
 /* HEADER LAYOUT OBJECTS */
@@ -118,7 +130,7 @@ div#nav ul li
     display: inline;
     background: #04346C;
     list-style-type: none;
-    margin: 0px 2px;
+    margin-left: 2px;
 }
 
 div#nav ul li a, div#nav ul li a:hover, div#nav ul li a:visited, div#nav ul li a:active
@@ -225,13 +237,72 @@ div#main a, div#main a:hover, div#main a:visited, div#main a:active, div#footer 
 
 div#crushes div.crushdiv
 {
+    margin-top: .8em;
     float: left;
     padding: 5px;
     width: 10em;
     text-align: center;
+    border: 1px solid #CCCCCC;
+    margin-right: .5em;
+    background-color: #EEEEEE;
+    height: 13em;
+}
+
+div#crushes div.crushdiv span
+{
+    display: block;
 }
 
 /* MESSAGES LAYOUT OBJECTS */
+div#messages-header
+{
+   margin-bottom: 1em;
+}
+
+ul#messages-nav
+{
+    float: right;
+    margin-top: .2em;
+    display: inline;
+}
+
+ul#messages-nav li
+{
+    border: 1px solid #FFFFFF;
+    display: inline;
+    list-style-type: none;
+    padding: 0.3em;
+}
+
+ul#messages-nav li a, ul#messages-nav li a:hover, ul#messages-nav li a:visited, ul#messages-nav li a:active
+{
+    font-weight: bold;
+    text-decoration: none;
+}
+
+ul#messages-nav li.active
+{
+    border: 1px solid #CCCCCC;
+    background-color: #EEEEEE;
+}
+  
+#messages-from-me
+{
+    display: none;
+}
+
+li.message input.reply-text
+{
+    width: 95%;
+}
+ul li.message {
+    background-color: #EEEEEE;
+}
+ul li.sent
+{
+    opacity: .5 !important;
+}
+
 ul#messages li.message {
     border: 1px solid #CCCCCC;
     padding: .5em;

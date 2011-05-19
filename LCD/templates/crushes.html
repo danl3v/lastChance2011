@@ -2,50 +2,17 @@
 
 {% block extrahead %}
 <link rel="stylesheet" type="text/css" href="/stylesheets/jquery/jquery-ui-1.8.12.custom.css" />
-<style> 
-  h2 { display: inline; }
-  input { display: inline; }
-  li.message { background-color: #EEEEEE; }
-  .crushdiv { border: 1px solid #CCCCCC; margin: 5px; background-color: #EEEEEE; height: 13em; }
-  .crushdiv span { display: block; }
-  .reply-text { width: 95%; }
-  .sent { opacity: .5 !important; }
-  ul#messages-nav
-  {
-    float: right;
-    margin-top: .2em;
-    display: inline;
-  }
-  ul#messages-nav li
-  {
-    border: 1px solid #FFFFFF;
-    display: inline;
-    list-style-type: none;
-    padding: 0.3em;
-
-  }
-  ul#messages-nav li a, ul#messages-nav li a:hover, ul#messages-nav li a:visited, ul#messages-nav li a:active
-  {
-    font-weight: bold;
-    text-decoration: none;
-  }
-   ul#messages-nav li.active
-  {
-    border: 1px solid #CCCCCC;
-    background-color: #EEEEEE;
-  }
-  
-  #messages-from-me { display: none; }
-</style>
 <script type="text/javascript" src="/js/jquery-1.5.1.min.js"></script>
 <script type="text/javascript" src="/js/jquery-ui-1.8.12.custom.min.js"></script>
 {% endblock %}
 
 {% block content %}
-<div id="main">
+<div id="main" class="colwrapper">
 <div class="leftcol">
-<h2>Crushes</h2>
+    <div id="crushes-header">
+    <h2 style="display:inline;">Crushes</h2>
     <span id="new-crush">new crush: <input type="text" class="crush" name="crush"></span>
+    </div>
     <div id="crushes">
     {% for crush in crushes %}
     <div class="crushdiv">
@@ -66,7 +33,7 @@
 
 <div class="rightcol">
     <div id="messages-header">
-        <h2>Messages</h2>
+        <h2 style="display:inline;">Messages</h2>
         <ul id="messages-nav">
             <li id="messages-nav-to-me" class="active"><a href="javascript:void(0);" onclick="javascript:showMessages('to-me');">To Me</a></li>
             <li id="messages-nav-from-me"><a href="javascript:void(0);" onclick="javascript:showMessages('from-me');">From Me</a></li>
