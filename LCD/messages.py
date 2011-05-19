@@ -26,6 +26,8 @@ class Reply(webapp.RequestHandler):
             source = session.getCarl()
             if message and (message.source.carletonID == source.carletonID or message.target.carletonID == source.carletonID):
                 message.updated = datetime.now()
+                message.source_deleted = False
+                message.target_deleted = False
                 message.put()
                 reply = models.Reply()
                 reply.message = message
@@ -41,10 +43,11 @@ class Reply(webapp.RequestHandler):
 class Delete(webapp.RequestHandler):
     def post(self):
         if session.isPaired() and session.opted_in():
-            target = session.getCarl()
+            user = session.getCarl()
             message = models.Message.get_by_id(long(self.request.get("mid"))) # maybe use key instead of key.id to find the message
-            if message and message.target.carletonID == target.carletonID: # kind of weird that we need to compare their carletonIDs instead of just comparing them
-                message.deleted = True
+            if message:
+                if user.carletonID == message.source.carletonID: message.source_deleted = True
+                elif user.carletonID == message.target.carletonID: message.target_deleted = True
                 message.put()
                 self.response.out.write('{"success":0}')
             else:

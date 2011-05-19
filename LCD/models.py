@@ -16,7 +16,8 @@ class Crush(db.Model):
 class Message(db.Model): # change this back to message
     source = db.ReferenceProperty(Carl, collection_name="in_messages")
     target = db.ReferenceProperty(Carl, collection_name="out_messages")
-    deleted = db.BooleanProperty(default=False)
+    source_deleted = db.BooleanProperty(default=False)
+    target_deleted = db.BooleanProperty(default=False)
 
     body = db.StringProperty(multiline=True)
     created = db.DateTimeProperty(auto_now_add=True)

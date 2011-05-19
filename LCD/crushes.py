@@ -40,9 +40,12 @@ class RemoveCrush(webapp.RequestHandler):
         if session.isPaired() and session.opted_in():
             source = session.getCarl()
             target = functions.get_user_by_CID(self.request.get("crush"))
-            carl = functions.has_crush(source, target)
-            carl.delete()
-            self.response.out.write('{"success":0}')
+            crush = functions.has_crush(source, target)
+            if crush:
+                crush.delete()
+                self.response.out.write('{"success":0}')
+            else:
+                self.response.out.write('{"success":2}')
         else:
             self.response.out.write('{"success":1}')
 
@@ -68,13 +71,13 @@ def get_crushes_for_user(user):
 def get_messages_for_user(user): # need to somehow get messages by source
     messages = models.Message.all()
     messages.filter("target =", user)
-    messages.filter("deleted =", False)
+    messages.filter("target_deleted =", False)
     messages.order("-updated")
     return messages.fetch(1000) # if we have more than 1000 messages, we need to fetch multiple times
 
 def get_messages_from_user(user): # need to somehow get messages by source
     messages = models.Message.all()
     messages.filter("source =", user)
-    messages.filter("deleted =", False)
+    messages.filter("source_deleted =", False)
     messages.order("-updated")
     return messages.fetch(1000) # if we have more than 1000 messages, we need to fetch multiple times
