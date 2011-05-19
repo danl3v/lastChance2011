@@ -286,7 +286,7 @@ div#new-message-form label, div#new-message-form input
     display: block;
 }
 
-div#new-message-form select, div#new-message-form textarea
+div#new-message-form input.text, div#new-message-form textarea
 {
     display: block;
     width: 95%;

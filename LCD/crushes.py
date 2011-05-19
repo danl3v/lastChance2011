@@ -24,7 +24,7 @@ class AddCrush(webapp.RequestHandler):
             target = functions.get_user_by_CID(self.request.get("crush"))
             if functions.has_crush(source, target): self.response.out.write('{"success":2}') # cannot choose someone who is already a crush
             elif not target: self.response.out.write('{"success":3}') # crush must exist
-            #elif source.carletonID == target.carletonID: self.response.out.write('{"success":4}') # can't choose yourself as a crush (kind of weird that we need to compare their carletonIDs instead of just comparing them)
+            elif source.carletonID == target.carletonID: self.response.out.write('{"success":4}') # can't choose yourself as a crush (kind of weird that we need to compare their carletonIDs instead of just comparing them)
             elif len(get_crushes_for_user(source)) >= 5: self.response.out.write('{"success":5}') # can't have more than 5 crushes
             else:
                 edge = models.Crush()
@@ -69,12 +69,12 @@ def get_messages_for_user(user): # need to somehow get messages by source
     messages = models.Message.all()
     messages.filter("target =", user)
     messages.filter("deleted =", False)
-    messages.order("-created")
+    messages.order("-updated")
     return messages.fetch(1000) # if we have more than 1000 messages, we need to fetch multiple times
 
 def get_messages_from_user(user): # need to somehow get messages by source
     messages = models.Message.all()
     messages.filter("source =", user)
     messages.filter("deleted =", False)
-    messages.order("-created")
+    messages.order("-updated")
     return messages.fetch(1000) # if we have more than 1000 messages, we need to fetch multiple times

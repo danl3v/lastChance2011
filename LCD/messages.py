@@ -1,4 +1,5 @@
 from google.appengine.ext import webapp
+from datetime import datetime
 import models, view, session, functions
 
 class Send(webapp.RequestHandler):
@@ -24,6 +25,8 @@ class Reply(webapp.RequestHandler):
             message = models.Message.get_by_id(long(self.request.get("mid"))) # maybe use key instead of key.id to find the message
             source = session.getCarl()
             if message and (message.source.carletonID == source.carletonID or message.target.carletonID == source.carletonID):
+                message.updated = datetime.now()
+                message.put()
                 reply = models.Reply()
                 reply.message = message
                 reply.source = source
