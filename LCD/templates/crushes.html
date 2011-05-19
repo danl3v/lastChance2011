@@ -8,6 +8,7 @@
 
 {% block content %}
 <div id="main" class="colwrapper">
+
 <div class="leftcol">
     <div id="crushes-header">
     <h2 style="display:inline;">Crushes</h2>
@@ -40,60 +41,72 @@
         </ul>
     </div>
     <div id="messages-to-me" class="messages-tab">
-    <ul id="messages">
+    <div class="messages">
        {% for message in messages %}
-         <li class="message" mid="{{ message.key.id }}">
-           <div class="timestamp"><strong>Someone</strong> on {{ message.created|date:"M d \@ g:i:s A"}}</div>
-           <div class="actions">
+         <div class="message" mid="{{ message.key.id }}">
+         <div class="message-item">
+           <div class="message-item-header">
+           <div class="message-item-info"><strong>Someone</strong> on {{ message.created|date:"M d \@ g:i:s A"}}</div>
+           <div class="message-actions">
              <ul id="icons" class="ui-widget ui-helper-clearfix">
                {% if not message.replies.count %}<li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>{% endif %}
                <li class="ui-state-default ui-corner-all delete-button" title="Delete"><span class="ui-icon ui-icon-trash"></span></li>
                <li class="ui-state-default ui-corner-all block-button" title="Block User"><span class="ui-icon ui-icon-cancel"></span></li>
              </ul>
            </div>
-           <br>{{ message.body }}
-         </li>
+           </div>
+           <div class="message-item-body">{{ message.body }}</div>
+         </div>
          {% for reply in message.replies %}
-           <li class="message{% if carleton_id == reply.source.carletonID %} sent{% endif %}" style="margin-left: 2em;">
-             <div class="timestamp">
-                 {% if carleton_id == reply.source.carletonID %}<strong>You</strong> on
-                 {% else %}<strong>Someone</strong> on {% endif %}
-                 {{ reply.created|date:"M d \@ g:i:s A"}}
+           <div class="message-item{% if carleton_id == reply.source.carletonID %} sent{% endif %}" style="margin-left: 2em;">
+             <div class="message-item-header">
+             <div class="message-item-info">
+               {% if carleton_id == reply.source.carletonID %}<strong>You</strong> on
+               {% else %}<strong>Someone</strong> on {% endif %}
+               {{ reply.created|date:"M d \@ g:i:s A"}}
              </div>
-	     <br>{{ reply.body }}
-	   </li>
-	 {% endfor %}
-         <li class="message reply-box" mid="{{ message.key.id }}" style="margin-left:2em;{% if not message.replies.count %}display:none;{% endif %}"><input type="text" class="reply-text"></li>
+             </div>
+	         <div class="message-item-body">{{ reply.body }}</div>
+	       </div>
+	     {% endfor %}
+         <div class="message-item reply reply-box"{% if not message.replies.count %} style="display:none;"{% endif %}><input type="text" class="reply-text"></div>
+         </div>
        {% endfor %}
-    </ul>
+    </div>
     </div>
     <div id="messages-from-me" class="messages-tab">
-    <ul id="messages">
+    <div class="messages">
        {% for message in sent_messages %}
-         <li class="message sent" mid="{{ message.key.id }}">
-           <div class="timestamp"><strong>You</strong> to <strong>{{ message.target.first_name }} {{ message.target.last_name }}</strong> on {{ message.created|date:"M d \@ g:i:s A"}}</div>
-           <div class="actions">
+         <div class="message" mid="{{ message.key.id }}">
+         <div class="message-item sent">
+           <div class="message-item-header">
+           <div class="message-item-info"><strong>You</strong> to <strong>{{ message.target.first_name }} {{ message.target.last_name }}</strong> on {{ message.created|date:"M d \@ g:i:s A"}}</div>
+           <div class="message-actions">
              <ul id="icons" class="ui-widget ui-helper-clearfix">
                {% if not message.replies.count %}<li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>{% endif %}
                <li class="ui-state-default ui-corner-all delete-button" title="Delete"><span class="ui-icon ui-icon-trash"></span></li>
                <li class="ui-state-default ui-corner-all block-button" title="Block User"><span class="ui-icon ui-icon-cancel"></span></li>
              </ul>
            </div>
-           <br>{{ message.body }}
-         </li>
+           </div>
+           <div class="message-item-body">{{ message.body }}</div>
+         </div>
          {% for reply in message.replies %}
-           <li class="message{% if carleton_id == reply.source.carletonID %} sent{% endif %}" style="margin-left:2em;">
-             <div class="timestamp">
-                 {% if carleton_id == reply.source.carletonID %}<strong>You</strong> on
-                 {% else %}<strong>{{ reply.source.first_name }} {{ reply.source.last_name }}</strong> on {% endif %}
-                 {{ reply.created|date:"M d \@ g:i:s A"}}
+           <div class="message-item{% if carleton_id == reply.source.carletonID %} sent{% endif %}" style="margin-left:2em;">
+             <div class="message-item-header">
+             <div class="message-item-info">
+               {% if carleton_id == reply.source.carletonID %}<strong>You</strong> on
+               {% else %}<strong>{{ reply.source.first_name }} {{ reply.source.last_name }}</strong> on {% endif %}
+               {{ reply.created|date:"M d \@ g:i:s A"}}
              </div>
-	     <br>{{ reply.body }}
-	   </li>
-	 {% endfor %}
-         <li class="message reply-box" mid="{{ message.key.id }}" style="margin-left:2em;{% if not message.replies.count %}display:none;{% endif %}"><input type="text" class="reply-text"></li>
+             </div>
+	         <div class="message-item-body">{{ reply.body }}</div>
+	       </div>
+  	   {% endfor %}
+       <div class="message-item reply reply-box"{% if not message.replies.count %} style="display:none;"{% endif %}><input type="text" class="reply-text"></div>
+       </div>
        {% endfor %}
-    </ul>
+    </div>
     </div>
 </div>
 
@@ -147,8 +160,14 @@ $(document).ready(function() {
         buttons: {
             Cancel: function() { $(this).dialog("close"); },
             "Send Message": function() {
-                                $.post("/messages/send", { "to": $("input[name='to']").val(), "body": $("textarea[name='body']").val() }, function(data) {
-                                    if (data.success == 0) { $("#new-message-form").dialog("close"); } // add a notification that the message was successfully sent
+                                var to = $("input[name='to']").val();
+                                var body = $("textarea[name='body']").val();
+                                $.post("/messages/send", { "to": to, "body": body }, function(data) {
+                                    if (data.success == 0) {
+                                        $("#new-message-form").dialog("close");
+                                        addSentMessage(to, body, data.mid);
+                                        showMessages('from-me');
+                                    }
                                     else if (data.success == 1) { alert("Your account must be paired and opted-in in order to send messages."); }
                                     else if (data.success == 2) { alert($("input[name='to']").val() + " is not in our database. Could not send message."); }
                                     else if (data.success == 3) { alert($("input[name='to']").val() + " is not one of your crushes. You can only send a message to one of your crushes."); }
@@ -166,6 +185,27 @@ $(document).ready(function() {
     $(".block-button").live('click', blockUserListener);
     $(".reply-text").live('focus', messageSendReplyListener);
 });
+
+function addSentMessage(to, body, message_id) {
+    var message =
+    '<div class="message" mid="' + message_id + '">' +
+    '  <div class="message-item sent">' +
+    '    <div class="message-item-header">' +
+    '    <div class="message-item-info"><strong>You</strong> to <strong>' + to + '</strong> just now</div>' +
+    '    <div class="message-actions">' +
+    '      <ul id="icons" class="ui-widget ui-helper-clearfix">' +
+    '        <li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>' +
+    '        <li class="ui-state-default ui-corner-all delete-button" title="Delete"><span class="ui-icon ui-icon-trash"></span></li>' +
+    '        <li class="ui-state-default ui-corner-all block-button" title="Block User"><span class="ui-icon ui-icon-cancel"></span></li>' +
+    '      </ul>' +
+    '    </div>' +
+    '    </div>' +
+	'    <div class="message-item-body">' + body + '</div>' +
+	'  </div>' +
+	'  <div class="message-item reply reply-box" style="display:none;"><input type="text" class="reply-text"></div>' +
+	'</div>';
+	$("#messages-from-me .message:first").before(message);
+}
 
 function crushRemoveListener() {
     var crush = $(this);
@@ -187,7 +227,7 @@ function messageSendListener(user) {
 
 function messageRemoveListener() {
     if (confirm("Do you really want to delete this message?")) {
-        var message = $(this).parent().parent().parent();
+        var message = $(this).parent().parent().parent().parent().parent();
         $.post("/messages/delete", { "mid": message.attr("mid") }, function(data) {
             if (data.success == 0) { message.fadeOut("fast", function() { message.remove(); }); }
             else if (data.success == 1) { alert("Your account must be paired and opted-in in order to delete messages."); }
@@ -205,21 +245,18 @@ function showMessages(tab) {
 }
 
 function messageReplyListener() {
-    $(this).parent().parent().parent().next(".reply-box").show();
-    $(this).parent().parent().parent().next(".reply-box").find("input").focus();
+    $(this).parent().parent().parent().parent().next(".reply-box").show();
+    //$(this).parent().parent().parent().next(".reply-box").find("input").focus(); // bug here that causes hitting enter to send many replies
 }
 
-function messageSendReplyListener() {
+function messageSendReplyListener() { // clean up vars
   $(this).keyup(function(event) {
     if (event.keyCode == 13) {
-      var reply = $(this).parent();
-      var reply_box = $(this);
-      var reply_body = $(this).val();
-      reply_box.val("");
-      reply.after(reply.clone());
-      reply.html('<div class="timestamp"><strong>You</strong> just now</div><br>' + reply_body);
-      reply.addClass("sent");
-      $.post("/messages/reply", { "mid": reply.attr("mid"), "body": reply_body }, function(data) {
+      var message_id = $(this).parent().parent().attr("mid");
+      var body = $(this).val();
+      $(this).val("");
+      $(this).parent().before('<div class="message-item sent reply"><div class="message-item-header"><div class="message-item-info"><strong>You</strong> just now</div></div><div class="message-item-body">' + body + '</div></div>');
+      $.post("/messages/reply", { "mid": message_id, "body": body }, function(data) {
         if (data.success == 0) { }
         else if (data.success == 1) { alert("Your account must be paired and opted-in in order to reply to messages."); }
         else if (data.success == 2) { alert("Message does not exist or you tried to reply another user's message."); }

@@ -291,52 +291,67 @@ ul#messages-nav li.active
     display: none;
 }
 
-li.message input.reply-text
+div.message-item input.reply-text
 {
     width: 95%;
 }
-ul li.message {
+
+div div.message-item
+{
     background-color: #EEEEEE;
 }
-ul li.sent
+
+div div.sent
 {
     opacity: .5 !important;
 }
 
-ul#messages li.message {
+div.messages div.message-item
+{
     border: 1px solid #CCCCCC;
     padding: .5em;
     margin: .5em 0;
     clear: both;
 }
 
-ul#messages li.message:hover > div.actions
+div.messages div.reply
 {
-    opacity: 1;
+    margin-left: 2em;
 }
 
-ul#messages li.message div.timestamp
+div.messages div.message-item div.message-item-header
 {
-    float: left;
+    position: relative;
+}
+
+div.messages div.message-item div.message-item-info
+{
     font-size: .6em;
 }
 
-ul#messages li.message div.actions
+div.messages div.message-item div.message-actions
 {
+    position: absolute;
+    right: 0;
+    top: 0;
     opacity: 0;
     -webkit-transition: all 0.2s ease;
     -moz-transition: all 0.2s ease;
     -o-transition: all 0.2s ease;
-    float: right;
 }
 
-ul#messages div.actions ul#icons
+div.messages div.message-item:hover > div.message-item-header div.message-actions
+{
+    opacity: 1;
+}
+
+div.messages div.message-actions ul#icons
 {
     margin: 0;
     padding: 0;
 }
 
-ul#messages div.actions ul#icons li
+div.messages div.message-actions ul#icons li
 {
     margin: 2px;
     position: relative;
@@ -346,10 +361,15 @@ ul#messages div.actions ul#icons li
     list-style: none;
 }
 
-ul#messages div.actions ul#icons span.ui-icon
+div.messages div.message-actions ul#icons span.ui-icon
 {
     float: left;
     margin: 0 4px;
+}
+
+div.messages div.message-item div.message-item-body
+{
+    margin-top: .4em;
 }
 
 div#new-message-form label, div#new-message-form input
