@@ -9,6 +9,7 @@ class Send(webapp.RequestHandler):
             target = functions.get_user_by_CID(self.request.get("to"))
             if not target: self.response.out.write('{"success":2}') # check if user exists
             elif not functions.has_crush(source, target): self.response.out.write('{"success":3}') # you must have them as a crush
+            elif not self.request.get("body"): self.response.out.write('{"success":4}') # message must have a body
             else:
                 message = models.Message()
                 message.source = source

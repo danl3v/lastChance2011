@@ -268,19 +268,19 @@ ul#messages-nav
 
 ul#messages-nav li
 {
-    border: 1px solid #FFFFFF;
     display: inline;
     list-style-type: none;
-    padding: 0.3em;
 }
 
 ul#messages-nav li a, ul#messages-nav li a:hover, ul#messages-nav li a:visited, ul#messages-nav li a:active
 {
     font-weight: bold;
     text-decoration: none;
+    padding: 0.3em;
+    border: 1px solid #FFFFFF;
 }
 
-ul#messages-nav li.active
+ul#messages-nav li.active a
 {
     border: 1px solid #CCCCCC;
     background-color: #EEEEEE;

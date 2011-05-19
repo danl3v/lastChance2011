@@ -46,7 +46,7 @@
          <div class="message" data-mid="{{ message.key.id }}">
          <div class="message-item">
            <div class="message-item-header">
-           <div class="message-item-info"><strong>Someone</strong> on {{ message.created|date:"M d \@ g:i:s A"}}</div>
+           <div class="message-item-info"><strong>Crush #{{ message.source.key.id }}</strong> on {{ message.created|date:"M d \@ g:i:s A"}}</div>
            <div class="message-actions">
              <ul class="icons ui-widget ui-helper-clearfix">
                {% if not message.replies.count %}<li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>{% endif %}
@@ -58,11 +58,11 @@
            <div class="message-item-body">{{ message.body }}</div>
          </div>
          {% for reply in message.replies %}
-           <div class="message-item{% if carleton_id == reply.source.carletonID %} reply sent{% endif %}">
+           <div class="message-item reply{% if carleton_id == reply.source.carletonID %} sent{% endif %}">
              <div class="message-item-header">
              <div class="message-item-info">
                {% if carleton_id == reply.source.carletonID %}<strong>You</strong> on
-               {% else %}<strong>Someone</strong> on {% endif %}
+               {% else %}<strong>Crush #{{ message.source.key.id }}</strong> on {% endif %}
                {{ reply.created|date:"M d \@ g:i:s A"}}
              </div>
              </div>
@@ -162,6 +162,7 @@ $(document).ready(function() {
                                 var to = $("input[name='message-to']").val();
                                 var name = $("input[name='message-to-box']").val();
                                 var body = $("textarea[name='message-body']").val();
+                                if (body == "") { alert("Please enter a message body."); return; }
                                 $.post("/messages/send", { "to": to, "body": body }, function(data) {
                                     if (data.success == 0) {
                                         $("#new-message-form").dialog("close");
@@ -171,6 +172,7 @@ $(document).ready(function() {
                                     else if (data.success == 1) { alert("Your account must be paired and opted-in in order to send messages."); }
                                     else if (data.success == 2) { alert(name + " is not in our database. Could not send message."); }
                                     else if (data.success == 3) { alert(name + " is not one of your crushes. You can only send a message to one of your crushes."); }
+                                    else if (data.success == 4) { alert("Your message did not have a body. It was not sent."); }
                                     else { alert("There was an error in sending your message. Please try again."); }
                                 }, "json");
                             },
