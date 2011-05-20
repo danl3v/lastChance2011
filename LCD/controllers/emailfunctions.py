@@ -16,7 +16,7 @@ def render_email_body(template_file, template_values):
     '''
     Renders the body of an email.
     '''
-    path = os.path.join(os.path.dirname(__file__), 'email_templates/' + template_file)
+    path = os.path.join(os.path.dirname(__file__), '../email_templates/' + template_file)
     return template.render(path, template_values)
 
 def send_invitation(carletonAccount):

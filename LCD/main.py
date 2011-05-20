@@ -1,6 +1,6 @@
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
-import crushes, settings, messages, welcome, admin
+from controllers import crushes, settings, messages, welcome, admin
 
 def main():
     application = webapp.WSGIApplication([

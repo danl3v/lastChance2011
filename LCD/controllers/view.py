@@ -53,6 +53,6 @@ def getHeaderFooterData(self):
 
 def renderTemplate(self, template_file, template_values):
     template_values = dict(getHeaderFooterData(self), **template_values)
-    path = os.path.join(os.path.dirname(__file__), 'views/' + template_file)
+    path = os.path.join(os.path.dirname(__file__), '../views/' + template_file)
     self.response.out.write(template.render(path, template_values))
 

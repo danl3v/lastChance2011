@@ -1,7 +1,6 @@
 from google.appengine.api import users
 import models
 
-
 def get_current_user():
     return users.get_current_user()
 
