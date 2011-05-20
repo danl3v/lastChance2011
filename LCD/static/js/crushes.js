@@ -14,9 +14,9 @@ $(document).ready(function() {
                             else { status = '<span style="color:green;">participating!</span><br>'; }
                             $("#crushes").append('<div class="crushdiv"><img src="/user_images/' + ui.item.carletonID + '.jpg" width="120" height="120"><br>' + ui.item.first_name + " " + ui.item.last_name + "<br>" + status + '<button class="messageCrush" value="' + ui.item.carletonID + '" data-first-name="' + ui.item.first_name + '" data-last-name="' + ui.item.last_name + '">message</button> <button class="removeCrush" value="' + ui.item.carletonID + '">remove</button></div>');
                         }
-                        else if (data.success == 1) { alert("Your account must be paired and opted-in in order to add crushes."); }
-                        else if (data.success == 2) { alert(ui.item.value + " is already one of your crushes."); }
-                        else if (data.success == 3) { alert(ui.item.value + " is not in our database."); }
+                        else if (data.success == 1) { alert("Your account must be paired and opted-in in order to add crushes. Go to the settings page to resolve this issue."); }
+                        else if (data.success == 2) { alert(ui.item.first_name + " " + ui.item.last_name + " is already one of your crushes."); }
+                        else if (data.success == 3) { alert(ui.item.first_name + " " + ui.item.last_name + " is not in our database."); }
                         else if (data.success == 4) { alert("You cannot choose yourself as a crush."); }
                         else if (data.success == 5) { alert("Sorry. You can't have more than 5 crushes. Please remove one before adding another."); }
                         else { alert("There was an error in adding your crush. Please try again."); }
@@ -45,7 +45,7 @@ $(document).ready(function() {
                                     }
                                     else if (data.success == 1) { alert("Your account must be paired and opted-in in order to send messages."); }
                                     else if (data.success == 2) { alert(name + " is not in our database. Could not send message."); }
-                                    else if (data.success == 3) { alert(name + " is not one of your crushes. You can only send a message to one of your crushes."); }
+                                    else if (data.success == 3) { alert(name + " is not one of your crushes. You can only send a message to one of your crushes. Refresh the page to get the most updated list of your crushes."); }
                                     else if (data.success == 4) { alert("Your message did not have a body. It was not sent."); }
                                     else { alert("There was an error in sending your message. Please try again."); }
                                 }, "json");
@@ -89,9 +89,9 @@ function crushRemoveListener() {
     var crush = $(this);
     crush.parent().fadeOut("fast");
     $.post("/crushes/remove", { "crush": crush.val() }, function(data) {
-        if (data.success == 0) { crsuh.remove(); }
-        else if (data.success == 1) { alert("Your account must be paired and opted-in in order to remove crushes."); crush.parent().show(); }
-        else if (data.success == 2) { alert("The username " + crush.val() + " does not exist and thus could not be added as a crush."); crush.parent().show(); }
+        if (data.success == 0) { crush.parent().remove(); }
+        else if (data.success == 1) { alert("Your account must be paired and opted-in in order to remove crushes. Go to the settings page to resolve this issue."); crush.parent().show(); }
+        else if (data.success == 2) { alert("The username " + crush.val() + " does not exist and thus could not be removed. It might have been already removed."); crush.parent().remove(); }
         else { alert("Error in deleting crush. Try again."); crush.parent().show(); }
     }, "json");
 }
@@ -108,8 +108,8 @@ function messageRemoveListener() {
         message.fadeOut("fast");
         $.post("/messages/delete", { "mid": message.attr("data-mid") }, function(data) {
             if (data.success == 0) { message.remove(); }
-            else if (data.success == 1) { alert("Your account must be paired and opted-in in order to delete messages."); message.show(); }
-            else if (data.success == 2) { alert("Message does not exist or you tried to delete another user's message."); message.show(); }
+            else if (data.success == 1) { alert("Your account must be paired and opted-in in order to delete messages. Go to the settings page to resolve this issue."); message.show(); }
+            else if (data.success == 2) { alert("Message does not exist or you tried to delete another user's message."); message.remove(); }
             else { alert("Error in deleting message. Try again."); message.show(); }
         }, "json");
     }
@@ -135,8 +135,8 @@ function messageSendReplyListener(event) {
       $(this).parent().before('<div class="message-item sent reply"><div class="message-item-header"><div class="message-item-info"><strong>You</strong> just now</div></div><div class="message-item-body">' + body + '</div></div>');
       $.post("/messages/reply", { "mid": message_id, "body": body }, function(data) {
         if (data.success == 0) { }
-        else if (data.success == 1) { alert("Your account must be paired and opted-in in order to reply to messages."); }
-        else if (data.success == 2) { alert("Message does not exist or you tried to reply another user's message."); }
+        else if (data.success == 1) { alert("Your account must be paired and opted-in in order to reply to messages. The added message will be gone when you refresh the page. Go to the settings page to resolve this issue."); }
+        else if (data.success == 2) { alert("Message does not exist or you tried to reply another user's message. The added message will be gone when you refresh the page."); }
         else { alert("Error in replying to  message. Try again. The added message will be gone when you refresh the page."); }
       }, "json");
     }

@@ -1,7 +1,7 @@
 /*
 Project: MAIN CSS Template
 Project Website: http://lastchance2011.com
-Last updated: 2011-05-12
+Last updated: 2011-05-20
 File: main.css
 */
 
@@ -178,7 +178,6 @@ div#nav ul li.alert span:after
     position: absolute;
     display: block;
     content: "";
- 
     border-color: rgba(0,0,0,.8) transparent transparent transparent;
     border-style: solid;
     border-width: 7px;
@@ -291,45 +290,29 @@ ul#messages-nav li.active a
     display: none;
 }
 
-div.message-item input.reply-text
-{
-    width: 95%;
-}
+/* MESSAGE ITEM STYLING */
 
-div div.message-item
+/* general message items */
+div.messages div.message div.message-item
 {
     background-color: #EEEEEE;
-}
-
-div div.sent
-{
-    opacity: .5 !important;
-}
-
-div.messages div.message-item
-{
     border: 1px solid #CCCCCC;
     padding: .5em;
     margin: .5em 0;
     clear: both;
 }
 
-div.messages div.reply
-{
-    margin-left: 2em;
-}
-
-div.messages div.message-item div.message-item-header
+div.messages div.message div.message-item div.message-item-header
 {
     position: relative;
 }
 
-div.messages div.message-item div.message-item-info
+div.messages div.message div.message-item div.message-item-header div.message-item-info
 {
     font-size: .6em;
 }
 
-div.messages div.message-item div.message-actions
+div.messages div.message div.message-item div.message-item-header div.message-actions
 {
     position: absolute;
     right: 0;
@@ -340,18 +323,18 @@ div.messages div.message-item div.message-actions
     -o-transition: all 0.2s ease;
 }
 
-div.messages div.message-item:hover > div.message-item-header div.message-actions
+div.messages div.message div.message-item:hover > div.message-item-header div.message-actions
 {
     opacity: 1;
 }
 
-div.messages div.message-actions ul.icons
+div.messages div.message div.message-item div.message-item-header div.message-actions ul.icons
 {
     margin: 0;
     padding: 0;
 }
 
-div.messages div.message-actions ul.icons li
+div.messages div.message div.message-item div.message-item-header div.message-actions ul.icons li
 {
     margin: 2px;
     position: relative;
@@ -361,16 +344,40 @@ div.messages div.message-actions ul.icons li
     list-style: none;
 }
 
-div.messages div.message-actions ul.icons li span.ui-icon
+div.messages div.message div.message-item div.message-item-header div.message-actions ul.icons li span.ui-icon
 {
     float: left;
     margin: 0 4px;
 }
 
-div.messages div.message-item div.message-item-body
+div.messages div.message div.message-item div.message-item-body
 {
     margin-top: .4em;
 }
+
+/* mesage replies */
+div.messages div.message div.reply
+{
+    margin-left: 2em;
+}
+
+div.messages div.message div.reply-box
+{
+    text-align: center;
+}
+
+div.messages div.message div.message-item input.reply-text
+{
+   width: 98%;
+}
+
+/* message sent */
+div.messages div.message div.sent
+{
+    opacity: .5 !important;
+}
+
+/* send message popup */
 
 div#new-message-form label, div#new-message-form input
 {

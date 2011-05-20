@@ -92,7 +92,7 @@
            <div class="message-item-body">{{ message.body }}</div>
          </div>
          {% for reply in message.replies %}
-           <div class="message-item{% if carleton_id == reply.source.carletonID %} reply sent{% endif %}">
+           <div class="message-item reply{% if carleton_id == reply.source.carletonID %} sent{% endif %}">
              <div class="message-item-header">
              <div class="message-item-info">
                {% if carleton_id == reply.source.carletonID %}<strong>You</strong> on
