@@ -30,15 +30,15 @@ handlers:
   static_dir: static/js
 
 - url: /admin.*
-  script: admin.py
+  script: main.py
   login: admin
 
 - url: /privacy|/contact
-  script: welcome.py
+  script: main.py
 
 - url: /.+
   script: main.py
   login: required
 
 - url: /
-  script: welcome.py
+  script: main.py

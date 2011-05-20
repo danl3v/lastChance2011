@@ -1,11 +1,7 @@
 import cgi
 import os
 
-from google.appengine.api import users
 from google.appengine.ext import webapp
-from google.appengine.ext.webapp.util import run_wsgi_app
-
-# separate out the app from the controllers and put admin in main
 
 import models, view, session, emailfunctions, functions
 
@@ -80,21 +76,3 @@ class Invite(webapp.RequestHandler):
 def calculate_matches():
     crushes = models.Crush.all()
     return [crush for crush in crushes if functions.has_crush(crush.target, crush.source)]
-
-def main():
-    application = webapp.WSGIApplication([
-           ('/admin', Admin),
-           ('/admin/', Admin),
-           ('/admin/addcarl', AddCarl),
-           ('/admin/addusers', AddUsers),
-           ('/admin/newpaircode', NewPairCode),
-           ('/admin/deletecarl', DeleteCarl),
-           ('/admin/invite', Invite),
-           ('/admin/unpaircarl', UnPairCarl),
-           ('/admin/calculate', CalculateCrushes)
-         ], debug=True)
-         
-    run_wsgi_app(application)
-
-if __name__ == "__main__":
-    main()

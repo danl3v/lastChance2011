@@ -1,5 +1,4 @@
 from google.appengine.ext import webapp
-from google.appengine.ext.webapp.util import run_wsgi_app
 
 import view, session, emailfunctions
 
@@ -19,14 +18,3 @@ class Contact(webapp.RequestHandler):
         emailfunctions.send_contact_form(self.request.get("subject"), self.request.get("body"), self.request.get("anonymous"))
         template_values = {}
         view.renderTemplate(self, 'contact_success.html', template_values)
-
-def main():
-    application = webapp.WSGIApplication([
-           ('/', MainPage),
-           ('/contact', Contact)
-         ],debug=True)
-
-    run_wsgi_app(application)
-
-if __name__ == "__main__":
-    main()
