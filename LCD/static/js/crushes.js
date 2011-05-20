@@ -87,13 +87,12 @@ function addSentMessage(to, body, message_id) {
 
 function crushRemoveListener() {
     var crush = $(this);
-    $.post("/crushes/remove", { "crush": $(this).val() }, function(data) {
-        if (data.success == 0) {
-            crush.parent().fadeOut(function() { $(this).remove(); });
-        }
-        else if (data.success == 1) { alert("Your account must be paired and opted-in in order to remove crushes."); }
-        else if (data.success == 2) { alert("Your crush does not exist."); }
-        else { alert("Error in deleting crush. Try again."); }
+    crush.parent().fadeOut("fast");
+    $.post("/crushes/remove", { "crush": crush.val() }, function(data) {
+        if (data.success == 0) { crsuh.remove(); }
+        else if (data.success == 1) { alert("Your account must be paired and opted-in in order to remove crushes."); crush.parent().show(); }
+        else if (data.success == 2) { alert("The username " + crush.val() + " does not exist and thus could not be added as a crush."); crush.parent().show(); }
+        else { alert("Error in deleting crush. Try again."); crush.parent().show(); }
     }, "json");
 }
 
@@ -106,11 +105,12 @@ function messageSendListener(user) {
 function messageRemoveListener() {
     if (confirm("Do you really want to delete this message?")) {
         var message = $(this).parent().parent().parent().parent().parent();
+        message.fadeOut("fast");
         $.post("/messages/delete", { "mid": message.attr("data-mid") }, function(data) {
-            if (data.success == 0) { message.fadeOut("fast", function() { message.remove(); }); }
-            else if (data.success == 1) { alert("Your account must be paired and opted-in in order to delete messages."); }
-            else if (data.success == 2) { alert("Message does not exist or you tried to delete another user's message."); }
-            else { alert("Error in deleting message. Try again."); }
+            if (data.success == 0) { message.remove(); }
+            else if (data.success == 1) { alert("Your account must be paired and opted-in in order to delete messages."); message.show(); }
+            else if (data.success == 2) { alert("Message does not exist or you tried to delete another user's message."); message.show(); }
+            else { alert("Error in deleting message. Try again."); message.show(); }
         }, "json");
     }
 }
@@ -127,7 +127,7 @@ function messageReplyListener() {
     $(this).parent().parent().parent().parent().next(".reply-box").find("input").focus(); // bug here that causes hitting enter to send many replies
 }
 
-function messageSendReplyListener(event) { // clean up vars
+function messageSendReplyListener(event) {
     if (event.keyCode == 13) {
       var message_id = $(this).parent().parent().attr("data-mid");
       var body = $(this).val();
@@ -143,5 +143,5 @@ function messageSendReplyListener(event) { // clean up vars
 }
 
 function blockUserListener() {
-    alert("feature not working now");
+    alert("feature not implemented yet. sorry");
 }

@@ -30,19 +30,19 @@
   </form>
 
 {% else %}
+  <h2>Get An Invitation</h2>
+  <p>Use this if you don't have a Pair Code or want to Pair Your Account with another Google ID.</p>
+  <form action="/settings/sendcode" method="post">
+  <p>Carleton ID: <input type="text" name="carletonID"></p>
+  <p><input type="submit" value="Get Invitation"></p>
+  </form>
+
   <h2>Pair Your Account</h2>
   <form action="/settings/pair" method="post">
   <p>Your account is currently not paired with a Carleton ID. Enter your the information below so you can start using Last Chance Dance!</p>
   <p>Carleton ID:<input type="text" name="carletonID"></p>
   <p>Pair Code:<input type="text" name="pair_code"></p>
   <p><input type="submit" value="Pair Account"></p>
-  </form>
-
-  <h2>Get Another Invitation</h2>
-  <p>Use this if you don't have a Pair Code or want to Pair Your Account with another Google ID.</p>
-  <form action="/settings/sendcode" method="post">
-  <p>Carleton ID: <input type="text" name="carletonID"></p>
-  <p><input type="submit" value="Get Invitation"></p>
   </form>
 {% endif %}
 

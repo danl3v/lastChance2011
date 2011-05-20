@@ -24,7 +24,7 @@ def main():
            ('/admin/deletecarl', admin.DeleteCarl),
            ('/admin/invite', admin.Invite),
            ('/admin/unpaircarl', admin.UnPairCarl),
-           ('/admin/calculate', admin.CalculateCrushes)
+           ('/admin/calculate', admin.CalculateMatches)
          ],debug=True)
 
     run_wsgi_app(application)

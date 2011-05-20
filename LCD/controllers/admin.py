@@ -17,7 +17,7 @@ def addCarl(first_name, last_name, carleton_id):
         carl.put()
         return True
 
-class CalculateCrushes(webapp.RequestHandler):
+class CalculateMatches(webapp.RequestHandler):
     def get(self):
         matches = calculate_matches()
         for match in matches:
