@@ -22,7 +22,7 @@
         {% if not crush.target.opted_in %}<span style="color:red;">opted out</span><br>
         {% else %}
             {% if not crush.target.googleID %}<span style="color:red;">not yet registered</span><br>
-            {% else %}<span style="color:green;">available!</span><br>
+            {% else %}<span style="color:green;">participating!</span><br>
             {% endif %}
         {% endif %}
         <button class="messageCrush" value="{{ crush.target.carletonID }}" data-first-name="{{ crush.target.first_name }}" data-last-name="{{ crush.target.last_name }}">message</button>
@@ -46,7 +46,7 @@
          <div class="message" data-mid="{{ message.key.id }}">
          <div class="message-item">
            <div class="message-item-header">
-           <div class="message-item-info"><strong>Crush #{{ message.source.key.id }}</strong> on {{ message.created|date:"M d \@ g:i:s A"}}</div>
+           <div class="message-item-info"><strong>User #{{ message.source.key.id }}</strong> on {{ message.created|date:"M d \@ g:i:s A"}}</div>
            <div class="message-actions">
              <ul class="icons ui-widget ui-helper-clearfix">
                {% if not message.replies.count %}<li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>{% endif %}
@@ -62,7 +62,7 @@
              <div class="message-item-header">
              <div class="message-item-info">
                {% if carleton_id == reply.source.carletonID %}<strong>You</strong> on
-               {% else %}<strong>Crush #{{ message.source.key.id }}</strong> on {% endif %}
+               {% else %}<strong>User #{{ message.source.key.id }}</strong> on {% endif %}
                {{ reply.created|date:"M d \@ g:i:s A"}}
              </div>
              </div>
@@ -137,8 +137,8 @@ $(document).ready(function() {
                             var status;
                             if (data.status == "not_paired") { status = '<span style="color:red;">not yet registered</span><br>'; }
                             else if (data.status == "opted_out") { status = '<span style="color:red;">opted out</span><br>'; }
-                            else { status = '<span style="color:green;">available!</span><br>'; }
-                            $("#crushes").append('<div class="crushdiv"><img src="/user_images/' + ui.item.carletonID + '.jpg" width="120" height="120"><br>' + ui.item.first_name + " " + ui.item.last_name + "<br>" + status + '<button class="messageCrush" value="' + ui.item.carletonID + '">message</button> <button class="removeCrush" value="' + ui.item.carletonID + '">remove</button></div>');
+                            else { status = '<span style="color:green;">participating!</span><br>'; }
+                            $("#crushes").append('<div class="crushdiv"><img src="/user_images/' + ui.item.carletonID + '.jpg" width="120" height="120"><br>' + ui.item.first_name + " " + ui.item.last_name + "<br>" + status + '<button class="messageCrush" value="' + ui.item.carletonID + '" data-first-name="' + ui.item.first_name + '" data-last-name="' + ui.item.last_name + '">message</button> <button class="removeCrush" value="' + ui.item.carletonID + '">remove</button></div>');
                         }
                         else if (data.success == 1) { alert("Your account must be paired and opted-in in order to add crushes."); }
                         else if (data.success == 2) { alert(ui.item.value + " is already one of your crushes."); }
@@ -186,7 +186,7 @@ $(document).ready(function() {
     $(".reply-button").live('click', messageReplyListener);
     $(".delete-button").live('click', messageRemoveListener);
     $(".block-button").live('click', blockUserListener);
-    $(".reply-text").live('focus', messageSendReplyListener);
+    $(".reply-text").live('keyup', messageSendReplyListener);
 });
 
 function addSentMessage(to, body, message_id) {
@@ -250,11 +250,10 @@ function showMessages(tab) {
 
 function messageReplyListener() {
     $(this).parent().parent().parent().parent().next(".reply-box").show();
-    //$(this).parent().parent().parent().next(".reply-box").find("input").focus(); // bug here that causes hitting enter to send many replies
+    $(this).parent().parent().parent().parent().next(".reply-box").find("input").focus(); // bug here that causes hitting enter to send many replies
 }
 
-function messageSendReplyListener() { // clean up vars
-  $(this).keyup(function(event) {
+function messageSendReplyListener(event) { // clean up vars
     if (event.keyCode == 13) {
       var message_id = $(this).parent().parent().attr("data-mid");
       var body = $(this).val();
@@ -267,7 +266,6 @@ function messageSendReplyListener() { // clean up vars
         else { alert("Error in replying to  message. Try again. The added message will be gone when you refresh the page."); }
       }, "json");
     }
-  });
 }
 
 function blockUserListener() {

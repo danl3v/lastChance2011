@@ -61,7 +61,7 @@ class AutoFill(webapp.RequestHandler):
 def get_status(user):
     if not user.googleID: return "not_paired"
     elif not user.opted_in: return "opted_out"
-    else: return "available"
+    else: return "participating"
 
 def get_crushes_for_user(user):
     crushes = models.Crush.all()
