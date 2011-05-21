@@ -30,6 +30,7 @@ class AddCrush(webapp.RequestHandler):
                 edge = models.Crush()
                 edge.source = source
                 edge.target = target
+                edge.notified = True
                 edge.put()
                 self.response.out.write('{"success":0, "status":"' + get_status(target) + '"}')
         else:

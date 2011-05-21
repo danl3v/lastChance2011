@@ -21,8 +21,17 @@ class CalculateMatches(webapp.RequestHandler):
     def get(self):
         matches = calculate_matches()
         for match in matches:
+            new_match = models.Match()
+            new_match.source = match.source
+            new_match.target = match.target
+            new_match.put()
             self.response.out.write(match.source.carletonID + " --> " + match.target.carletonID + "<br>")
-            # send emails here
+
+class SendMatchNotifications(webapp.RequestHandler):
+    def get(self):
+        users = models.Carl.all()
+        # get the matches and send out notifications
+
 
 class Admin(webapp.RequestHandler):
     def get(self):

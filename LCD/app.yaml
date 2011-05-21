@@ -29,16 +29,13 @@ handlers:
 - url: /js
   static_dir: static/js
 
-- url: /admin.*
+- url: /admin.*|/tasks.*
   script: main.py
   login: admin
 
-- url: /privacy|/contact
+- url: /|/privacy|/contact
   script: main.py
 
 - url: /.+
   script: main.py
   login: required
-
-- url: /
-  script: main.py

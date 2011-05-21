@@ -1,8 +1,11 @@
 Hey there {{ carletonAccount.first_name }}!
 
-Someone selected you as a crush on Carleton Last Chance Dance 2011.
-
-You can select your own crushes at http://lastchance2011.com/crushes.
+{% if crushes|length > 1 %}
+{{ crushes|length }} people selected you as a crush today! Exciting right!
+{% else %}
+Someone selected you as a crush on Carleton Last Chance Dance 2011. Really exciting right!
+{% endif %}
+You can select your own crushes at http://lastchance2011.com/crushes
 
 Love,
 Last Chance Dance 2011

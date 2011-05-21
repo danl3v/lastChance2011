@@ -1,0 +1,16 @@
+Hey there {{ carletonAccount.first_name }}!
+
+Congradulations! You have been matched by Last Chance Dance 2011!
+
+{% if matches|length > 1 %}
+Here are your matches:
+{% for match in matches %}
+-- {{ match.first_name }} {{ match.last_name }} ({{ match.carletonID }})
+{% endfor %}
+
+{% else %}
+Your match is: {{ matches.0.first_name }} {{ matches.0.last_name }} ({{ matches.0.carletonID }})
+{% endif %}
+
+Love,
+Last Chance Dance 2011

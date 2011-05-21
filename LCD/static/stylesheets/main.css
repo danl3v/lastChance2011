@@ -39,6 +39,11 @@ table th, table td
     padding: 5px;
 }
 
+span.big
+{
+    font-size: 2em;
+}
+
 /* LAYOUT */
 div#container
 {
