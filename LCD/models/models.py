@@ -12,6 +12,11 @@ class Carl(db.Model):
 class Crush(db.Model):
     source = db.ReferenceProperty(Carl, collection_name="crush_source")
     target = db.ReferenceProperty(Carl, collection_name="crush_target")
+    notified = db.BooleanProperty(default=False)
+    
+class Match(db.Model):
+    source = db.ReferenceProperty(Carl, collection_name="match_source")
+    target = db.ReferenceProperty(Carl, collection_name="match_target")
 
 class Message(db.Model): # change this back to message
     source = db.ReferenceProperty(Carl, collection_name="in_messages")

@@ -1,10 +1,15 @@
 from google.appengine.ext import webapp
 
-import view, session, emailfunctions
+import view, session, emailfunctions, models
 
 class MainPage(webapp.RequestHandler):
     def get(self):
-        template_values = { 'current_page': {'main': True} }
+        template_values = {
+            'current_page': {'main': True},
+            'num_crushes': models.Crush.all().count(),
+            'num_messages': models.Message.all().count(),
+            'num_replies': models.Reply.all().count() # add in number of matches here
+            }
         view.renderTemplate(self, 'index.html', template_values)
 
 class Contact(webapp.RequestHandler):

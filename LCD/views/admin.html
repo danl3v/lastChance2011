@@ -1,12 +1,9 @@
 {% extends "base.html" %}
 
 {% block extrahead %}
-
 <style>
-
-#existing_users { font-size: .9em; width: 100%;}
+    #existing_users { font-size: .9em; width: 100%;}
 </style>
-
 {% endblock %}
 
 {% block content %}
@@ -20,7 +17,10 @@
       <input type="submit" value="Add User">
     </form>
 
-    <h2><a href="/admin/calculate">Calculate Matches</a></h2>
+    <p>
+    - <a href="/admin/calculate">Calculate Matches</a><br>
+    - <a href="#">Close Site</a>
+    </p>
   </div>
 
   <div class="rightcol">

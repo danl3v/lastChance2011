@@ -17,12 +17,12 @@
                 <label>Carleton ID
                 <span class="small">Enter your Carleton ID</span>
                 </label>
-                <input type="text" name="carletonID" id="carletonID" placeholder="e.g. sposkanser">
+                <input type="text" name="carletonID" id="carletonID" placeholder="e.g. sposkanser" tabindex="1">
                 
                 <label>Pair Code
                 <span class="small"><a href="/settings">Lost your pair code?</a></span>
                 </label>
-                <input type="text" name="pair_code" id="pair_code" placeholder="9FZ93QQIXU64ORLLFWND">
+                <input type="text" name="pair_code" id="pair_code" placeholder="9FZ93QQIXU64ORLLFWND" tabindex="2">
                 
                 <button type="submit">Pair Account</button>
                 <div class="spacer"></div>
@@ -35,6 +35,12 @@
     <li>A match occurs when one of your crushes also selects you as a crush.</li>
     <li>On the morning of <strong>June 7, 2011</strong>, before Karaoke “Knight” at the Rueb, you will receive an automatically generated email with your matches.</li>
     </ol>
+
+    <h2>Statistics</h2>
+    <p>Number of Crushes: {{ num_crushes }}<br>
+    Number of Messages: {{ num_messages }}<br>
+    Number of Replies: {{ num_replies }}<br>
+    Approximate Number of Matches: None yet</p>
 
     <h2>Disclaimer</h2>
     <p>Consent is sexy. Always ask for consent, even with your matches.</p>

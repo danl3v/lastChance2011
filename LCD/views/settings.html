@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
 {% block extrahead %}
-<script type="text/javascript" src="/js/jquery/jquery-1.5.1.min.js"></script>
+<script>
+    function focusGetInvite() { $("#invite-form input[name='carletonID']").focus(); }
+</script>
 {% endblock %}
 
 {% block content %}
@@ -51,7 +53,7 @@
             <label>Carleton ID
             <span class="small">Enter your Carleton ID</span>
             </label>
-            <input type="text" name="carletonID" id="carletonID" placeholder="e.g. schillerf" autofocus>
+            <input type="text" name="carletonID" id="carletonID" placeholder="e.g. schillerf" autofocus tabindex="1">
             
             <button type="submit">Get Invitation</button>
             <div class="spacer"></div>
@@ -66,21 +68,17 @@
             <label>Carleton ID
             <span class="small">Enter your Carleton ID</span>
             </label>
-            <input type="text" name="carletonID" id="carletonID" placeholder="e.g. sposkanser">
+            <input type="text" name="carletonID" id="carletonID" placeholder="e.g. sposkanser" tabindex="2">
             
             <label>Pair Code
             <span class="small"><a href="javascript:void(0);" onclick="focusGetInvite()">Lost your pair code?</a></span>
             </label>
-            <input type="text" name="pair_code" id="pair_code" placeholder="9FZ93QQIXU64ORLLFWND">
+            <input type="text" name="pair_code" id="pair_code" placeholder="9FZ93QQIXU64ORLLFWND" tabindex="3">
             
             <button type="submit">Pair Account</button>
             <div class="spacer"></div>
         </form>
     </div>
-    
-    <script>
-    function focusGetInvite() { $("#invite-form input[name='carletonID']").focus(); }
-    </script>
 {% endif %}
 
 </div>

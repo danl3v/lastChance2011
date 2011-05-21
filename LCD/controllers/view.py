@@ -16,7 +16,6 @@ def getHeaderFooterData(self):
     carleton_id = None
     first_name = None
     last_name = None
-    num_crushes = models.Crush.all().count()
     if user:
         login_url = session.create_logout_url("/")
         login_url_linktext = 'Logout'
@@ -45,8 +44,7 @@ def getHeaderFooterData(self):
         'login_url': login_url,
         'login_url_linktext': login_url_linktext,
         'paired': paired,
-        'opted_in': opted_in,
-        'num_crushes': num_crushes
+        'opted_in': opted_in
         }
 
     return template_values
