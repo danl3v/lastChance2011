@@ -40,6 +40,7 @@ $(document).ready(function() {
                                 $.post("/messages/send", { "to": to, "body": body }, function(data) {
                                     if (data.success == 0) {
                                         $("#new-message-form").dialog("close");
+                                        $(".message-item").removeClass("just-sent");
                                         addSentMessage(data.name, body, data.mid);
                                         showMessages('from-me');
                                     }
@@ -66,7 +67,7 @@ $(document).ready(function() {
 function addSentMessage(to, body, message_id) {
     var message =
     '<div class="message" data-mid="' + message_id + '">' +
-    '  <div class="message-item sent">' +
+    '  <div class="message-item just-sent sent">' +
     '    <div class="message-item-header">' +
     '    <div class="message-item-info"><strong>You</strong> to <strong>' + to + '</strong> just now</div>' +
     '    <div class="message-actions">' +
