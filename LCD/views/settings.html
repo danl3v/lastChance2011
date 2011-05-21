@@ -1,49 +1,86 @@
 {% extends "base.html" %}
 
+{% block extrahead %}
+<script type="text/javascript" src="/js/jquery/jquery-1.5.1.min.js"></script>
+{% endblock %}
+
 {% block content %}
 <div id="main">
 
 {% if paired %}
-
-  <h2>Name</h2>
-  <p>{{ first_name }} {{ last_name }} <small>(If this is incorrect, please <a href="/contact">contact lcDance</a>)</small></p>
-
+   
   {% if opted_in %}
-  <h2>Opt Out</h2>
-  <form action="/settings/optout" method="post">
-  <p>You are currently Opted In. By clicking Opt Out, you will not be able to select crushes, and other people will not be able to select you as a crush.</p>
-  <p><input type="submit" value="Opt Out" onclick="if(!confirm('Do you really want to opt out?')){return false;};"></p>
-  </form>
+    <div class="settings-form">
+        <form method="post" action="/settings/optout" id="optout-form">
+            <h1>Opt Out</h1>
+            <p>You are currently Opted In. By clicking Opt Out, you will not be able to select crushes, and other people will not be able to select you as a crush.</p>
+            
+            <button type="submit" onclick="if(!confirm('Do you really want to opt out?')){return false;};">Opt Out</button>
+            <div class="spacer"></div>
+        </form>
+    </div>  
 
   {% else %}
-  <h2>Opt In</h2>
-  <form action="/settings/optin" method="post">
-  <p>By clicking Opt In, you will be able to select crushes, and other people will be able to select you as a crush.</p>
-  <p><input type="submit" value="Opt In"></p>
-  </form>
+    <div class="settings-form" id="optin-form">
+        <form method="post" action="/settings/optin">
+            <h1>Opt In</h1>
+            <p>By clicking Opt In, you will be able to select crushes, and other people will be able to select you as a crush.</p>
+            
+            <button type="submit">Opt In</button>
+            <div class="spacer"></div>
+        </form>
+    </div>
   {% endif %}
 
-  <h2>Un-Pair Your Account</h2>
-  <form action="/settings/unpair" method="post">
-  <p>Your account is currently paired with <strong>{{ carleton_id }}</strong>. If you want to un-pair your account, click Un-Pair Account.</p>
-  <p><input type="submit" value="Un-Pair Account" onclick="if(!confirm('Do you really want to un-pair this Google ID from this Carleton ID?')){return false;};"></p>
-  </form>
+  <div class="settings-form" id="unpair-form">
+        <form method="post" action="/settings/unpair">
+            <h1>Un-Pair Your Account</h1>
+            <p>Your account is currently paired with <strong>{{ carleton_id }}</strong>. If you want to un-pair your account, click Un-Pair Account.</p>
+            
+            <button type="submit" onclick="if(!confirm('Do you really want to un-pair this Google ID from this Carleton ID?')){return false;};">Un-Pair Account</button>
+            <div class="spacer"></div>
+        </form>
+    </div>
 
 {% else %}
-  <h2>Get An Invitation</h2>
-  <p>Use this if you don't have a Pair Code or want to Pair Your Account with another Google ID.</p>
-  <form action="/settings/sendcode" method="post">
-  <p>Carleton ID: <input type="text" name="carletonID"></p>
-  <p><input type="submit" value="Get Invitation"></p>
-  </form>
+  <div class="settings-form">
+        <form method="post" action="/settings/sendcode" id="invite-form">
+            <h1>1. Don't Have an Invitation? Get One!</h1>
+            <p>Use this if you don't have a Pair Code or want to Pair Your Account with another Google ID.</p>
+            
+            <label>Carleton ID
+            <span class="small">Enter your Carleton ID</span>
+            </label>
+            <input type="text" name="carletonID" id="carletonID" placeholder="e.g. schillerf" autofocus>
+            
+            <button type="submit">Get Invitation</button>
+            <div class="spacer"></div>
+        </form>
+    </div>
 
-  <h2>Pair Your Account</h2>
-  <form action="/settings/pair" method="post">
-  <p>Your account is currently not paired with a Carleton ID. Enter your the information below so you can start using Last Chance Dance!</p>
-  <p>Carleton ID:<input type="text" name="carletonID"></p>
-  <p>Pair Code:<input type="text" name="pair_code"></p>
-  <p><input type="submit" value="Pair Account"></p>
-  </form>
+    <div class="settings-form">
+        <form method="post" action="/settings/pair" id="pair-form">
+            <h1>2. Pair Your Account.</h1>
+            <p>Your account is currently not paired with a Carleton ID. Enter your the information below so you can start using Last Chance Dance!</p>
+            
+            <label>Carleton ID
+            <span class="small">Enter your Carleton ID</span>
+            </label>
+            <input type="text" name="carletonID" id="carletonID" placeholder="e.g. sposkanser">
+            
+            <label>Pair Code
+            <span class="small"><a href="javascript:void(0);" onclick="focusGetInvite()">Lost your pair code?</a></span>
+            </label>
+            <input type="text" name="pair_code" id="pair_code" placeholder="9FZ93QQIXU64ORLLFWND">
+            
+            <button type="submit">Pair Account</button>
+            <div class="spacer"></div>
+        </form>
+    </div>
+    
+    <script>
+    function focusGetInvite() { $("#invite-form input[name='carletonID']").focus(); }
+    </script>
 {% endif %}
 
 </div>

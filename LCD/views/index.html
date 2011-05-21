@@ -9,11 +9,31 @@
     <h2>How it works</h2>
     <ol>
     <li>Sign in with your Google Account.</li>
-    <li>Go to Settings and pair your Google Account with your Carleton Email ID.</li>
-    <li>Go to Crushes and enter up to five people!</li>
-    <li>Feel free to update your Crushes until <strong>June 7, 2011</strong>, when your Crushes will be locked and the system will start to calculate the matches.</li>
-    <li>A match occurs when one of your Crushes also selects you as a Crush.</li>
-    <li>On <strong>June 10, 2011</strong> you will receive an automatically generated email with your matches.</li>
+    <li>Pair your Google Account with your Carleton Email ID.
+        {% if user and not paired %}
+        <div class="settings-form main-page-settings-form">
+            <form method="post" action="/settings/pair" id="pair-form">
+                <h1>Pair Your Account</h1>
+                <label>Carleton ID
+                <span class="small">Enter your Carleton ID</span>
+                </label>
+                <input type="text" name="carletonID" id="carletonID" placeholder="e.g. sposkanser">
+                
+                <label>Pair Code
+                <span class="small"><a href="/settings">Lost your pair code?</a></span>
+                </label>
+                <input type="text" name="pair_code" id="pair_code" placeholder="9FZ93QQIXU64ORLLFWND">
+                
+                <button type="submit">Pair Account</button>
+                <div class="spacer"></div>
+            </form>
+        </div>
+        {% endif %}
+    </li>
+    <li>Go to the Crushes tab and enter up to five people!</li>
+    <li>Feel free to update your crushes until <strong>June 1, 2011</strong>, when your crushes will be locked and the system will start to calculate the matches.</li>
+    <li>A match occurs when one of your crushes also selects you as a crush.</li>
+    <li>On the morning of <strong>June 7, 2011</strong>, before Karaoke “Knight” at the Rueb, you will receive an automatically generated email with your matches.</li>
     </ol>
 
     <h2>Disclaimer</h2>
