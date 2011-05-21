@@ -15,7 +15,7 @@
     <div class="settings-form">
         <form method="post" action="/settings/optout" id="optout-form">
             <h1>Opt Out</h1>
-            <p>You are currently Opted In. By clicking Opt Out, you will not be able to select crushes, and other people will not be able to select you as a crush.</p>
+            <p>You are currently Opted In. By clicking Opt Out, you will not be able to select crushes, send messages, or be matched with anybody.</p>
             
             <button type="submit" onclick="if(!confirm('Do you really want to opt out?')){return false;};">Opt Out</button>
             <div class="spacer"></div>
@@ -26,7 +26,7 @@
     <div class="settings-form" id="optin-form">
         <form method="post" action="/settings/optin">
             <h1>Opt In</h1>
-            <p>By clicking Opt In, you will be able to select crushes, and other people will be able to select you as a crush.</p>
+            <p>By clicking Opt In, you will be able to select crushes, send messages and possibly be matched with your crushes.</p>
             
             <button type="submit">Opt In</button>
             <div class="spacer"></div>
