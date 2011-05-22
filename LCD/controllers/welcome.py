@@ -10,7 +10,7 @@ class MainPage(webapp.RequestHandler):
             'num_crushes': models.Crush.all().count(),
             'num_messages': models.Message.all().count(),
             'num_replies': models.Reply.all().count(),
-            'num_matches': 10 #models.Match.all().count() / 2
+            'num_matches': models.Match.all().count() / 2
             }
         view.renderTemplate(self, 'index.html', template_values)
 

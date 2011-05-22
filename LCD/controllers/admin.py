@@ -1,4 +1,5 @@
 from google.appengine.ext import webapp
+from google.appengine.ext import db
 from models import models
 import view, session, emailfunctions, functions
 
@@ -17,6 +18,7 @@ def addCarl(first_name, last_name, carleton_id):
 class CalculateMatches(webapp.RequestHandler):
     def get(self):
         matches = calculate_matches()
+        db.delete(models.Match.all())
         for match in matches:
             new_match = models.Match()
             new_match.source = match.source
