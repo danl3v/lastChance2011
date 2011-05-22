@@ -18,14 +18,15 @@ def main():
            ('/messages/delete', messages.Delete),
            ('/admin', admin.Admin),
            ('/admin/', admin.Admin),
-           ('/admin/addcarl', admin.AddCarl),
            ('/admin/addusers', admin.AddUsers),
            ('/admin/newpaircode', admin.NewPairCode),
            ('/admin/deletecarl', admin.DeleteCarl),
            ('/admin/invite', admin.Invite),
+           ('/admin/invite_all', admin.InviteAll),
            ('/admin/unpaircarl', admin.UnPairCarl),
-           ('/admin/calculate_matches', admin.CalculateMatches),
+           ('/admin/update_matches', admin.UpdateMatches),
            ('/admin/send_match_notifications', admin.SendMatchNotifications),
+           ('/admin/set_site_status', admin.SetSiteStatus),
            ('/tasks/notify_crushes', tasks.NotifyCrushes),
            ('/tasks/update_matches', tasks.UpdateMatches)
          ],debug=True)
