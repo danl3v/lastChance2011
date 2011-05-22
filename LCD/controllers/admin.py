@@ -17,14 +17,7 @@ def addCarl(first_name, last_name, carleton_id):
 
 class CalculateMatches(webapp.RequestHandler):
     def get(self):
-        matches = calculate_matches()
-        db.delete(models.Match.all())
-        for match in matches:
-            new_match = models.Match()
-            new_match.source = match.source
-            new_match.target = match.target
-            new_match.put()
-            self.response.out.write(match.source.carletonID + " --> " + match.target.carletonID + "<br>")
+        matches = functions.update_matches()
 
 class SendMatchNotifications(webapp.RequestHandler):
     def get(self):
@@ -80,7 +73,3 @@ class Invite(webapp.RequestHandler):
         carletonAccount = functions.get_user_by_CID(self.request.get("carletonID"))
         emailfunctions.send_invitation(carletonAccount)
         self.response.out.write('Invitation sent to ' + self.request.get("carletonID") + '! <a href="/admin">Back to admin</a>.')
-
-def calculate_matches():
-    crushes = models.Crush.all()
-    return [crush for crush in crushes if functions.has_crush(crush.target, crush.source)]

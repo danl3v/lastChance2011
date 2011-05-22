@@ -1,5 +1,11 @@
 cron:
+
 - description: daily crush notification
   url: /tasks/notifycrushes
+  schedule: every day 09:00
+  timezone: America/Chicago
+
+- description: update the crushes
+  url: /tasks/updatecrushes
   schedule: every day 09:00
   timezone: America/Chicago

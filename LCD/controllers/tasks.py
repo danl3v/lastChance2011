@@ -1,5 +1,6 @@
 from google.appengine.ext import webapp
 from models import models
+import functions
 
 class NotifyCrushes(webapp.RequestHandler):
     def get(self):
@@ -18,3 +19,7 @@ class NotifyCrushes(webapp.RequestHandler):
             # send out notifcations
             
         self.response.out.write(notify_dict)
+
+class UpdateMatches(webapp.RequestHandler):
+    def get(self):
+        functions.update_matches()

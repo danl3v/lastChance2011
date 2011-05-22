@@ -16,3 +16,14 @@ def generate_pair_code():
     import random, string
     N = 20
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(N))
+
+def update_matches():
+    crushes = models.Crush.all()
+    db.delete(models.Match.all())
+    matches = [crush for crush in crushes if functions.has_crush(crush.target, crush.source)]
+    for match in matches:
+        new_match = models.Match()
+        new_match.source = match.source
+        new_match.target = match.target
+        new_match.put()
+    return matches
