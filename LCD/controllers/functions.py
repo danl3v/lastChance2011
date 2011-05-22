@@ -1,4 +1,5 @@
 from models import models
+from google.appengine.ext import db
 
 def has_crush(source, target):
     crushes = models.Crush.all()
@@ -20,7 +21,7 @@ def generate_pair_code():
 def update_matches():
     crushes = models.Crush.all()
     db.delete(models.Match.all())
-    matches = [crush for crush in crushes if functions.has_crush(crush.target, crush.source)]
+    matches = [crush for crush in crushes if (has_crush(crush.target, crush.source) and (crush.source.opted_in) and (crush.target.opted_in))]
     for match in matches:
         new_match = models.Match()
         new_match.source = match.source

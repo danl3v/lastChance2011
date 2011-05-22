@@ -1,5 +1,4 @@
 from google.appengine.ext import webapp
-from google.appengine.ext import db
 from models import models
 import view, session, emailfunctions, functions
 
@@ -18,13 +17,17 @@ def addCarl(first_name, last_name, carleton_id):
 class CalculateMatches(webapp.RequestHandler):
     def get(self):
         matches = functions.update_matches()
+        self.response.out.write("Matches calculated")
 
 class SendMatchNotifications(webapp.RequestHandler):
     def get(self):
         users = models.Carl.all()
-        # get the matches and send out notifications
-
-
+        for user in users:
+            matches = user.matches.fetch(10)
+            if len(matches) > 0:
+                emailfunctions.send_matches(user, matches)
+        self.response.out.write("Match notifications sent! We'll see what happens next!")
+            
 class Admin(webapp.RequestHandler):
     def get(self):
         carls = models.Carl.all()

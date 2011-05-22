@@ -33,21 +33,39 @@ def send_invitation(carletonAccount):
     
     mail.send_mail(sender_address, user_address, subject, body)
 
-def send_crushed_upon(carletonAccount, crushes):
+def send_crushed_upon(carletonAccount, num_crushes):
     '''
     Sends an email to a user who has been chosen by someone else.
     '''
     #user_address = carletonAccount.carletonID + "@carleton.edu"
-    user_address = ["conrad.p.dean@gmail.com", "dlouislevy@gmail.com"]
+    user_address = ["dlouislevy@gmail.com"]
 
     sender_address = last_chance_dance_email_address
     subject = subject_prefix + "Someone chose you as a crush today!"
     
     template_values = {
            'carletonAccount': carletonAccount,
-           'crushes': crushes
+           'num_crushes': num_crushes
            }
     body = render_email_body('you_have_been_crushed_notification.html', template_values)
+    
+    mail.send_mail(sender_address, user_address, subject, body)
+
+def send_matches(carletonAccount, matches):
+    '''
+    Sends matches
+    '''
+    #user_address = carletonAccount.carletonID + "@carleton.edu"
+    user_address = ["dlouislevy@gmail.com"]
+
+    sender_address = last_chance_dance_email_address
+    subject = subject_prefix + "Here are your matches..."
+    
+    template_values = {
+           'carletonAccount': carletonAccount,
+           'matches': matches
+           }
+    body = render_email_body('match.html', template_values)
     
     mail.send_mail(sender_address, user_address, subject, body)
 

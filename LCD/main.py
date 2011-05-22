@@ -24,9 +24,10 @@ def main():
            ('/admin/deletecarl', admin.DeleteCarl),
            ('/admin/invite', admin.Invite),
            ('/admin/unpaircarl', admin.UnPairCarl),
-           ('/admin/calculate', admin.CalculateMatches),
-           ('/tasks/notifycrushes', tasks.NotifyCrushes),
-           ('/tasks/updatecrushes', tasks.UpdateCrushes)
+           ('/admin/calculate_matches', admin.CalculateMatches),
+           ('/admin/send_match_notifications', admin.SendMatchNotifications),
+           ('/tasks/notify_crushes', tasks.NotifyCrushes),
+           ('/tasks/update_matches', tasks.UpdateMatches)
          ],debug=True)
 
     run_wsgi_app(application)

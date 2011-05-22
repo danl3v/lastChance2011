@@ -5,12 +5,20 @@ import view, session, emailfunctions
 
 class MainPage(webapp.RequestHandler):
     def get(self):
+
+        num_paired = models.Carl.all().filter("googleID !=", None).count()
+        num_opted_out = models.Carl.all().filter("opted_in =", False).count()
+        num_to_pair = models.Carl.all().count() - num_paired
+
         template_values = {
             'current_page': {'main': True},
             'num_crushes': models.Crush.all().count(),
             'num_messages': models.Message.all().count(),
             'num_replies': models.Reply.all().count(),
-            'num_matches': models.Match.all().count() / 2
+            'num_matches': models.Match.all().count() / 2,
+            'num_paired': num_paired,
+            'num_opted_out': num_opted_out,
+            'num_to_pair': num_to_pair
             }
         view.renderTemplate(self, 'index.html', template_values)
 

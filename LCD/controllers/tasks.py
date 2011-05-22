@@ -1,24 +1,20 @@
 from google.appengine.ext import webapp
 from models import models
-import functions
+import functions, emailfunctions
 
 class NotifyCrushes(webapp.RequestHandler):
     def get(self):
         crushes = models.Crush.all()
         crushes.filter("notified =", False)
-
-        notify_dict = {}
-
+        crushes_to_notify = {}
         for crush in crushes:
-            
-            if crush.target.carletonID not in notify_dict:
-                notify_dict[crush.target.carletonID] = 0
-            notify_dict[crush.target.carletonID] += 1
+            if crush.target.carletonID not in crushes_to_notify:
+                crushes_to_notify[crush.target.carletonID] = [0, crush.target]
+            crushes_to_notify[crush.target.carletonID][0] += 1
             crush.notified = True
             crush.put()
-            # send out notifcations
-            
-        self.response.out.write(notify_dict)
+        for crush in crushes_to_notify:
+            emailfunctions.send_crushed_upon(crushes_to_notify[crush][1], crushes_to_notify[crush][0])
 
 class UpdateMatches(webapp.RequestHandler):
     def get(self):

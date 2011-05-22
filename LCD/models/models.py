@@ -6,23 +6,27 @@ class Setting(db.Model):
     value = db.StringProperty()
 
 class Carl(db.Model):
-    googleID = db.StringProperty() # change to underscores
+    googleID = db.StringProperty(default=None) # change to underscores
     carletonID = db.StringProperty()
     first_name = db.StringProperty()
     last_name = db.StringProperty()
     pair_code = db.StringProperty() # set default to generateVerificationCode?
     opted_in = db.BooleanProperty(default=True)
 
+    @property
+    def matches(self):
+        return Match.gql("WHERE source = :1", self.key())
+
 class Crush(db.Model):
-    source = db.ReferenceProperty(Carl, collection_name="crush_source")
-    target = db.ReferenceProperty(Carl, collection_name="crush_target")
+    source = db.ReferenceProperty(Carl, collection_name="in_crushes")
+    target = db.ReferenceProperty(Carl, collection_name="out_crushes")
     notified = db.BooleanProperty(default=False)
     
 class Match(db.Model):
-    source = db.ReferenceProperty(Carl, collection_name="match_source")
-    target = db.ReferenceProperty(Carl, collection_name="match_target")
+    source = db.ReferenceProperty(Carl, collection_name="in_matches")
+    target = db.ReferenceProperty(Carl, collection_name="out_matches")
 
-class Message(db.Model): # change this back to message
+class Message(db.Model):
     source = db.ReferenceProperty(Carl, collection_name="in_messages")
     target = db.ReferenceProperty(Carl, collection_name="out_messages")
     source_deleted = db.BooleanProperty(default=False)

@@ -70,7 +70,7 @@ class Settings(webapp.RequestHandler):
         elif action == "unpair" and session.isPaired():
             theCarl = session.getCarl()
             theCarl.pair_code = functions.generate_pair_code()
-            theCarl.googleID = ""
+            theCarl.googleID = None
             theCarl.put()
             #emailfunctions.send_unpaired(theCarl, session.get_current_user())
             template_values = {

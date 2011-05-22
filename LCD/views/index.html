@@ -37,11 +37,19 @@
     </ol>
 
     <h2>Statistics So Far</h2>
-    <p><span class="big">{{ num_crushes }}</span> crushes</p>
-    <p><span class="big">{{ num_messages }}</span> messages</p>
-    <p><span class="big">{{ num_replies }}</span> replies</p>
-    <p><span class="big">{{ num_matches }}</span> matches</p>
-
+    <div class="colwrapper">
+    <div class="leftcol">
+      <p><span class="big">{{ num_crushes }}</span> {% if num_crushes == 1 %}crush{% else %}crushes{% endif %}</p>
+      <p><span class="big">{{ num_messages }}</span> {% if num_messages == 1 %}message{% else %}messages{% endif %}</p>
+      <p><span class="big">{{ num_replies }}</span> {% if num_replies == 1 %}reply{% else %}replies{% endif %}</p>
+      <p><span class="big">{{ num_matches }}</span> {% if num_matches == 1 %}match{% else %}matches{% endif %} (updated every 6 hours)</p>
+    </div>
+    <div class="rightcol">
+      <p><span class="big">{{ num_paired }}</span> {% if num_paired == 1 %}person{% else %}people{% endif %} registered so far</p>
+      <p><span class="big">{{ num_opted_out }}</span> {% if num_opted_out = 1 %}person{% else %}people{% endif %} opted out</p>
+      <p><span class="big">{{ num_to_pair }}</span> {% if num_to_pair == 1 %}person still needs{% else %}people still need{% endif %} to register</p>
+    </div>
+    </div>
     <h2>Disclaimer</h2>
     <p>Consent is sexy. Always ask for consent, even with your matches.</p>
 
