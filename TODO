@@ -23,6 +23,11 @@
     [-] You recieved a secret message!
     [-] can send secret messages to crushes
     [-] Have on site message notification (inbox lights up)
+        [-] Word bubble-style notification
+            Example:  you have an unread message, so:
+            (over Crushes button) YOU HAVE MAIL
+                (over "To Me" tab) YOU HAVE MAIL
+                    and then highlight unread message in that orange color
     [-] viewing messages
     [-] posting messages
     [-] deleting unwanted messages
