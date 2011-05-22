@@ -1,0 +1,11 @@
+cron:
+
+- description: daily crush notification
+  url: /tasks/notify_crushes
+  schedule: every day 09:00
+  timezone: America/Chicago
+
+- description: update the matches
+  url: /tasks/update_matches
+  schedule: every 6 hours
+  timezone: America/Chicago

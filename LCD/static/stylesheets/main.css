@@ -1,7 +1,7 @@
 /*
 Project: MAIN CSS Template
 Project Website: http://lastchance2011.com
-Last updated: 2011-05-12
+Last updated: 2011-05-20
 File: main.css
 */
 
@@ -37,6 +37,11 @@ table th, table td
 {
     border: 1px solid #000000;
     padding: 5px;
+}
+
+span.big
+{
+    font-size: 2em;
 }
 
 /* LAYOUT */
@@ -77,11 +82,22 @@ div#footer
 }
 
 /* GENERAL LAYOUT OBJECTS */
-div.leftcol, div.rightcol
+div.colwrapper
 {
-    display: inline-block;
-    vertical-align: top;
-    width: 49%;
+    overflow: auto;
+    width: 100%;
+}
+
+div.leftcol
+{
+    width: 50%;
+    float: left;
+}
+
+div.rightcol
+{
+    width: 50%;
+    float: right;   
 }
 
 /* HEADER LAYOUT OBJECTS */
@@ -118,7 +134,7 @@ div#nav ul li
     display: inline;
     background: #04346C;
     list-style-type: none;
-    margin: 0px 2px;
+    margin-left: 2px;
 }
 
 div#nav ul li a, div#nav ul li a:hover, div#nav ul li a:visited, div#nav ul li a:active
@@ -166,7 +182,6 @@ div#nav ul li.alert span:after
     position: absolute;
     display: block;
     content: "";
- 
     border-color: rgba(0,0,0,.8) transparent transparent transparent;
     border-style: solid;
     border-width: 7px;
@@ -225,47 +240,105 @@ div#main a, div#main a:hover, div#main a:visited, div#main a:active, div#footer 
 
 div#crushes div.crushdiv
 {
+    margin-top: .8em;
     float: left;
     padding: 5px;
     width: 10em;
     text-align: center;
+    border: 1px solid #CCCCCC;
+    margin-right: .5em;
+    background-color: #EEEEEE;
+    height: 13em;
+}
+
+div#crushes div.crushdiv span
+{
+    display: block;
 }
 
 /* MESSAGES LAYOUT OBJECTS */
-ul#messages li.message {
+div#messages-header
+{
+   margin-bottom: 1em;
+}
+
+ul#messages-nav
+{
+    float: right;
+    margin-top: .2em;
+    display: inline;
+}
+
+ul#messages-nav li
+{
+    display: inline;
+    list-style-type: none;
+}
+
+ul#messages-nav li a, ul#messages-nav li a:hover, ul#messages-nav li a:visited, ul#messages-nav li a:active
+{
+    font-weight: bold;
+    text-decoration: none;
+    padding: 0.3em;
+    border: 1px solid #FFFFFF;
+}
+
+ul#messages-nav li.active a
+{
+    border: 1px solid #CCCCCC;
+    background-color: #EEEEEE;
+}
+  
+#messages-from-me
+{
+    display: none;
+}
+
+/* MESSAGE ITEM STYLING */
+
+/* general message items */
+div.messages div.message div.message-item
+{
+    background-color: #EEEEEE;
     border: 1px solid #CCCCCC;
     padding: .5em;
     margin: .5em 0;
     clear: both;
 }
 
-ul#messages li.message:hover > div.actions
+div.messages div.message div.message-item div.message-item-header
 {
-    opacity: 1;
+    position: relative;
 }
 
-ul#messages li.message div.timestamp
+div.messages div.message div.message-item div.message-item-header div.message-item-info
 {
-    float: left;
     font-size: .6em;
 }
 
-ul#messages li.message div.actions
+div.messages div.message div.message-item div.message-item-header div.message-actions
 {
+    position: absolute;
+    right: 0;
+    top: 0;
     opacity: 0;
     -webkit-transition: all 0.2s ease;
     -moz-transition: all 0.2s ease;
     -o-transition: all 0.2s ease;
-    float: right;
 }
 
-ul#messages div.actions ul#icons
+div.messages div.message div.message-item:hover > div.message-item-header div.message-actions
+{
+    opacity: 1;
+}
+
+div.messages div.message div.message-item div.message-item-header div.message-actions ul.icons
 {
     margin: 0;
     padding: 0;
 }
 
-ul#messages div.actions ul#icons li
+div.messages div.message div.message-item div.message-item-header div.message-actions ul.icons li
 {
     margin: 2px;
     position: relative;
@@ -275,18 +348,55 @@ ul#messages div.actions ul#icons li
     list-style: none;
 }
 
-ul#messages div.actions ul#icons span.ui-icon
+div.messages div.message div.message-item div.message-item-header div.message-actions ul.icons li span.ui-icon
 {
     float: left;
     margin: 0 4px;
 }
+
+div.messages div.message div.message-item div.message-item-body
+{
+    margin-top: .4em;
+}
+
+/* mesage replies */
+div.messages div.message div.reply
+{
+    margin-left: 2em;
+}
+
+div.messages div.message div.reply-box
+{
+    text-align: center;
+}
+
+div.messages div.message div.message-item input.reply-text
+{
+   width: 98%;
+}
+
+/* message sent */
+div.messages div.message div.sent
+{
+    opacity: .5 !important;
+}
+
+/* message just sent */
+div.messages div.message div.just-sent
+{
+    background-color: #EBf4FB;
+    border: 1px solid #B7DDF2;
+    opacity: 1 !important;
+}
+
+/* send message popup */
 
 div#new-message-form label, div#new-message-form input
 {
     display: block;
 }
 
-div#new-message-form select, div#new-message-form textarea
+div#new-message-form input.text, div#new-message-form textarea
 {
     display: block;
     width: 95%;
@@ -309,6 +419,105 @@ div#new-message-form p
 {
     font-size: .8em;
     margin-top: 1em;
+}
+
+/* SETTINGS STYLES */
+
+div.settings-form p, div.settings-form h1, div.settings-form form, div.settings-form button
+{
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+div.settings-form div.spacer
+{
+    clear:both;
+    height:1px;
+}
+
+div.settings-form
+{
+    margin: 0 auto;
+    width: 600px;
+    padding: 14px;
+    margin-bottom: 1em;
+    border: solid 2px #B7DDF2;
+    vertical-align: top;
+    background: #EBf4FB;
+}
+
+div.settings-form h1
+{
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+div.settings-form p
+{
+    color: #666666;
+    margin-bottom: 20px;
+    border-bottom: solid 1px #B7DDF2;
+    padding-bottom: 10px;
+}
+
+div.settings-form label
+{
+    display: block;
+    font-weight: bold;
+    text-align: right;
+    width: 140px;
+    float: left;
+}
+
+div.settings-form .small
+{
+    color: #666666;
+    display: block;
+    font-size: 11px;
+    font-weight: normal;
+    text-align: right;
+    width: 140px;
+}
+
+div.settings-form input
+{
+    float: left;
+    font-size: 12px;
+    padding: 4px 2px;
+    border: solid 1px #aacfe4;
+    width: 400px;
+    margin: 2px 0 20px 10px;
+}
+
+div.settings-form button
+{
+    clear: both;
+    margin-left: 240px;
+    width: 125px;
+    height: 31px;
+    background: #666666 url(img/button.png) no-repeat;
+    text-align: center;
+    line-height: 31px;
+    color: #FFFFFF;
+    font-size: .75em;
+    font-weight: bold;
+}
+
+div.main-page-settings-form
+{
+    margin: 1em 0 !important;
+    width: 400px !important;
+}
+
+div.main-page-settings-form button
+{
+    margin-left: 150px !important;
+}
+
+div.main-page-settings-form input
+{
+    width: 200px !important;
 }
 
 /* CONTACT LAYOUT OBJECTS */
