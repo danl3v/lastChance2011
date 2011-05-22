@@ -1,4 +1,4 @@
-import models
+from models import models
 
 def has_crush(source, target):
     crushes = models.Crush.all()

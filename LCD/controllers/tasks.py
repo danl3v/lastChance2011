@@ -1,5 +1,6 @@
 from google.appengine.ext import webapp
-import session, models, view, functions
+from models import models
+import session, view, functions
 
 class NotifyCrushes(webapp.RequestHandler):
     def get(self):

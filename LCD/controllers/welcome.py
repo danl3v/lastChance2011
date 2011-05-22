@@ -1,6 +1,7 @@
 from google.appengine.ext import webapp
 
-import view, session, emailfunctions, models
+from models import models
+import view, session, emailfunctions
 
 class MainPage(webapp.RequestHandler):
     def get(self):

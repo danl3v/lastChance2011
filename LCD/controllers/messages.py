@@ -1,6 +1,7 @@
 from google.appengine.ext import webapp
 from datetime import datetime
-import models, view, session, functions
+from models import models
+import view, session, functions
 
 class Send(webapp.RequestHandler):
     def post(self):

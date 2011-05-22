@@ -1,9 +1,6 @@
-import cgi
-import os
-
 from google.appengine.ext import webapp
-
-import models, view, session, emailfunctions, functions
+from models import models
+import view, session, emailfunctions, functions
 
 def addCarl(first_name, last_name, carleton_id):
     if functions.get_user_by_CID(carleton_id.strip()):

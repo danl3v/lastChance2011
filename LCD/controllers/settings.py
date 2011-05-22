@@ -1,5 +1,6 @@
 from google.appengine.ext import webapp
-import session, models, view, emailfunctions, functions
+from models import models
+import session, view, emailfunctions, functions
 
 class Settings(webapp.RequestHandler):
 

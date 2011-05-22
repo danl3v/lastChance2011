@@ -5,8 +5,8 @@ from google.appengine.dist import use_library
 use_library('django', '1.2')
 
 from google.appengine.ext.webapp import template
-
-import models, session
+from models import models
+import session
 
 def getHeaderFooterData(self):
     '''

@@ -2,7 +2,7 @@ from google.appengine.ext import db
 from google.appengine.api import users
 
 class Setting(db.Model):
-    key = db.StringProperty()
+    setting = db.StringProperty()
     value = db.StringProperty()
 
 class Carl(db.Model):
