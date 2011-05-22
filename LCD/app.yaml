@@ -3,9 +3,6 @@ version: 1
 runtime: python
 api_version: 1
 
-inbound_services:
-- mail
-
 builtins:
 - datastore_admin: on
 
@@ -33,9 +30,12 @@ handlers:
   script: main.py
   login: admin
 
-- url: /|/privacy|/contact
+- url: /privacy|/contact
   script: main.py
 
 - url: /.+
   script: main.py
   login: required
+  
+- url: /
+  script: main.py
