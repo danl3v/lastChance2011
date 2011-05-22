@@ -194,6 +194,17 @@ div#nav ul li.alert span:after
 }
 
 /* MAIN LAYOUT OBJECTS */
+div#main h1.alert
+{
+    color: #FFF;
+    font-size: 1.5em;
+    border: 1px solid #04346C;
+    text-align: center;
+    padding: .5em;
+    background-color: #C91010;
+    
+}
+
 div#main h2
 {
     font-size: 1.5em;

@@ -4,6 +4,7 @@ from models import models
 import view, session, functions
 
 class Send(webapp.RequestHandler):
+    @functions.only_if_site_open
     def post(self):
         if session.isPaired() and session.opted_in():
             source = session.getCarl()
@@ -22,6 +23,7 @@ class Send(webapp.RequestHandler):
             self.response.out.write('{"success":1}')
 
 class Reply(webapp.RequestHandler):
+    @functions.only_if_site_open
     def post(self):
         if session.isPaired() and session.opted_in():
             message = models.Message.get_by_id(long(self.request.get("mid"))) # maybe use key instead of key.id to find the message
@@ -43,6 +45,7 @@ class Reply(webapp.RequestHandler):
             self.response.out.write('{"success":1}')
 
 class Delete(webapp.RequestHandler):
+    @functions.only_if_site_open
     def post(self):
         if session.isPaired() and session.opted_in():
             user = session.getCarl()

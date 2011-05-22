@@ -22,9 +22,10 @@
 
   <div class="rightcol" id="admin-actions">
     <h2>Actions</h2>
-    <button onclick="inviteAll();">Invite All</button>
+    <button onclick="updateStatistics();">Update Statistics</button>
+    {% if site_status == 'open' %}<button onclick="inviteAll();">Invite All</button>{% endif %}
     <button onclick="updateMatches();">Update Matches</button>
-    <button onclick="sendMatchNotifications();">Send Match Notifications</button>
+    {% if site_status == 'showing' %}<button onclick="sendMatchNotifications();">Send Match Notifications</button>{% endif %}
     
   <form onSubmit="setSiteStatus(); return false;">
     <h2>Site Status</h2>

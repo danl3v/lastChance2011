@@ -28,3 +28,45 @@ def update_matches():
         new_match.target = match.target
         new_match.put()
     return matches
+
+def get_site_status(): # make a get setting function and a set setting function
+    site_status = models.Setting.all().filter("name =", "site_status").get()
+    if not site_status:
+        site_status = models.Setting()
+        site_status.name = "site_status"
+        site_status.value = "open"
+        site_status.put()
+    if not site_status.value:
+        site_status.value = "open"
+        site_status.put()
+    return site_status.value
+
+def get_statistic(name):
+    statistic = models.Statistic.all().filter("name =", name).get()
+    if statistic: return statistic.value
+    else: return 0
+    
+def set_statistic(name, value):
+    statistic = models.Statistic.all().filter("name =", name).get()
+    if not statistic:
+        statistic = models.Statistic()
+        statistic.name = name
+    statistic.value = value
+    statistic.put()
+
+def only_if_site_open(f):
+    def helper(self):
+        site_status = get_site_status()
+        if site_status == "open":
+            return f(self)
+        else:
+            self.response.out.write("The status of the site is " + site_status + ". You cannot edit crushes at this time")
+    return helper
+    
+def only_if_paired_opted_in(f):
+    def helper(self):
+        if session.isPaired() and session.opted_in():
+            return f(self)
+        else:
+            self.response.out.write("site you are not paired")
+    return helper

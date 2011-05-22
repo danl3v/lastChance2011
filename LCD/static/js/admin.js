@@ -7,6 +7,13 @@ function inviteAll() {
     }
 }
 
+function updateStatistics() {
+    $.get('/tasks/update_statistics', function(data) {
+        if (data.success == 0) { alert('Statistics updated'); }
+        else { alert('Error updating statistics.'); }
+    }, 'json');
+}
+
 function updateMatches() {
     $.get('/admin/update_matches', function(data) {
         if (data.success == 0) { alert('Matches updated'); }
@@ -29,6 +36,7 @@ function setSiteStatus() {
             if (data.success == 0) { alert('Site status successfully changed to ' + data.status); }
             else if (data.success == 1) { alert('Not a valid site status value: ' + data.status); }
             else { alert('Error changing site status.'); }
+            window.location.reload();
         }, 'json');
     }
 }

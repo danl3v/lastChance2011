@@ -6,7 +6,7 @@ use_library('django', '1.2')
 
 from google.appengine.ext.webapp import template
 from models import models
-import session
+import session, functions
 
 def getHeaderFooterData(self):
     '''
@@ -16,6 +16,7 @@ def getHeaderFooterData(self):
     carleton_id = None
     first_name = None
     last_name = None
+    site_status = functions.get_site_status()
     if user:
         login_url = session.create_logout_url("/")
         login_url_linktext = 'Logout'
@@ -44,7 +45,8 @@ def getHeaderFooterData(self):
         'login_url': login_url,
         'login_url_linktext': login_url_linktext,
         'paired': paired,
-        'opted_in': opted_in
+        'opted_in': opted_in,
+        'site_status': site_status
         }
 
     return template_values

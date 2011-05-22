@@ -6,20 +6,9 @@ class Admin(webapp.RequestHandler):
     def get(self):
         carls = models.Carl.all()
         
-        site_status = models.Setting.all().filter("name =", "site_status").get()
-        if not site_status:
-            site_status = models.Setting()
-            site_status.name = "site_status"
-            site_status.value = "open"
-            site_status.put()
-        if not site_status.value:
-            site_status.value = "open"
-            site_status.put()
-        site_status = site_status.value
-        
         template_values = {
             'carls' : carls,
-            'site_status': site_status,
+            'site_status': functions.get_site_status(),
             'current_page': { 'admin': True }
         }
         view.renderTemplate(self, 'admin.html', template_values)
