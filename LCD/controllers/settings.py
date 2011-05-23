@@ -79,18 +79,15 @@ class Settings(webapp.RequestHandler):
                 }
             view.renderTemplate(self, 'unpair_success.html', template_values)
 
-        elif action == "sendcode":
+        elif action == "invite":
             carletonAccount = functions.get_user_by_CID(self.request.get('carletonID').split("@")[0])
             if carletonAccount:
                 carletonAccount.pair_code = functions.generate_pair_code()
                 carletonAccount.put()
                 emailfunctions.send_invitation(carletonAccount)
-                self.response.out.write('A pair code has been sent to ' + self.request.get('carletonID').split("@")[0] + '@carleton.edu. Once you get the email, go to <a href="/settings">settings</a> to enter your pair code.')
+                self.response.out.write('{"success":0}')
             else:
-                self.response.out.write('<p>Our database does not have the user ' + self.request.get('carletonID').split("@")[0] + '. This is either beacuse you are not a senior or because you are not on stalkernet.</p>')
-                self.response.out.write('<p>If you think this is our fault, <a href="/contact">contact us</a> and convince us that you are a senior.</p>')
-
-        else: self.response.out.write('You are not allowed to perform this action. Please go back to <a href="/settings">settings</a> and try again.')
+                self.response.out.write('{"success":1}')
 
 class AutoPair(webapp.RequestHandler):
     def get(self, user="", pair_code=""):

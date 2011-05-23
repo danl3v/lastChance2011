@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
 {% block extrahead %}
-<script>
-    function focusGetInvite() { $("#invite-form input[name='carletonID']").focus(); }
-</script>
+<script type="text/javascript" src="/js/settings.js"></script>
 {% endblock %}
 
 {% block content %}
+
 <div id="main">
+<div id="response" style="display:none;"><h1 class="alert"></h1></div><br>
 
 {% if paired %}
    
@@ -46,7 +46,7 @@
 
 {% else %}
   <div class="settings-form">
-        <form method="post" action="/settings/sendcode" id="invite-form">
+        <form method="post" id="invite-form" onsubmit="sendInvitation();return false;">
             <h1>1. Don't Have an Invitation? Get One!</h1>
             <p>Use this if you don't have a Pair Code or want to Pair Your Account with another Google ID.</p>
             
