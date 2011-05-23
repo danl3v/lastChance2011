@@ -16,6 +16,7 @@ def getHeaderFooterData(self):
     carleton_id = None
     first_name = None
     last_name = None
+    has_unread_messages = False
     if user:
         login_url = session.create_logout_url("/")
         login_url_linktext = 'Logout'
@@ -26,6 +27,7 @@ def getHeaderFooterData(self):
             carleton_id = carl.carletonID
             first_name = carl.first_name
             last_name = carl.last_name
+            has_unread_messages = carl.has_unread_messages
         else: paired = False
     else:
         login_url = session.create_login_url(self.request.uri)
@@ -44,7 +46,8 @@ def getHeaderFooterData(self):
         'login_url': login_url,
         'login_url_linktext': login_url_linktext,
         'paired': paired,
-        'opted_in': opted_in
+        'opted_in': opted_in,
+        'has_unread_messages':has_unread_messages
         }
 
     return template_values

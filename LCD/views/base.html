@@ -24,7 +24,12 @@
   <li class="{% if current_page.main %}active{% else %}inactive{% endif %}"><a href="/">Main</a></li>
   {% if user %}
     {% if opted_in and paired %}
-      <li class="{% if current_page.crushes %}active{% else %}inactive{% endif %}"><a href="/crushes">Crushes</a></li>
+      <li class="{% if current_page.crushes %}active{% else %}inactive{% endif %}" >
+      {% if has_unread_messages %}
+          <div style="background: red; position:relative; top:-20px;float:left;"> YOU HAVE MESSAGES </div>
+      {% endif %}
+      <a href="/crushes">
+      Crushes</a></li>
     {% endif %}
     {% if paired and not opted_in %}
       <li class="alert{% if current_page.settings %} active{% else %} inactive{% endif %}"><a href="/settings">Settings</a><span>you are opted out</span></li>

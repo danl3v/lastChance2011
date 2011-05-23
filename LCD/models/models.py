@@ -10,8 +10,10 @@ class Carl(db.Model):
     carletonID = db.StringProperty()
     first_name = db.StringProperty()
     last_name = db.StringProperty()
-    pair_code = db.StringProperty() # set default to generateVerificationCode?
+    pair_code = db.StringProperty() # set default to generateVerificationCodeed
     opted_in = db.BooleanProperty(default=True)
+
+    has_unread_messages = db.BooleanProperty(default=False)
 
     @property
     def matches(self):
@@ -35,6 +37,8 @@ class Message(db.Model):
     body = db.StringProperty(multiline=True)
     created = db.DateTimeProperty(auto_now_add=True)
     updated = db.DateTimeProperty(auto_now_add=True)
+
+    unread = db.BooleanProperty(default=True)
     
     @property
     def replies(self):
@@ -45,3 +49,5 @@ class Reply(db.Model):
     source = db.ReferenceProperty(Carl, collection_name="reply_source")
     body = db.StringProperty(multiline=True)
     created = db.DateTimeProperty(auto_now_add=True)
+
+    unread = db.BooleanProperty(default=True)
