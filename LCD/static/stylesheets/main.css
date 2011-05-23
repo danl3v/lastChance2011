@@ -169,7 +169,7 @@ div#nav ul li.alert span
     white-space: nowrap;
     font: normal 12px "Segoe UI", Arial, Sans-serif;
     top: -50px;
-    left: -37px;
+    left: -35px;
     background: rgba(0,0,0,.8);
     -moz-border-radius: 8px;
     -webkit-border-radius: 8px;
@@ -397,6 +397,7 @@ div.messages div.message div.unread
 {
     background-color: #D9ECFA;
     border: 1px solid #A8D6F0;
+    font-weight: bold;
     opacity: 1 !important;
 }
 

@@ -19,7 +19,7 @@ class Carl(db.Model):
     pair_code = db.StringProperty() # set default to generateVerificationCodeed
     opted_in = db.BooleanProperty(default=True)
 
-    has_unread_messages = db.BooleanProperty(default=False)
+    num_unread_messages = db.IntegerProperty(default=0)
         
     @property
     def matches(self):

@@ -19,7 +19,7 @@ class Send(webapp.RequestHandler):
                 message.body = self.request.get("body")
                 message.put()
 
-                target.has_unread_messages = True # make this an int
+                target.num_unread_messages += 1
                 target.put()
 
                 self.response.out.write('{"success":0,"mid":' + str(message.key().id()) + ',"name":"' + message.target.first_name + ' ' + message.target.last_name + '"}')
@@ -36,12 +36,12 @@ class Reply(webapp.RequestHandler):
 
             if message.source.carletonID == source.carletonID: # then we set the target as unread   
                 reply.source_unread = False
-                message.target.has_unread_messages = True
+                message.target.num_unread_messages += 1
                 message.target.put()
 
             elif message.target.carletonID == source.carletonID: # then we set the source as unread
                 reply.target_unread = False
-                message.source.has_unread_messages = True
+                message.source.num_unread_messages += 1
                 message.source.put()
                 
             reply.message = message

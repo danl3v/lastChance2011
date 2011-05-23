@@ -16,7 +16,7 @@ def getHeaderFooterData(self):
     carleton_id = None
     first_name = None
     last_name = None
-    has_unread_messages = False
+    num_unread_messages = 0
     site_status = functions.get_site_status()
     if user:
         login_url = session.create_logout_url("/")
@@ -28,7 +28,7 @@ def getHeaderFooterData(self):
             carleton_id = carl.carletonID
             first_name = carl.first_name
             last_name = carl.last_name
-            has_unread_messages = carl.has_unread_messages
+            num_unread_messages = carl.num_unread_messages
         else: paired = False
     else:
         login_url = session.create_login_url(self.request.uri)
@@ -48,7 +48,7 @@ def getHeaderFooterData(self):
         'login_url_linktext': login_url_linktext,
         'paired': paired,
         'opted_in': opted_in,
-        'has_unread_messages': has_unread_messages,
+        'num_unread_messages': num_unread_messages,
         'site_status': site_status
         }
 

@@ -21,7 +21,7 @@ class Crushes(webapp.RequestHandler):
         mark_messages_to_me_read(messages)
 
         user = session.getCarl()
-        user.has_unread_messages = False # make this an integer
+        user.num_unread_messages = 0
         user.put()      
 
 class AddCrush(webapp.RequestHandler):
