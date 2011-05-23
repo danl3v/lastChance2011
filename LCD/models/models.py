@@ -1,5 +1,7 @@
 from google.appengine.ext import db
 from google.appengine.api import users
+from datetime import datetime
+tz_offset = -5
 
 class Setting(db.Model):
     name = db.StringProperty()
@@ -45,6 +47,14 @@ class Message(db.Model):
     unread = db.BooleanProperty(default=True)
     
     @property
+    def local_created(self):
+        return self.created + datetime.timedelta(hours=tz_offset)
+        
+    @property
+    def local_updated(self):
+        return self.updated + datetime.timedelta(hours=tz_offset)
+    
+    @property
     def replies(self):
         return Reply.gql("WHERE message = :1 ORDER BY created ASC", self.key())
 
@@ -55,3 +65,7 @@ class Reply(db.Model):
     created = db.DateTimeProperty(auto_now_add=True)
 
     unread = db.BooleanProperty(default=True)
+    
+    @property
+    def local_created(self):
+        return self.created + datetime.timedelta(hours=tz_offset)

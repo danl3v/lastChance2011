@@ -1,5 +1,6 @@
 from models import models
 from google.appengine.ext import db
+import session
 
 def has_crush(source, target):
     crushes = models.Crush.all()

@@ -47,7 +47,7 @@
          {%if message.unread %} unread{% endif %}
          ">
            <div class="message-item-header">
-           <div class="message-item-info"><strong>User #{{ message.source.key.id }}</strong> on {{ message.created|date:"M d \@ g:i:s A"}}</div>
+           <div class="message-item-info"><strong>User #{{ message.source.key.id }}</strong> on {{ message.local_created|date:"M d \@ g:i:s A"}}</div>
            <div class="message-actions">
              <ul class="icons ui-widget ui-helper-clearfix">
                {% if not message.replies.count %}<li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>{% endif %}
@@ -66,7 +66,7 @@
              <div class="message-item-info">
                {% if carleton_id == reply.source.carletonID %}<strong>You</strong> on
                {% else %}<strong>User #{{ message.source.key.id }}</strong> on {% endif %}
-               {{ reply.created|date:"M d \@ g:i:s A"}}
+               {{ reply.local_created|date:"M d \@ g:i:s A"}}
              </div>
              </div>
 	         <div class="message-item-body">{{ reply.body }}</div>
@@ -85,7 +85,7 @@
          {%if message.unread %} unread{% endif %}
          ">
            <div class="message-item-header">
-           <div class="message-item-info"><strong>You</strong> to <strong>{{ message.target.first_name }} {{ message.target.last_name }}</strong> on {{ message.created|date:"M d \@ g:i:s A"}}</div>
+           <div class="message-item-info"><strong>You</strong> to <strong>{{ message.target.first_name }} {{ message.target.last_name }}</strong> on {{ message.local_created|date:"M d \@ g:i:s A"}}</div>
            <div class="message-actions">
              <ul class="icons ui-widget ui-helper-clearfix">
                {% if not message.replies.count %}<li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>{% endif %}
@@ -104,7 +104,7 @@
              <div class="message-item-info">
                {% if carleton_id == reply.source.carletonID %}<strong>You</strong> on
                {% else %}<strong>{{ reply.source.first_name }} {{ reply.source.last_name }}</strong> on {% endif %}
-               {{ reply.created|date:"M d \@ g:i:s A"}}
+               {{ reply.local_created|date:"M d \@ g:i:s A"}}
              </div>
              </div>
 	         <div class="message-item-body">{{ reply.body }}</div>
