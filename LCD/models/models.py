@@ -44,7 +44,7 @@ class Message(db.Model):
     created = db.DateTimeProperty(auto_now_add=True)
     updated = db.DateTimeProperty(auto_now_add=True)
 
-    _unread = db.BooleanProperty(default=True)
+    unread = db.BooleanProperty(default=True)
     
     @property
     def local_created(self):
@@ -77,7 +77,7 @@ class Reply(db.Model):
     body = db.StringProperty(multiline=True)
     created = db.DateTimeProperty(auto_now_add=True)
 
-    _unread = db.BooleanProperty(default=True)
+    unread = db.BooleanProperty(default=True)
     
     @property
     def local_created(self):
