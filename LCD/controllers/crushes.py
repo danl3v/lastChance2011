@@ -27,11 +27,13 @@ class Crushes(webapp.RequestHandler):
 
     def set_all_to_read(self,messages):
         for m in messages:
-            m.unread = False
-            m.put()
+            if m.unread and session.getCarl().carletonID == m.target.carletonID:
+                m.unread = False
+                m.put()
             for r in m.replies:
-                r.unread = False
-                r.put()
+                if r.unread and session.getCarl().carletonID == m.target.carletonID:
+                    r.unread = False
+                    r.put()
                 
 
 class AddCrush(webapp.RequestHandler):
