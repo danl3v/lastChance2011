@@ -39,9 +39,9 @@ class Reply(webapp.RequestHandler):
                 message.unread = True
                 message.put()
                 #update target's unread count
-                target = message.target if message.source.carletonID == source.carletonID else message.source
-                target.has_unread_messages = True
-                target.put()
+                otherPerson = message.target if message.source.carletonID == source.carletonID else message.source
+                otherPerson.has_unread_messages = True
+                otherPerson.put()
                 reply = models.Reply()
                 reply.message = message
                 reply.source = source
