@@ -18,7 +18,7 @@ class Carl(db.Model):
     opted_in = db.BooleanProperty(default=True)
 
     has_unread_messages = db.BooleanProperty(default=False)
-
+        
     @property
     def matches(self):
         return Match.gql("WHERE source = :1", self.key())

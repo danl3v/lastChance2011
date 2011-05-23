@@ -1,4 +1,5 @@
 from google.appengine.ext import webapp
+from google.appengine.ext import db
 from models import models
 import view, session, emailfunctions, functions
 
@@ -51,6 +52,14 @@ class AddUsers(webapp.RequestHandler):
 class DeleteCarl(webapp.RequestHandler):
     def post(self):
         carl = functions.get_user_by_CID(self.request.get('carletonID'))
+        db.delete(carl.in_crushes)
+        db.delete(carl.out_crushes)
+        for in_message in carl.in_messages: db.delete(in_message.replies)
+        for out_message in carl.out_messages: db.delete(out_message.replies)
+        db.delete(carl.in_messages)
+        db.delete(carl.out_messages)
+        db.delete(carl.in_matches)
+        db.delete(carl.out_matches)
         carl.delete()
         self.redirect('/admin')
 

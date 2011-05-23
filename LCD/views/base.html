@@ -23,7 +23,7 @@
 <ul>
   <li class="{% if current_page.main %}active{% else %}inactive{% endif %}"><a href="/">Main</a></li>
   {% if user %}
-    {% if opted_in and paired %}   
+    {% if opted_in and paired and site_status == 'open' %}
       {% if has_unread_messages %}
       <li class="alert{% if current_page.crushes %} active{% else %} inactive{% endif %}"><a href="/crushes">Crushes</a><span>you have unread messages</span></li>
       {% else %}
