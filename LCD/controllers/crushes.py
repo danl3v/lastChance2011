@@ -18,6 +18,7 @@ class Crushes(webapp.RequestHandler):
             view.renderTemplate(self, 'crushes.html', template_values)
             self.set_all_to_read(messages)
             self.set_all_to_read(sent_messages)
+
             user = session.getCarl()
             user.has_unread_messages = False
             user.put()
@@ -26,10 +27,13 @@ class Crushes(webapp.RequestHandler):
 
     def set_all_to_read(self,messages):
         for m in messages:
-            m.unread = False
-            m.put()
-            #for r in messages.replies:
-                #r.unread = False
+            if m.unread and session.getCarl().carletonID == m.target.carletonID:
+                m.unread = False
+                m.put()
+            for r in m.replies:
+                if r.unread and session.getCarl().carletonID == m.target.carletonID:
+                    r.unread = False
+                    r.put()
                 
 
 class AddCrush(webapp.RequestHandler):

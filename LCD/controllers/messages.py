@@ -36,7 +36,12 @@ class Reply(webapp.RequestHandler):
                 message.updated = datetime.now()
                 message.source_deleted = False
                 message.target_deleted = False
+                message.unread = True
                 message.put()
+                #update target's unread count
+                target = message.target if message.source.carletonID == source.carletonID else message.source
+                target.has_unread_messages = True
+                target.put()
                 reply = models.Reply()
                 reply.message = message
                 reply.source = source
