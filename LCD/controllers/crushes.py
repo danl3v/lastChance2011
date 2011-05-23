@@ -16,8 +16,21 @@ class Crushes(webapp.RequestHandler):
                 'current_page': { 'crushes': True }
                 }
             view.renderTemplate(self, 'crushes.html', template_values)
+            self.set_all_to_read(messages)
+            self.set_all_to_read(sent_messages)
+            user = session.getCarl()
+            user.has_unread_messages = False
+            user.put()
         else:
             self.response.out.write('Your account must be paired and opted-in before adding crushes. Go to <a href="/settings">settings</a> to resolve this issue.')
+
+    def set_all_to_read(self,messages):
+        for m in messages:
+            m.unread = False
+            m.put()
+            #for r in messages.replies:
+                #r.unread = False
+                
 
 class AddCrush(webapp.RequestHandler):
     @functions.only_if_site_open
