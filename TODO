@@ -23,6 +23,7 @@
     [-] You recieved a secret message!
     [-] can send secret messages to crushes
     [-] Have on site message notification (inbox lights up)
+        [-] BUG: message sender can see when a message is read/unread by the target.  Either write a bunch of ugly hacks to fix or re-do database stuff so it's more elegant
         [-] Word bubble-style notification
             Example:  you have an unread message, so:
             (over Crushes button) YOU HAVE MAIL
