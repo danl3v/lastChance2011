@@ -26,13 +26,9 @@ class Crushes(webapp.RequestHandler):
             
     def set_all_to_read(self,messages):
         for m in messages:
-            if m.unread and session.getCarl().carletonID == m.target.carletonID:
-                m.unread = False
-                m.put()
+            m.mark_read(session.getCarl())
             for r in m.replies:
-                if r.unread and session.getCarl().carletonID == m.target.carletonID:
-                    r.unread = False
-                    r.put()
+                r.mark_read(session.getCarl())
                 
 
 class AddCrush(webapp.RequestHandler):
