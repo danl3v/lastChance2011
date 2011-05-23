@@ -1,6 +1,6 @@
 from google.appengine.ext import db
 from google.appengine.api import users
-from datetime import datetime
+from datetime import timedelta
 tz_offset = -5
 
 class Setting(db.Model):
@@ -48,11 +48,11 @@ class Message(db.Model):
     
     @property
     def local_created(self):
-        return self.created + datetime.timedelta(hours=tz_offset)
+        return self.created + timedelta(hours=tz_offset)
         
     @property
     def local_updated(self):
-        return self.updated + datetime.timedelta(hours=tz_offset)
+        return self.updated + timedelta(hours=tz_offset)
     
     @property
     def replies(self):
@@ -68,4 +68,4 @@ class Reply(db.Model):
     
     @property
     def local_created(self):
-        return self.created + datetime.timedelta(hours=tz_offset)
+        return self.created + timedelta(hours=tz_offset)
