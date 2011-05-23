@@ -400,6 +400,14 @@ div.messages div.message div.just-sent
     opacity: 1 !important;
 }
 
+/* message unread */
+div.messages div.message div.unread
+{
+    background-color: #D89061;
+    border: 1px solid #B14500;
+    opacity: 1 !important;
+}
+
 /* send message popup */
 
 div#new-message-form label, div#new-message-form input

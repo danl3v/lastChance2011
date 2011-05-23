@@ -43,7 +43,9 @@
     <div class="messages">
        {% for message in messages %}
          <div class="message" data-mid="{{ message.key.id }}">
-         <div class="message-item">
+         <div class="message-item
+         {%if message.unread %} unread{% endif %}
+         ">
            <div class="message-item-header">
            <div class="message-item-info"><strong>User #{{ message.source.key.id }}</strong> on {{ message.created|date:"M d \@ g:i:s A"}}</div>
            <div class="message-actions">
@@ -57,7 +59,9 @@
            <div class="message-item-body">{{ message.body }}</div>
          </div>
          {% for reply in message.replies %}
-           <div class="message-item reply{% if carleton_id == reply.source.carletonID %} sent{% endif %}">
+           <div class="message-item reply
+           {%if message.unread %} unread{% endif %}
+            {% if carleton_id == reply.source.carletonID %} sent{% endif %}">
              <div class="message-item-header">
              <div class="message-item-info">
                {% if carleton_id == reply.source.carletonID %}<strong>You</strong> on
@@ -77,7 +81,9 @@
     <div class="messages">
        {% for message in sent_messages %}
          <div class="message" data-mid="{{ message.key.id }}">
-         <div class="message-item sent">
+         <div class="message-item sent
+         {%if message.unread %} unread{% endif %}
+         ">
            <div class="message-item-header">
            <div class="message-item-info"><strong>You</strong> to <strong>{{ message.target.first_name }} {{ message.target.last_name }}</strong> on {{ message.created|date:"M d \@ g:i:s A"}}</div>
            <div class="message-actions">
@@ -91,7 +97,9 @@
            <div class="message-item-body">{{ message.body }}</div>
          </div>
          {% for reply in message.replies %}
-           <div class="message-item reply{% if carleton_id == reply.source.carletonID %} sent{% endif %}">
+           <div class="message-item reply
+           {%if message.unread %} unread{% endif %}
+           {% if carleton_id == reply.source.carletonID %} sent{% endif %}">
              <div class="message-item-header">
              <div class="message-item-info">
                {% if carleton_id == reply.source.carletonID %}<strong>You</strong> on
