@@ -63,10 +63,19 @@ def only_if_site_open(f):
             self.response.out.write("The status of the site is " + site_status + ". You cannot edit crushes at this time")
     return helper
     
+def only_if_site_showing(f):
+    def helper(self):
+        site_status = get_site_status()
+        if site_status == "showing":
+            return f(self)
+        else:
+            self.response.out.write("The status of the site is " + site_status + ". You cannot view matches at this time")
+    return helper
+    
 def only_if_paired_opted_in(f):
     def helper(self):
         if session.isPaired() and session.opted_in():
             return f(self)
         else:
-            self.response.out.write("site you are not paired")
+            self.response.out.write('{"success":1}')
     return helper

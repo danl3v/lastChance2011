@@ -4,27 +4,25 @@ import session, view, functions
 
 class Crushes(webapp.RequestHandler):
     @functions.only_if_site_open
+    @functions.only_if_paired_opted_in
     def get(self):
-        if session.isPaired() and session.opted_in():
-            crushes = get_crushes_for_user(session.getCarl())
-            messages = get_messages_for_user(session.getCarl())
-            sent_messages = get_messages_from_user(session.getCarl())
-            template_values = {
-                'crushes': crushes,
-                'messages': messages,
-                'sent_messages': sent_messages,
-                'current_page': { 'crushes': True }
-                }
-            view.renderTemplate(self, 'crushes.html', template_values)
-            self.set_all_to_read(messages)
-            self.set_all_to_read(sent_messages)
+        crushes = get_crushes_for_user(session.getCarl())
+        messages = get_messages_for_user(session.getCarl())
+        sent_messages = get_messages_from_user(session.getCarl())
+        template_values = {
+            'crushes': crushes,
+            'messages': messages,
+            'sent_messages': sent_messages,
+            'current_page': { 'crushes': True }
+            }
+        view.renderTemplate(self, 'crushes.html', template_values)
+        self.set_all_to_read(messages)
+        self.set_all_to_read(sent_messages)
 
-            user = session.getCarl()
-            user.has_unread_messages = False
-            user.put()
-        else:
-            self.response.out.write('Your account must be paired and opted-in before adding crushes. Go to <a href="/settings">settings</a> to resolve this issue.')
-
+        user = session.getCarl()
+        user.has_unread_messages = False
+        user.put()
+            
     def set_all_to_read(self,messages):
         for m in messages:
             if m.unread and session.getCarl().carletonID == m.target.carletonID:
@@ -38,37 +36,33 @@ class Crushes(webapp.RequestHandler):
 
 class AddCrush(webapp.RequestHandler):
     @functions.only_if_site_open
+    @functions.only_if_paired_opted_in
     def post(self):
-        if session.isPaired() and session.opted_in():
-            source = session.getCarl()
-            target = functions.get_user_by_CID(self.request.get("crush"))
-            if functions.has_crush(source, target): self.response.out.write('{"success":2}') # cannot choose someone who is already a crush
-            elif not target: self.response.out.write('{"success":3}') # crush must exist
-            elif source.carletonID == target.carletonID: self.response.out.write('{"success":4}') # can't choose yourself as a crush (kind of weird that we need to compare their carletonIDs instead of just comparing them)
-            elif len(get_crushes_for_user(source)) >= 5: self.response.out.write('{"success":5}') # can't have more than 5 crushes
-            else:
-                edge = models.Crush()
-                edge.source = source
-                edge.target = target
-                edge.put()
-                self.response.out.write('{"success":0, "status":"' + get_status(target) + '"}')
+        source = session.getCarl()
+        target = functions.get_user_by_CID(self.request.get("crush"))
+        if functions.has_crush(source, target): self.response.out.write('{"success":2}') # cannot choose someone who is already a crush
+        elif not target: self.response.out.write('{"success":3}') # crush must exist
+        elif source.carletonID == target.carletonID: self.response.out.write('{"success":4}') # can't choose yourself as a crush (kind of weird that we need to compare their carletonIDs instead of just comparing them)
+        elif len(get_crushes_for_user(source)) >= 5: self.response.out.write('{"success":5}') # can't have more than 5 crushes
         else:
-            self.response.out.write('{"success":1}')    
+            edge = models.Crush()
+            edge.source = source
+            edge.target = target
+            edge.put()
+            self.response.out.write('{"success":0, "status":"' + get_status(target) + '"}')   
 
 class RemoveCrush(webapp.RequestHandler):
     @functions.only_if_site_open
+    @functions.only_if_paired_opted_in
     def post(self):
-        if session.isPaired() and session.opted_in():
-            source = session.getCarl()
-            target = functions.get_user_by_CID(self.request.get("crush"))
-            crush = functions.has_crush(source, target)
-            if crush:
-                crush.delete()
-                self.response.out.write('{"success":0}')
-            else:
-                self.response.out.write('{"success":2}')
+        source = session.getCarl()
+        target = functions.get_user_by_CID(self.request.get("crush"))
+        crush = functions.has_crush(source, target)
+        if crush:
+            crush.delete()
+            self.response.out.write('{"success":0}')
         else:
-            self.response.out.write('{"success":1}')
+            self.response.out.write('{"success":2}')
 
 class AutoFill(webapp.RequestHandler):
     @functions.only_if_site_open
