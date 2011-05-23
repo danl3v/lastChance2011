@@ -4,7 +4,7 @@
 <style>
 .heart {
 height:500px;
-margin:0 auto;
+
 position:relative;
 width:500px;
 z-index:1;
@@ -40,60 +40,7 @@ top:90px;
 width:0;
 z-index:1000;
 }
-.heart .arw1 {
-background-color:#333333;
-height:10px;
-left:20px;
-position:absolute;
-top:80px;
-width:195px;
-z-index:1000;
-}
-.heart .arw2 {
-background-color:#333333;
-height:10px;
-position:absolute;
-right:20px;
-top:80px;
-width:66px;
-z-index:1000;
-}
-.heart .pointer {
-border-color:transparent transparent transparent #000000;
-border-style:solid;
-border-width:20px;
-font-size:0;
-line-height:0;
-position:absolute;
-right:-20px;
-top:64px;
-width:0;
-z-index:1000;
-}
-.heart .pointer2 {
-border-color:#000000 #000000 #000000 transparent;
-border-style:solid;
-border-width:20px;
-font-size:0;
-left:0;
-line-height:0;
-position:absolute;
-top:65px;
-width:0;
-z-index:200;
-}
-.heart .pointer3 {
-border-color:#FFFFFF transparent;
-border-style:solid;
-border-width:20px;
-font-size:0;
-left:20px;
-line-height:0;
-position:absolute;
-top:65px;
-width:0;
-z-index:300;
-}
+
 .heart .shade1 {
 -moz-border-radius:100px;
 -webkit-border-radius:100px;
@@ -151,10 +98,29 @@ top:160px;
 width:0;
 z-index:1700;
 }
+
+.crush1, .crush2
+{
+    position: absolute;
+    z-index: 1800;
+    text-align: center;
+}
+.crush1 img, .crush2 img
+{
+    border: 1px solid #000;
+}
+.crush1
+{
+    left: 0;
+}
+
+.crush2
+{
+    right: 0;
+}
+
 </style>
 {% endblock %}
-
-
 
 {% block content %}
 
@@ -163,33 +129,17 @@ z-index:1700;
     <div id="crushes">
     {% if matches|length > 0 %}
         {% for match in matches %}
-        
-        
-<div class="heart">
-    <div class="hrt-lft"></div>
-    <div class="hrt-rgt"></div>
-    <div class="bot"></div>
- 
-    <div class="arw1"></div>
-    <div class="arw2"></div>
-    <div class="pointer"></div>
-    <div class="pointer2"></div>
-    <div class="pointer3"></div>
- 
-    <div class="shade1"></div>
-    <div class="shade2"></div>
-    <div class="shade4"></div>
-    <div class="shade5"></div>
-</div>
-        
-        
-        <div class="heart">
-            <div class="left-half"></div>
-            <div class="right-half"><img src="/user_images/{{ match.target.carletonID }}.jpg" width="120" height="120" alt="{{ match.target.carletonID }}"></div>
-            <br>
-            {{ match.target.first_name }} {{ match.target.last_name }}
-        </div>
-
+            <div class="heart">
+                <div class="hrt-lft"></div>
+                <div class="hrt-rgt"></div>
+                <div class="bot"></div>
+                <div class="shade1"></div>
+                <div class="shade2"></div>
+                <div class="shade4"></div>
+                <div class="shade5"></div>
+                <div class="crush1"><img src="/user_images/{{ match.source.carletonID }}.jpg" width="120" height="120" alt="{{ match.source.carletonID }}"><br>{{ match.source.first_name }} {{ match.source.last_name }}</div>
+                <div class="crush2"><img src="/user_images/{{ match.target.carletonID }}.jpg" width="120" height="120" alt="{{ match.target.carletonID }}"><br>{{ match.target.first_name }} {{ match.target.last_name }}</div>
+            </div>
         {% endfor %}
     {% else %}
     <p>Sorry, you didn't have any matches.</p>

@@ -14,13 +14,6 @@ function updateStatistics() {
     }, 'json');
 }
 
-function updateMatches() {
-    $.get('/admin/update_matches', function(data) {
-        if (data.success == 0) { alert('Matches updated'); }
-        else { alert('Error updating matches.'); }
-    }, 'json');
-}
-
 function sendMatchNotifications() {
     if (confirm('Do you really want to send match notifications to everyone?')) {
         $.get('/admin/send_match_notifications', function(data) {

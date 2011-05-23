@@ -26,6 +26,9 @@
     {% if opted_in and paired and site_status == 'open' %}
       <li class="{% if current_page.crushes %}active{% else %}inactive{% endif %}"><a href="/crushes">Crushes</a></li>
     {% endif %}
+    {% if opted_in and paired and site_status == 'showing' %}
+      <li class="{% if current_page.matches %}active{% else %}inactive{% endif %}"><a href="/matches">Matches!</a></li>
+    {% endif %}
     {% if paired and not opted_in %}
       <li class="alert{% if current_page.settings %} active{% else %} inactive{% endif %}"><a href="/settings">Settings</a><span>you are opted out</span></li>
     {% else %}

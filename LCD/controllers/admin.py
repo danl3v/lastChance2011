@@ -30,11 +30,6 @@ class SetSiteStatus(webapp.RequestHandler):
                 site_status.put()
             self.response.out.write('{"success":0, "status":"' + new_site_status + '"}')
 
-class UpdateMatches(webapp.RequestHandler):
-    def get(self):
-        matches = functions.update_matches()
-        self.response.out.write('{"success":0}')
-
 class SendMatchNotifications(webapp.RequestHandler):
     def get(self):
         users = models.Carl.all()
