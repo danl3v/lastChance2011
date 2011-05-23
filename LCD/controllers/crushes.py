@@ -6,7 +6,8 @@ class Crushes(webapp.RequestHandler):
     @functions.only_if_site_open
     @functions.only_if_paired_opted_in
     def get(self):
-        crushes = get_crushes_for_user(session.getCarl())
+        #crushes = get_crushes_for_user(session.getCarl())
+        crushes = session.getCarl().in_crushes  # is the filter query or this property cheaper?
         messages = get_messages_for_user(session.getCarl())
         sent_messages = get_messages_from_user(session.getCarl())
         template_values = {
@@ -25,13 +26,9 @@ class Crushes(webapp.RequestHandler):
             
     def set_all_to_read(self,messages):
         for m in messages:
-            if m.unread and session.getCarl().carletonID == m.target.carletonID:
-                m.unread = False
-                m.put()
+            m.mark_read(session.getCarl())
             for r in m.replies:
-                if r.unread and session.getCarl().carletonID == m.target.carletonID:
-                    r.unread = False
-                    r.put()
+                r.mark_read(session.getCarl())
                 
 
 class AddCrush(webapp.RequestHandler):

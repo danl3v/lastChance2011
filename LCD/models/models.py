@@ -58,8 +58,21 @@ class Message(db.Model):
     def replies(self):
         return Reply.gql("WHERE message = :1 ORDER BY created ASC", self.key())
 
+    """
+    @property
+    def unread(self):
+        if session.getCarl().carletonID == self.source.carletonID:
+            return self._unread
+    """
+
+    def mark_read(self,user):
+        # hiding the user != source_user condition may be especially confusing from the outside...
+        if self.unread and user.carletonID != self.source.carletonID:
+            self.unread = False
+            return self.put()
+
 class Reply(db.Model):
-    message = db.ReferenceProperty(Message, collection_name="reply_message")
+    message = db.ReferenceProperty(Message, collection_name="reply_messages")
     source = db.ReferenceProperty(Carl, collection_name="reply_source")
     body = db.StringProperty(multiline=True)
     created = db.DateTimeProperty(auto_now_add=True)
@@ -69,3 +82,16 @@ class Reply(db.Model):
     @property
     def local_created(self):
         return self.created + timedelta(hours=tz_offset)
+
+    """
+    @property
+    def unread(self):
+        if session.getCarl().carletonID == self.source.carletonID:
+            return self._unread
+    """
+
+    def mark_read(self,user):
+        # hiding the user != source_user condition may be especially confusing from the outside...
+        if self.unread and user.carletonID != self.source.carletonID:
+            self.unread = False
+            return self.put()
