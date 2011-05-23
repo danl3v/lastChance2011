@@ -3,29 +3,16 @@
 {% block extrahead %}
 <style>
     #existing_users { font-size: .9em; width: 100%;}
+    #admin-actions button { display: block; margin-top: 1em; } 
 </style>
+<script type="text/javascript" src="/js/admin.js"></script>
 {% endblock %}
 
 {% block content %}
 <div id="main">
-  <div class="leftcol">
-    <h2>New User</h2>
-    <form action="/admin/addcarl" method="post">
-      CarletonID:<input type="text" name="carletonID"><br>
-      First Name:<input type="text" name="first_name"><br>
-      Last Name:<input type="text" name="last_name"><br>
-      <input type="submit" value="Add User">
-    </form>
-
-    <p>
-    - <a href="/admin/calculate_matches">Calculate Matches</a><br>
-    - <a href="/admin/send_match_notifications">Send Match Notifications</a><br>
-    - <a href="#">Close Site</a>
-    </p>
-  </div>
-
-  <div class="rightcol">
-    <h2>Batch add Users</h2>
+  <div class="colwrapper">
+  <div class="leftcol">  
+    <h2>Add Users</h2>
     <form action="/admin/addusers" method="post">
       FORMAT: (first_name, last_name, user_id):<br>
       <textarea name="users" cols="40" rows="10"></textarea><br>
@@ -33,6 +20,22 @@
     </form>
   </div>
 
+  <div class="rightcol" id="admin-actions">
+    <h2>Actions</h2>
+    <button onclick="updateStatistics();">Update Matches and Statistics</button>
+    {% if site_status == 'open' %}<button onclick="inviteAll();">Invite All</button>{% endif %}
+    {% if site_status == 'showing' %}<button onclick="sendMatchNotifications();">Send Match Notifications</button>{% endif %}
+    
+  <form onSubmit="setSiteStatus(); return false;">
+    <h2>Site Status</h2>
+    <input type="radio" name="site_status" value="pre"{% if site_status == 'pre' %} checked{% endif %}><label for="site_status">Pre-Launch (pre)</label><br>
+    <input type="radio" name="site_status" value="open"{% if site_status == 'open' %} checked{% endif %}><label for="site_status">Can Enter Crushes (open)</label><br>
+    <input type="radio" name="site_status" value="calculating"{% if site_status == 'calculating' %} checked{% endif %}><label for="site_status">Pre-Release Matches (calculating)</label><br>
+    <input type="radio" name="site_status" value="showing"{% if site_status == 'showing' %} checked{% endif %}><label for="site_status">Matches Available (showing)</label><br>
+    <button type="submit">Set Status</button>
+  </form>
+  </div>
+  </div>
   <h2>Existing Users</h2>
   <table id="existing_users">
     <tr><th>Carleton ID</th><th>Name</th><th>Pair Code</th><th>Google ID</th><th>Actions</th></tr>

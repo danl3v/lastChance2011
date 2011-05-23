@@ -3,6 +3,7 @@ from models import models
 import session, view, functions
 
 class Crushes(webapp.RequestHandler):
+    @functions.only_if_site_open
     def get(self):
         if session.isPaired() and session.opted_in():
             crushes = get_crushes_for_user(session.getCarl())
@@ -19,6 +20,7 @@ class Crushes(webapp.RequestHandler):
             self.response.out.write('Your account must be paired and opted-in before adding crushes. Go to <a href="/settings">settings</a> to resolve this issue.')
 
 class AddCrush(webapp.RequestHandler):
+    @functions.only_if_site_open
     def post(self):
         if session.isPaired() and session.opted_in():
             source = session.getCarl()
@@ -37,6 +39,7 @@ class AddCrush(webapp.RequestHandler):
             self.response.out.write('{"success":1}')    
 
 class RemoveCrush(webapp.RequestHandler):
+    @functions.only_if_site_open
     def post(self):
         if session.isPaired() and session.opted_in():
             source = session.getCarl()
@@ -51,6 +54,7 @@ class RemoveCrush(webapp.RequestHandler):
             self.response.out.write('{"success":1}')
 
 class AutoFill(webapp.RequestHandler):
+    @functions.only_if_site_open
     def get(self):
         users = models.Carl.all()
         users.order("first_name")

@@ -2,8 +2,12 @@ from google.appengine.ext import db
 from google.appengine.api import users
 
 class Setting(db.Model):
-    setting = db.StringProperty()
+    name = db.StringProperty()
     value = db.StringProperty()
+    
+class Statistic(db.Model):
+    name = db.StringProperty()
+    value = db.IntegerProperty()
 
 class Carl(db.Model):
     googleID = db.StringProperty(default=None) # change to underscores
