@@ -60,9 +60,13 @@ class AutoFill(webapp.RequestHandler):
         users = models.Carl.all()
         users.order("first_name")
         results = users.fetch(1000) #if we have more than 1000 users, we need to fetch multiple times until we run out of fetches
-        theJSON = ''.join(['{"value":"' + user.first_name + ' ' + user.last_name + ' (' + user.carletonID + ')","carletonID":"' + user.carletonID + '","first_name":"' + user.first_name + '","last_name":"' + user.last_name + '"},' for user in users])
+        theJSON = ''.join([generate_JSON(user) for user in users])
         theJSON = "[" + theJSON[:-1] + "]"
         self.response.out.write(theJSON)
+
+def generate_JSON(user):
+    extra = " (opted-out)" if not user.opted_in else ""
+    return '{"value":"' + user.first_name + ' ' + user.last_name + ' (' + user.carletonID + ')' + extra + '","carletonID":"' + user.carletonID + '","first_name":"' + user.first_name + '","last_name":"' + user.last_name + '"},'
 
 def get_status(user):
     if not user.googleID: return "not_paired"
