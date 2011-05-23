@@ -59,7 +59,7 @@ class Message(db.Model):
         return Reply.gql("WHERE message = :1 ORDER BY created ASC", self.key())
 
 class Reply(db.Model):
-    message = db.ReferenceProperty(Message, collection_name="reply_message")
+    message = db.ReferenceProperty(Message, collection_name="reply_messages")
     source = db.ReferenceProperty(Carl, collection_name="reply_source")
     body = db.StringProperty(multiline=True)
     created = db.DateTimeProperty(auto_now_add=True)

@@ -6,7 +6,8 @@ class Crushes(webapp.RequestHandler):
     @functions.only_if_site_open
     @functions.only_if_paired_opted_in
     def get(self):
-        crushes = get_crushes_for_user(session.getCarl())
+        #crushes = get_crushes_for_user(session.getCarl())
+        crushes = session.getCarl().in_crushes  # is the filter query or this property cheaper?
         messages = get_messages_for_user(session.getCarl())
         sent_messages = get_messages_from_user(session.getCarl())
         template_values = {
