@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+<style>
+.heart {
+height:500px;
+margin:0 auto;
+position:relative;
+width:500px;
+z-index:1;
+}
+.heart .hrt-lft {
+-moz-border-radius:150px 150px 0 0;
+-webkit-border-radius:150px 150px 0 0;
+background-color:#FF0000;
+float:left;
+height:90px;
+left:85px;
+position:absolute;
+width:180px;
+}
+.heart .hrt-rgt {
+-moz-border-radius:150px 150px 0 0;
+-webkit-border-radius:150px 150px 0 0;
+background-color:#FF0000;
+height:90px;
+position:absolute;
+right:85px;
+width:180px;
+}
+.heart .bot {
+border-left:165px solid transparent;
+border-right:165px solid transparent;
+border-top:165px solid #FF0000;
+font-size:0;
+left:85px;
+line-height:0;
+position:absolute;
+top:90px;
+width:0;
+z-index:1000;
+}
+.heart .arw1 {
+background-color:#333333;
+height:10px;
+left:20px;
+position:absolute;
+top:80px;
+width:195px;
+z-index:1000;
+}
+.heart .arw2 {
+background-color:#333333;
+height:10px;
+position:absolute;
+right:20px;
+top:80px;
+width:66px;
+z-index:1000;
+}
+.heart .pointer {
+border-color:transparent transparent transparent #000000;
+border-style:solid;
+border-width:20px;
+font-size:0;
+line-height:0;
+position:absolute;
+right:-20px;
+top:64px;
+width:0;
+z-index:1000;
+}
+.heart .pointer2 {
+border-color:#000000 #000000 #000000 transparent;
+border-style:solid;
+border-width:20px;
+font-size:0;
+left:0;
+line-height:0;
+position:absolute;
+top:65px;
+width:0;
+z-index:200;
+}
+.heart .pointer3 {
+border-color:#FFFFFF transparent;
+border-style:solid;
+border-width:20px;
+font-size:0;
+left:20px;
+line-height:0;
+position:absolute;
+top:65px;
+width:0;
+z-index:300;
+}
+.heart .shade1 {
+-moz-border-radius:100px;
+-webkit-border-radius:100px;
+background-color:#FF9900;
+height:100px;
+position:absolute;
+right:120px;
+top:25px;
+width:100px;
+z-index:1200;
+}
+.heart .shade2 {
+-moz-border-radius:100px;
+-webkit-border-radius:100px;
+background-color:#FF0000;
+height:120px;
+position:absolute;
+right:115px;
+top:35px;
+width:120px;
+z-index:1300;
+}
+.heart .shade3 {
+-moz-border-radius:200px 300px 200px 350px;
+-webkit-border-radius:200px 300px 200px 350px;
+background-color:#FF0000;
+height:170px;
+position:absolute;
+right:60px;
+top:102px;
+width:170px;
+z-index:1300;
+}
+.heart .shade4 {
+border-color:#FF9900 #FF9900 #FF9900 transparent;
+border-style:solid;
+border-width:0 11px 30px 40px;
+font-size:0;
+line-height:0;
+position:absolute;
+right:200px;
+top:170px;
+width:0;
+z-index:1600;
+}
+.heart .shade5 {
+border-color:transparent #FF0000;
+border-style:solid;
+border-width:40px 37px 0 0;
+font-size:0;
+line-height:0;
+position:absolute;
+right:195px;
+top:160px;
+width:0;
+z-index:1700;
+}
+</style>
+{% endblock %}
+
+
+
+{% block content %}
+
+<div id="main">
+    <h2>Matches</h2>    
+    <div id="crushes">
+    {% if matches|length > 0 %}
+        {% for match in matches %}
+        
+        
+<div class="heart">
+    <div class="hrt-lft"></div>
+    <div class="hrt-rgt"></div>
+    <div class="bot"></div>
+ 
+    <div class="arw1"></div>
+    <div class="arw2"></div>
+    <div class="pointer"></div>
+    <div class="pointer2"></div>
+    <div class="pointer3"></div>
+ 
+    <div class="shade1"></div>
+    <div class="shade2"></div>
+    <div class="shade4"></div>
+    <div class="shade5"></div>
+</div>
+        
+        
+        <div class="heart">
+            <div class="left-half"></div>
+            <div class="right-half"><img src="/user_images/{{ match.target.carletonID }}.jpg" width="120" height="120" alt="{{ match.target.carletonID }}"></div>
+            <br>
+            {{ match.target.first_name }} {{ match.target.last_name }}
+        </div>
+
+        {% endfor %}
+    {% else %}
+    <p>Sorry, you didn't have any matches.</p>
+    {% endif %}
+</div>
+
+{% endblock %}
