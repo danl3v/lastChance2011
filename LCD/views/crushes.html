@@ -60,7 +60,7 @@
          </div>
          {% for reply in message.replies %}
            <div class="message-item reply
-           {%if message.unread %} unread{% endif %}
+           {%if reply.unread %} unread{% endif %}
             {% if carleton_id == reply.source.carletonID %} sent{% endif %}">
              <div class="message-item-header">
              <div class="message-item-info">
@@ -98,7 +98,7 @@
          </div>
          {% for reply in message.replies %}
            <div class="message-item reply
-           {%if message.unread %} unread{% endif %}
+           {%if reply.unread %} unread{% endif %}
            {% if carleton_id == reply.source.carletonID %} sent{% endif %}">
              <div class="message-item-header">
              <div class="message-item-info">
