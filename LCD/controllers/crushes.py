@@ -17,19 +17,12 @@ class Crushes(webapp.RequestHandler):
             'current_page': { 'crushes': True }
             }
         view.renderTemplate(self, 'crushes.html', template_values)
-        self.set_all_to_read(messages)
-        self.set_all_to_read(sent_messages)
+        mark_messages_from_me_read(sent_messages)
+        mark_messages_to_me_read(messages)
 
         user = session.getCarl()
-        user.has_unread_messages = False
-        user.put()
-            
-    def set_all_to_read(self,messages):
-        for m in messages:
-            m.mark_read(session.getCarl())
-            for r in m.replies:
-                r.mark_read(session.getCarl())
-                
+        user.has_unread_messages = False # make this an integer
+        user.put()      
 
 class AddCrush(webapp.RequestHandler):
     @functions.only_if_site_open
@@ -86,11 +79,27 @@ def get_messages_for_user(user): # need to somehow get messages by source
     messages.filter("target =", user)
     messages.filter("target_deleted =", False)
     messages.order("-updated")
-    return messages.fetch(1000) # if we have more than 1000 messages, we need to fetch multiple times
+    return messages
 
 def get_messages_from_user(user): # need to somehow get messages by source
     messages = models.Message.all()
     messages.filter("source =", user)
     messages.filter("source_deleted =", False)
     messages.order("-updated")
-    return messages.fetch(1000) # if we have more than 1000 messages, we need to fetch multiple times
+    return messages
+
+def mark_messages_from_me_read(messages):
+    for message in messages:
+        for reply in message.replies:
+            reply.source_unread = False
+            reply.put()
+
+def mark_messages_to_me_read(messages):
+    for message in messages:
+        message.target_unread = False
+        message.put()
+        for reply in message.replies:
+            reply.target_unread = False
+            reply.put()
+
+

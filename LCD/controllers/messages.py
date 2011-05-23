@@ -19,7 +19,7 @@ class Send(webapp.RequestHandler):
                 message.body = self.request.get("body")
                 message.put()
 
-                target.has_unread_messages = True
+                target.has_unread_messages = True # make this an int
                 target.put()
 
                 self.response.out.write('{"success":0,"mid":' + str(message.key().id()) + ',"name":"' + message.target.first_name + ' ' + message.target.last_name + '"}')
@@ -31,23 +31,32 @@ class Reply(webapp.RequestHandler):
         message = models.Message.get_by_id(long(self.request.get("mid"))) # maybe use key instead of key.id to find the message
         source = session.getCarl()
         if message and (message.source.carletonID == source.carletonID or message.target.carletonID == source.carletonID):
+
+            reply = models.Reply()
+
+            if message.source.carletonID == source.carletonID: # then we set the target as unread   
+                reply.source_unread = False
+                message.target.has_unread_messages = True
+                message.target.put()
+
+            elif message.target.carletonID == source.carletonID: # then we set the source as unread
+                reply.target_unread = False
+                message.source.has_unread_messages = True
+                message.source.put()
+                
+            reply.message = message
+            reply.source = source
+            reply.body = self.request.get('body')
+            reply.put()
+            
             message.updated = datetime.now()
             message.source_deleted = False
             message.target_deleted = False
-            message.unread = True
             message.put()
-            #update target's unread count
-            otherPerson = message.target if message.source.carletonID == source.carletonID else message.source
-            otherPerson.has_unread_messages = True
-            otherPerson.put()
-            reply = models.Reply()
-            reply.message = message
-            reply.source = source
-            reply.body = self.request.get("body")
-            reply.put()
+            
             self.response.out.write('{"success":0}')
-        else:
-            self.response.out.write('{"success":2}')
+            
+        self.response.out.write('{"success":2}')
 
 class Delete(webapp.RequestHandler):
     @functions.only_if_site_open

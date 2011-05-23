@@ -48,7 +48,7 @@ def getHeaderFooterData(self):
         'login_url_linktext': login_url_linktext,
         'paired': paired,
         'opted_in': opted_in,
-        'has_unread_messages':has_unread_messages,
+        'has_unread_messages': has_unread_messages,
         'site_status': site_status
         }
 

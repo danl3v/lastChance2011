@@ -66,8 +66,8 @@ $(document).ready(function() {
 
 function addSentMessage(to, body, message_id) {
     var message =
-    '<div class="message" data-mid="' + message_id + '">' +
-    '  <div class="message-item just-sent sent">' +
+    $('<div class="message" data-mid="' + message_id + '">' +
+    '  <div class="message-item unread sent">' +
     '    <div class="message-item-header">' +
     '    <div class="message-item-info"><strong>You</strong> to <strong>' + to + '</strong> just now</div>' +
     '    <div class="message-actions">' +
@@ -81,9 +81,10 @@ function addSentMessage(to, body, message_id) {
 	'    <div class="message-item-body">' + body + '</div>' +
 	'  </div>' +
 	'  <div class="message-item reply reply-box" style="display:none;"><input type="text" class="reply-text"></div>' +
-	'</div>';
+	'</div>');
 	if ($("#messages-from-me .messages .message").length > 0) { $("#messages-from-me .messages .message:first").before(message); }
 	else { $("#messages-from-me .messages").html(message); }
+	message.find(".message-item").each(function() { $(this).removeClass('unread', 3000); });
 }
 
 function crushRemoveListener() {
