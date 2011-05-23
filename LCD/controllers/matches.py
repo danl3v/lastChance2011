@@ -3,6 +3,7 @@ from models import models
 import session, view, functions
 
 class Matches(webapp.RequestHandler):
+    @only_if_site_showing
     def get(self):
         if session.isPaired() and session.opted_in():
             template_values = {
