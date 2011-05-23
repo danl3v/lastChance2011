@@ -23,13 +23,12 @@
 <ul>
   <li class="{% if current_page.main %}active{% else %}inactive{% endif %}"><a href="/">Main</a></li>
   {% if user %}
-    {% if opted_in and paired %}
-      <li class="{% if current_page.crushes %}active{% else %}inactive{% endif %}" >
+    {% if opted_in and paired %}   
       {% if has_unread_messages %}
-          <div style="background: red; position:relative; top:-20px;float:left;"> YOU HAVE MESSAGES </div>
+      <li class="alert{% if current_page.crushes %} active{% else %} inactive{% endif %}"><a href="/crushes">Crushes</a><span>you have unread messages</span></li>
+      {% else %}
+      <li class="{% if current_page.crushes %}active{% else %}inactive{% endif %}" ><a href="/crushes">Crushes</a></li>
       {% endif %}
-      <a href="/crushes">
-      Crushes</a></li>
     {% endif %}
     {% if opted_in and paired and site_status == 'showing' %}
       <li class="{% if current_page.matches %}active{% else %}inactive{% endif %}"><a href="/matches">Matches!</a></li>
