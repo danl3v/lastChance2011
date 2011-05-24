@@ -40,6 +40,7 @@
         </ul>
     </div>
     <div id="messages-to-me" class="messages-tab">
+    <p class="no-messages">You have no messages to you right now.</p>
     <div class="messages">
        {% for message in messages %}
          <div class="message" data-mid="{{ message.key.id }}">
@@ -74,6 +75,7 @@
     </div>
     </div>
     <div id="messages-from-me" class="messages-tab">
+    <p class="no-messages">You have no sent messages right now.</p>
     <div class="messages">
        {% for message in sent_messages %}
          <div class="message" data-mid="{{ message.key.id }}">

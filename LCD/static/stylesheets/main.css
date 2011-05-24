@@ -262,12 +262,35 @@ div#crushes div.crushdiv
     height: 13em;
 }
 
+div#crushes div.crushdiv button
+{   
+    padding: 0;
+    border: 0;
+    margin: 0;
+    width: 45%;
+    height: 2em;
+    background: #04346C;
+    text-align: center;
+    line-height: 2em;
+    color: #FFFFFF;
+    font-size: .75em;
+    font-weight: bold;
+}
+
 div#crushes div.crushdiv span
 {
     display: block;
 }
 
 /* MESSAGES LAYOUT OBJECTS */
+div.messages-tab p.no-messages {
+    display: none;
+    text-align: center;
+    padding: 6.5em 0;
+    background-color: #EEE;
+    border: 1px solid #CCC;
+}
+
 div#messages-header
 {
    margin-bottom: 1em;
@@ -384,6 +407,8 @@ div.messages div.message div.reply-box
 div.messages div.message div.message-item input.reply-text
 {
    width: 98%;
+   border: 1px solid #CCCCCC;
+   font-size: .8em;
 }
 
 /* message sent */
@@ -507,7 +532,7 @@ div.settings-form button
     margin-left: 240px;
     width: 125px;
     height: 31px;
-    background: #666666 url(img/button.png) no-repeat;
+    background: #666666;
     text-align: center;
     line-height: 31px;
     color: #FFFFFF;

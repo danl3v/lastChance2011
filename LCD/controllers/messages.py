@@ -9,28 +9,13 @@ class Get(webapp.RequestHandler):
         unread_messages = get_unread_messages_for_user(user)
         unread_sent_messages = get_unread_messages_from_user(user)
         
-        unread_html = ''
-        unread_ids = ''
+        unread_messages_html = ''
+        #for unread_message in unread_messages:
+
+        unread_sent_messages_html = ''
+        #for unread_sent_message in unread_sent_messages:
         
-        for unread_message in unread_messages:
-            unread_ids += str(unread_message.key().id()) + ','
-            
-            
-            # generate the new messages here
-            
-        unread_ids = unread_ids[:-1]
-        
-        unread_sent_html = ''
-        unread_sent_ids = ''
-        for unread_sent_message in unread_sent_messages:
-            unread_sent_ids += str(unread_sent_message.key().id()) + ','
-            
-            
-            # generate the new messages here
-            
-        unread_sent_ids = unread_sent_ids[:-1]
-        
-        self.response.out.write('{"num_unread_messages":' + str(user.num_unread_messages) + ',"num_unread_sent_messages":' + str(user.num_unread_sent_messages) + ',"unread_ids":[' + unread_ids + '],"unread_sent_ids":[' + unread_sent_ids + '],"unread_html":"' + unread_html + '","unread_sent_html":"' + unread_sent_html + '"}')
+        self.response.out.write('{"num_unread_messages":' + str(user.num_unread_messages) + ',"num_unread_sent_messages":' + str(user.num_unread_sent_messages) + ',"unread_messages":"' + unread_messages_html + '","unread_sent_messages":"' + unread_sent_messages_html + '"}')
 
 class Send(webapp.RequestHandler):
     @functions.only_if_site_open

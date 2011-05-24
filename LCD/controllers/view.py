@@ -27,7 +27,7 @@ def getHeaderFooterData(self):
             carl = session.getCarl()
             carleton_id = carl.carletonID
             first_name = carl.first_name
-            last_name = carl.last_name
+            last_name = carl.last_name  
             num_unread_total_messages = carl.num_unread_messages + carl.num_unread_sent_messages
         else: paired = False
     else:
@@ -59,3 +59,7 @@ def renderTemplate(self, template_file, template_values):
     path = os.path.join(os.path.dirname(__file__), '../views/' + template_file)
     self.response.out.write(template.render(path, template_values))
 
+def get_rendered_template(self, template_file, template_values):
+    template_values = dict(getHeaderFooterData(self), **template_values)
+    path = os.path.join(os.path.dirname(__file__), '../views/' + template_file)
+    return template.render(path, template_values)

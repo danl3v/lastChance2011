@@ -3,6 +3,8 @@ $(document).ready(function() {
     var tab = readCookie("tabSelection");
     if (tab) { showMessages(tab); }
     updateMessages();
+    
+    checkNoMessages();
 
     $.getJSON('/autofill', function(data) {
         $(".crush").autocomplete({
@@ -49,6 +51,7 @@ $(document).ready(function() {
                                         $("#new-message-form").dialog("close");
                                         $(".message-item").removeClass("just-sent");
                                         addSentMessage(data.name, body, data.mid);
+                                        checkNoMessages();
                                         showMessages('from-me');
                                     }
                                     else if (data.success == 1) { alert("Your account must be paired and opted-in in order to send messages."); }
@@ -92,6 +95,29 @@ function addSentMessage(to, body, message_id) {
 	if ($("#messages-from-me .messages .message").length > 0) { $("#messages-from-me .messages .message:first").before(message); }
 	else { $("#messages-from-me .messages").html(message); }
 	message.find(".message-item").each(function() { $(this).removeClass('unread', 500); }); // small bug here that closes reply box if you open before class removed
+	
+}
+
+function addMessage(to, body, message_id, tab) {
+    var message =
+    $('<div class="message" data-mid="' + message_id + '">' +
+    '  <div class="message-item unread sent">' +
+    '    <div class="message-item-header">' +
+    '    <div class="message-item-info"><strong>You</strong> to <strong>' + to + '</strong> just now</div>' +
+    '    <div class="message-actions">' +
+    '      <ul class="icons ui-widget ui-helper-clearfix">' +
+    '        <li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>' +
+    '        <li class="ui-state-default ui-corner-all delete-button" title="Delete"><span class="ui-icon ui-icon-trash"></span></li>' +
+    '        <li class="ui-state-default ui-corner-all block-button" title="Block User"><span class="ui-icon ui-icon-cancel"></span></li>' +
+    '      </ul>' +
+    '    </div>' +
+    '    </div>' +
+	'    <div class="message-item-body">' + body + '</div>' +
+	'  </div>' +
+	'  <div class="message-item reply reply-box" style="display:none;"><input type="text" class="reply-text"></div>' +
+	'</div>');
+	if ($('#messages-' + tab + ' .messages .message').length > 0) { $("#messages-from-me .messages .message:first").before(message); }
+	else { $('#messages-' + tab + ' .messages').html(message); }
 }
 
 function crushRemoveListener() {
@@ -120,6 +146,7 @@ function messageRemoveListener() {
             else if (data.success == 1) { alert("Your account must be paired and opted-in in order to delete messages. Go to the settings page to resolve this issue."); message.show(); }
             else if (data.success == 2) { alert("Message does not exist or you tried to delete another user's message."); message.remove(); }
             else { alert("Error in deleting message. Try again."); message.show(); }
+            checkNoMessages();
         }, "json");
     }
 }
@@ -167,11 +194,28 @@ function updateMessages() {
         if (data.num_unread_messages > 0 || data.num_unread_sent_messages) {
             // delete the old messages
             alert("You have new messages. Reload the page to get them.");
-            // add in new ones at the top
+            //for (unread_message in data.unread_messages) {
+            //    alert(unread_message);
+            //}
         }
         else { setTimeout('updateMessages()', 10000); }
     }, "json");
     
+}
+
+function checkNoMessages() {
+    if ($("#messages-to-me .messages .message").length == 0) {
+        $("#messages-to-me .no-messages").show();
+    }
+    else {
+        $("#messages-to-me .no-messages").hide();
+    }
+    if ($("#messages-from-me .messages .message").length == 0) {
+        $("#messages-from-me .no-messages").show();
+    }
+    else {
+        $("#messages-from-me .no-messages").hide();
+    }
 }
 
 function createCookie(name, value, days) {
