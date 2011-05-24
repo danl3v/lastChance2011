@@ -68,7 +68,7 @@
 	         <div class="message-item-body">{{ reply.body }}</div>
 	       </div>
 	     {% endfor %}
-         <div class="message-item reply reply-box"{% if not message.replies.count %} style="display:none;"{% endif %}><input type="text" class="reply-text"></div>
+         <div class="message-item reply reply-box"{% if not message.replies.count %} style="display:none;"{% endif %}><input type="text" class="reply-text" placeholder="Write a reply..."></div>
          </div>
        {% endfor %}
     </div>
@@ -102,7 +102,7 @@
 	         <div class="message-item-body">{{ reply.body }}</div>
 	       </div>
   	   {% endfor %}
-       <div class="message-item reply reply-box"{% if not message.replies.count %} style="display:none;"{% endif %}><input type="text" class="reply-text"></div>
+       <div class="message-item reply reply-box"{% if not message.replies.count %} style="display:none;"{% endif %}><input type="text" class="reply-text" placeholder="Write a reply..."></div>
        </div>
        {% endfor %}
     </div>

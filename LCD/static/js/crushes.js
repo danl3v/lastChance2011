@@ -143,14 +143,17 @@ function messageSendReplyListener(event) {
     if (event.keyCode == 13) {
       var message_id = $(this).parent().parent().attr("data-mid");
       var body = $(this).val();
-      $(this).val("");
-      $(this).parent().before('<div class="message-item sent reply"><div class="message-item-header"><div class="message-item-info"><strong>You</strong> just now</div></div><div class="message-item-body">' + body + '</div></div>');
-      $.post("/messages/reply", { "mid": message_id, "body": body }, function(data) {
-        if (data.success == 0) { }
-        else if (data.success == 1) { alert("Your account must be paired and opted-in in order to reply to messages. The added message will be gone when you refresh the page. Go to the settings page to resolve this issue."); }
-        else if (data.success == 2) { alert("Message does not exist or you tried to reply another user's message. The added message will be gone when you refresh the page."); }
-        else { alert("Error in replying to  message. Try again. The added message will be gone when you refresh the page."); }
-      }, "json");
+      if (body) {
+        $(this).val("");
+        $(this).parent().before('<div class="message-item sent reply"><div class="message-item-header"><div class="message-item-info"><strong>You</strong> just now</div></div><div class="message-item-body">' + body + '</div></div>');
+        $.post("/messages/reply", { "mid": message_id, "body": body }, function(data) {
+          if (data.success == 0) { }
+          else if (data.success == 1) { alert("Your account must be paired and opted-in in order to reply to messages. The added reply will be gone when you refresh the page. Go to the settings page to resolve this issue."); }
+          else if (data.success == 2) { alert("Message does not exist or you tried to reply another user's message. The added reply will be gone when you refresh the page."); }
+          else if (data.success == 3) { alert("Reply not sent because there was no text to send. The added reply will be gone when you refresh the page."); }
+          else { alert("Error in replying to  message. Try again. The added reply will be gone when you refresh the page."); }
+        }, "json");
+      }
     }
 }
 
@@ -163,10 +166,10 @@ function updateMessages() {
         // check to make sure boxes are not focused or update id reply boxes not focused
         if (data.num_unread_messages > 0) {
             // delete the old messages
-            alert("new messages. reload to get them.");
+            alert("You have new messages. Reload the page to get them.");
             // add in new ones at the top
         }
-        else { setTimeout('updateMessages()', 4000); }
+        else { setTimeout('updateMessages()', 10000); }
     }, "json");
     
 }

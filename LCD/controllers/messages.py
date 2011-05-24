@@ -57,37 +57,41 @@ class Reply(webapp.RequestHandler):
     @functions.only_if_site_open
     @functions.only_if_paired_opted_in
     def post(self):
-        message = models.Message.get_by_id(long(self.request.get("mid"))) # maybe use key instead of key.id to find the message
-        source = session.getCarl()
-        if message and (message.source.carletonID == source.carletonID or message.target.carletonID == source.carletonID):
-
-            reply = models.Reply()
-            reply.message = message
-
-            if message.source.carletonID == source.carletonID: # then we set the target as unread   
-                reply.source_unread = False
-                reply.message.target_any_unread = True
-                message.target.num_unread_messages += 1 # separate into sent and in messages
-                message.target.put()
-
-            elif message.target.carletonID == source.carletonID: # then we set the source as unread
-                reply.target_unread = False
-                reply.message.source_any_unread = True
-                message.source.num_unread_messages += 1 # separate into sent and in messages
-                message.source.put()
+        if self.request.get('body'):
+            message = models.Message.get_by_id(long(self.request.get("mid"))) # maybe use key instead of key.id to find the message
+            source = session.getCarl()
+            if message and (message.source.carletonID == source.carletonID or message.target.carletonID == source.carletonID):
+    
+                reply = models.Reply()
+                reply.message = message
+    
+                if message.source.carletonID == source.carletonID: # then we set the target as unread   
+                    reply.source_unread = False
+                    reply.message.target_any_unread = True
+                    message.target.num_unread_messages += 1 # separate into sent and in messages
+                    message.target.put()
+    
+                elif message.target.carletonID == source.carletonID: # then we set the source as unread
+                    reply.target_unread = False
+                    reply.message.source_any_unread = True
+                    message.source.num_unread_messages += 1 # separate into sent and in messages
+                    message.source.put()
+                    
+                reply.source = source
+                reply.body = self.request.get('body')
+                reply.put()
                 
-            reply.source = source
-            reply.body = self.request.get('body')
-            reply.put()
-            
-            message.updated = datetime.now()
-            message.source_deleted = False
-            message.target_deleted = False
-            message.put()
-            
-            self.response.out.write('{"success":0}')
-            
-        self.response.out.write('{"success":2}')
+                message.updated = datetime.now()
+                message.source_deleted = False
+                message.target_deleted = False
+                message.put()
+                
+                self.response.out.write('{"success":0}') # success!
+                
+            else:
+                self.response.out.write('{"success":2}') # message does not exist or trying to reply to someone else's message
+        else:
+            self.response.out.write('{"success":3}') # empty message body
 
 class Delete(webapp.RequestHandler):
     @functions.only_if_site_open
