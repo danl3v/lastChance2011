@@ -7,14 +7,13 @@ class Crushes(webapp.RequestHandler):
     @functions.only_if_paired_opted_in
     def get(self):
         import random
-        #crushes = get_crushes_for_user(session.getCarl())
-        crushes = session.getCarl().in_crushes  # is the filter query or this property cheaper?
+        crushes = get_crushes_for_user(session.getCarl())
         messages = get_messages_for_user(session.getCarl())
         sent_messages = get_messages_from_user(session.getCarl())
         template_values = {
             'crushes': crushes,
             'messages': messages,
-            'offset': random.randint(1, 100) - min([message.source.key().id() for message in messages]),
+            'offset': random.randint(1, 100) - min([message.source.key().id() for message in messages]+[0]),
             'sent_messages': sent_messages,
             'current_page': { 'crushes': True }
             }
@@ -51,7 +50,8 @@ class RemoveCrush(webapp.RequestHandler):
         target = functions.get_user_by_CID(self.request.get("crush"))
         crush = functions.has_crush(source, target)
         if crush:
-            crush.delete()
+            crush.deleted = True
+            crush.put()
             self.response.out.write('{"success":0}')
         else:
             self.response.out.write('{"success":2}')
@@ -76,8 +76,10 @@ def get_status(user):
     else: return "participating"
 
 def get_crushes_for_user(user):
+    #crushes = session.getCarl().in_crushes  # is the filter query or this property cheaper than next two lines?
     crushes = models.Crush.all()
     crushes.filter("source =", user)
+    crushes.filter("deleted =", False)
     return crushes.fetch(20) # there should not be more than 5
 
 def get_messages_for_user(user): # need to somehow get messages by source

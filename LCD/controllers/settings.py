@@ -112,5 +112,6 @@ class AutoPair(webapp.RequestHandler):
 
 def get_crushes_for_user_by_target(user):
     crushes = models.Crush.all()
+    crushes.filter("deleted =", False)
     crushes.filter("target =", user)
     return crushes.fetch(1000) # there should not be more than num users in db

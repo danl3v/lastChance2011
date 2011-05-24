@@ -4,6 +4,7 @@ import session
 
 def has_crush(source, target):
     crushes = models.Crush.all()
+    crushes.filter("deleted =", False)
     crushes.filter("source =", source)
     crushes.filter("target =", target)
     carl = crushes.get()

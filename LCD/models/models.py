@@ -28,6 +28,8 @@ class Carl(db.Model):
 class Crush(db.Model):
     source = db.ReferenceProperty(Carl, collection_name="in_crushes")
     target = db.ReferenceProperty(Carl, collection_name="out_crushes")
+    created = db.DateTimeProperty(auto_now_add=True)
+    deleted = db.BooleanProperty(default=False)
     notified = db.BooleanProperty(default=False)
     
 class Match(db.Model):

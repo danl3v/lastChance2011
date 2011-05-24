@@ -10,15 +10,15 @@ class SendDigest(webapp.RequestHandler):
             num_messages = user.num_unread_messages
             if (num_crushes or num_messages) and user.opted_in:
                 emailfunctions.send_digest(user, num_crushes, num_messages)
-                #for crush in user.in_crushes:
-                #    crush.notified = True
-                #    crush.put()
+                for crush in user.in_crushes:
+                    crush.notified = True
+                    #****crush.put()
             
 class UpdateStatistics(webapp.RequestHandler):
     def get(self):
     
         matches = functions.update_matches()
-        num_crushes = models.Crush.all().count()
+        num_crushes = models.Crush.all().filter("deleted =", False).count()
         num_messages = models.Message.all().count()
         num_replies = models.Reply.all().count()
         num_matches = len(matches) / 2
