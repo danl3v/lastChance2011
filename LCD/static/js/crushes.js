@@ -1,4 +1,9 @@
 $(document).ready(function() {
+    
+    var tab = readCookie("tabSelection");
+    if (tab) { showMessages(tab); }
+    updateMessages();
+
     $.getJSON('/autofill', function(data) {
         $(".crush").autocomplete({
             minLength: 1,
@@ -86,7 +91,7 @@ function addSentMessage(to, body, message_id) {
 	'</div>');
 	if ($("#messages-from-me .messages .message").length > 0) { $("#messages-from-me .messages .message:first").before(message); }
 	else { $("#messages-from-me .messages").html(message); }
-	message.find(".message-item").each(function() { $(this).removeClass('unread', 3000); });
+	message.find(".message-item").each(function() { $(this).removeClass('unread', 500); }); // small bug here that closes reply box if you open before class removed
 }
 
 function crushRemoveListener() {
@@ -124,11 +129,14 @@ function showMessages(tab) {
     $("#messages-" + tab).show();
     $("#messages-nav li").removeClass("active");
     $("#messages-nav-" + tab).addClass("active");
+    createCookie("tabSelection", tab);
 }
 
 function messageReplyListener() {
-    $(this).parent().parent().parent().parent().next(".reply-box").show();
-    $(this).parent().parent().parent().parent().next(".reply-box").find("input").focus(); // bug here that causes hitting enter to send many replies
+    messageItem = $(this).parent().parent().parent().parent();
+    messageItem.next(".reply-box").show();
+    messageItem.next(".reply-box").find("input").focus(); // bug here that causes hitting enter to send many replies
+    messageItem.find(".reply-button").each(function() { $(this).remove(); });
 }
 
 function messageSendReplyListener(event) {
@@ -148,4 +156,42 @@ function messageSendReplyListener(event) {
 
 function blockUserListener() {
     alert("feature not implemented yet. sorry");
+}
+
+function updateMessages() {
+    $.get('/messages/get', function(data) {
+        // check to make sure boxes are not focused or update id reply boxes not focused
+        if (data.num_unread_messages > 0) {
+            // delete the old messages
+            alert("new messages. reload to get them.");
+            // add in new ones at the top
+        }
+        else { setTimeout('updateMessages()', 4000); }
+    }, "json");
+    
+}
+
+function createCookie(name, value, days) {
+	if (days) {
+		var date = new Date();
+		date.setTime(date.getTime()+(days*24*60*60*1000));
+		var expires = "; expires="+date.toGMTString();
+	}
+	else var expires = "";
+	document.cookie = name + "=" + value + expires + "; path=/";
+}
+
+function readCookie(name) {
+	var nameEQ = name + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0;i < ca.length;i++) {
+		var c = ca[i];
+		while (c.charAt(0)==' ') c = c.substring(1,c.length);
+		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+	}
+	return null;
+}
+
+function eraseCookie(name) {
+	createCookie(name,"",-1);
 }

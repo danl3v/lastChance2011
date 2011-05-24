@@ -13,6 +13,7 @@ def main():
            ('/settings', settings.Settings),
            ('/pair/(.*)/(.*)', settings.AutoPair),
            ('/settings/(.*)', settings.Settings),
+           ('/messages/get', messages.Get),
            ('/messages/send', messages.Send),
            ('/messages/reply', messages.Reply),
            ('/messages/delete', messages.Delete),

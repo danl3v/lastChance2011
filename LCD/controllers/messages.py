@@ -3,6 +3,35 @@ from datetime import datetime
 from models import models
 import view, session, functions
 
+class Get(webapp.RequestHandler):
+    def get(self):
+        user = session.getCarl()
+        unread_messages = get_unread_messages_for_user(user)
+        unread_sent_messages = get_unread_messages_from_user(user)
+        
+        unread_html = ''
+        unread_ids = ''
+        
+        for unread_message in unread_messages:
+            unread_ids += str(unread_message.key().id()) + ','
+            
+            
+            # generate the new messages here
+            
+        unread_ids = unread_ids[:-1]
+        
+        unread_sent_html = ''
+        unread_sent_ids = ''
+        for unread_sent_message in unread_sent_messages:
+            unread_sent_ids += str(unread_sent_message.key().id()) + ','
+            
+            
+            # generate the new messages here
+            
+        unread_sent_ids = unread_sent_ids[:-1]
+        
+        self.response.out.write('{"num_unread_messages":' + str(user.num_unread_messages) + ',"unread_ids":[' + unread_ids + '],"unread_sent_ids":[' + unread_sent_ids + '],"unread_html":"' + unread_html + '","unread_sent_html":"' + unread_sent_html + '"}')
+
 class Send(webapp.RequestHandler):
     @functions.only_if_site_open
     @functions.only_if_paired_opted_in
@@ -19,7 +48,7 @@ class Send(webapp.RequestHandler):
                 message.body = self.request.get("body")
                 message.put()
 
-                target.num_unread_messages += 1
+                target.num_unread_messages += 1 # separate into sent and in messages
                 target.put()
 
                 self.response.out.write('{"success":0,"mid":' + str(message.key().id()) + ',"name":"' + message.target.first_name + ' ' + message.target.last_name + '"}')
@@ -33,18 +62,20 @@ class Reply(webapp.RequestHandler):
         if message and (message.source.carletonID == source.carletonID or message.target.carletonID == source.carletonID):
 
             reply = models.Reply()
+            reply.message = message
 
             if message.source.carletonID == source.carletonID: # then we set the target as unread   
                 reply.source_unread = False
-                message.target.num_unread_messages += 1
+                reply.message.target_any_unread = True
+                message.target.num_unread_messages += 1 # separate into sent and in messages
                 message.target.put()
 
             elif message.target.carletonID == source.carletonID: # then we set the source as unread
                 reply.target_unread = False
-                message.source.num_unread_messages += 1
+                reply.message.source_any_unread = True
+                message.source.num_unread_messages += 1 # separate into sent and in messages
                 message.source.put()
                 
-            reply.message = message
             reply.source = source
             reply.body = self.request.get('body')
             reply.put()
@@ -71,3 +102,19 @@ class Delete(webapp.RequestHandler):
             self.response.out.write('{"success":0}')
         else:
             self.response.out.write('{"success":2}')
+            
+def get_unread_messages_for_user(user):
+    messages = models.Message.all() # can use in_messages
+    messages.filter("target =", user)
+    messages.filter("target_deleted =", False)
+    messages.filter("target_any_unread =", True)
+    messages.order("-updated")
+    return messages
+
+def get_unread_messages_from_user(user):
+    messages = models.Message.all() # can use out_messages
+    messages.filter("source =", user)
+    messages.filter("source_deleted =", False)
+    messages.filter("source_any_unread =", True)
+    messages.order("-updated")
+    return messages
