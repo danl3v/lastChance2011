@@ -29,7 +29,7 @@ class Settings(webapp.RequestHandler):
             ''' #tested
             crushes = get_crushes_for_user_by_target(theCarl) # send opted in notifications
             for crush in crushes:
-                emailfunctions.send_opted_in(crush.source, crush.target)
+                if crush.source.opted_in: emailfunctions.send_opted_in(crush.source, crush.target)
             '''
 
             self.redirect("/settings")
@@ -42,7 +42,7 @@ class Settings(webapp.RequestHandler):
             ''' #tested
             crushes = get_crushes_for_user_by_target(theCarl) # send opted out notifications
             for crush in crushes:
-                emailfunctions.send_opted_out(crush.source, crush.target)
+                if crush.source.opted_in: emailfunctions.send_opted_out(crush.source, crush.target)
             '''
                 
             self.redirect("/settings")

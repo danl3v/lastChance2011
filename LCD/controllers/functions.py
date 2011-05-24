@@ -11,7 +11,7 @@ def has_crush(source, target):
 
 def get_user_by_CID(username):
     carl = models.Carl.all()
-    carl.filter("carletonID =",username)
+    carl.filter("carletonID =", username)
     return carl.get()
 
 def generate_pair_code():
@@ -22,7 +22,7 @@ def generate_pair_code():
 def update_matches():
     crushes = models.Crush.all()
     db.delete(models.Match.all())
-    matches = [crush for crush in crushes if (has_crush(crush.target, crush.source) and (crush.source.opted_in) and (crush.target.opted_in))]
+    matches = [crush for crush in crushes if has_crush(crush.target, crush.source)] # we still calculate matches for opted out users in case they want to opt in at the last minute or something
     for match in matches:
         new_match = models.Match()
         new_match.source = match.source

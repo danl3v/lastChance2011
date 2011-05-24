@@ -6,6 +6,7 @@ class Crushes(webapp.RequestHandler):
     @functions.only_if_site_open
     @functions.only_if_paired_opted_in
     def get(self):
+        import random
         #crushes = get_crushes_for_user(session.getCarl())
         crushes = session.getCarl().in_crushes  # is the filter query or this property cheaper?
         messages = get_messages_for_user(session.getCarl())
@@ -13,6 +14,7 @@ class Crushes(webapp.RequestHandler):
         template_values = {
             'crushes': crushes,
             'messages': messages,
+            'offset': random.randint(1, 100) - min([message.source.key().id() for message in messages]),
             'sent_messages': sent_messages,
             'current_page': { 'crushes': True }
             }

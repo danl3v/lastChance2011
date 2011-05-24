@@ -45,7 +45,7 @@
          <div class="message" data-mid="{{ message.key.id }}">
          <div class="message-item{% if carleton_id == message.target.carletonID and message.target_unread %} unread{% endif %}">
            <div class="message-item-header">
-           <div class="message-item-info"><strong>User #{{ message.source.key.id }}</strong> on {{ message.local_created|date:"M d \@ g:i:s A"}}</div>
+           <div class="message-item-info"><strong>User #{{ message.source.key.id|add:offset }}</strong> on {{ message.local_created|date:"M d \@ g:i:s A"}}</div>
            <div class="message-actions">
              <ul class="icons ui-widget ui-helper-clearfix">
                {% if not message.replies.count %}<li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>{% endif %}
@@ -61,7 +61,7 @@
              <div class="message-item-header">
              <div class="message-item-info">
                {% if carleton_id == reply.source.carletonID %}<strong>You</strong> on
-               {% else %}<strong>User #{{ message.source.key.id }}</strong> on {% endif %}
+               {% else %}<strong>User #{{ message.source.key.id|add:offset }}</strong> on {% endif %}
                {{ reply.local_created|date:"M d \@ g:i:s A"}}
              </div>
              </div>
