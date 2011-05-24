@@ -27,7 +27,7 @@ def main():
            ('/admin/unpaircarl', admin.UnPairCarl),
            ('/admin/send_match_notifications', admin.SendMatchNotifications),
            ('/admin/set_site_status', admin.SetSiteStatus),
-           ('/tasks/notify_crushes', tasks.NotifyCrushes),
+           ('/tasks/send_digest', tasks.SendDigest),
            ('/tasks/update_statistics', tasks.UpdateStatistics)
          ],debug=True)
 

@@ -1,8 +1,8 @@
 cron:
 
 - description: daily crush notification
-  url: /tasks/notify_crushes
-  schedule: every day 09:00
+  url: /tasks/send_digest
+  schedule: every day 17:00
   timezone: America/Chicago
 
 - description: update the statistics
