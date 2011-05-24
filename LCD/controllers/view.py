@@ -16,7 +16,7 @@ def getHeaderFooterData(self):
     carleton_id = None
     first_name = None
     last_name = None
-    num_unread_messages = 0
+    num_unread_total_messages = 0
     site_status = functions.get_site_status()
     if user:
         login_url = session.create_logout_url("/")
