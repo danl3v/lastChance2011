@@ -37,9 +37,7 @@ def send_digest(carletonAccount, num_crushes, num_messages):
     '''
     Sends an email to a user who has been chosen by someone else.
     '''
-    #user_address = carletonAccount.carletonID + "@carleton.edu"
-    user_address = ["dlouislevy@gmail.com"]
-
+    user_address = carletonAccount.carletonID + "@carleton.edu"
     sender_address = last_chance_dance_email_address
     subject = subject_prefix + "Daily Digest"
     
@@ -56,9 +54,7 @@ def send_matches(carletonAccount, matches):
     '''
     Sends matches
     '''
-    #user_address = carletonAccount.carletonID + "@carleton.edu"
-    user_address = ["dlouislevy@gmail.com"]
-
+    user_address = carletonAccount.carletonID + "@carleton.edu"
     sender_address = last_chance_dance_email_address
     subject = subject_prefix + "Here are your matches..."
     
@@ -120,8 +116,7 @@ def send_opted_out(source, target):
     Sends a notification that someone opted out. source and target are Carl objects.
     '''
     from_address = last_chance_dance_email_address
-    #to_address = source.carletonID + "@carleton.edu"
-    to_address = "levyd@carleton.edu"
+    to_address = source.carletonID + "@carleton.edu"
     subject = subject_prefix + "Crush Opted Out"
 
     template_values = { 'source': source,
@@ -136,8 +131,7 @@ def send_opted_in(source, target):
     Sends a notification that someone opted back in. source and target are Carl objects.
     '''
     from_address = last_chance_dance_email_address
-    #to_address = source.carletonID + "@carleton.edu"
-    to_address = "levyd@carleton.edu"
+    to_address = source.carletonID + "@carleton.edu"
     subject = subject_prefix + "Crush Opted Back In!"
 
     template_values = { 'source': source,

@@ -7,12 +7,12 @@ class SendDigest(webapp.RequestHandler):
         users = models.Carl.all()
         for user in users:
             num_crushes = user.out_crushes.filter("notified =", False).count()
-            num_messages = user.num_unread_messages
+            num_messages = user.num_unread_messages + user.num_unread_sent_messages
             if (num_crushes or num_messages) and user.opted_in:
                 emailfunctions.send_digest(user, num_crushes, num_messages)
                 for crush in user.in_crushes:
                     crush.notified = True
-                    #****crush.put()
+                    crush.put()
             
 class UpdateStatistics(webapp.RequestHandler):
     def get(self):
