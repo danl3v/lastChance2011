@@ -40,6 +40,7 @@ $(document).ready(function() {
         height: 400,
         width: 450,
         modal: true,
+        resizable: false,
         buttons: {
             "Send Message": function() {
                                 var to = $("input[name='message-to']").val();
@@ -64,6 +65,18 @@ $(document).ready(function() {
             Cancel: function() { $(this).dialog("close"); }
         },
         close: function() { $("textarea[name='message-body']").val(""); }
+    });
+    
+    $("#reload-messages").dialog({
+        autoOpen: false,
+        height: 200,
+        width: 450,
+        modal: true,
+        resizable: false,
+        buttons: {
+            "Reload Page": function() { window.location.reload(); },
+            Cancel: function() { $(this).dialog("close"); }
+        }
     });
     
     $(".messageCrush:button").live('click', messageSendListener);
@@ -95,40 +108,19 @@ function addSentMessage(to, body, message_id) {
 	if ($("#messages-from-me .messages .message").length > 0) { $("#messages-from-me .messages .message:first").before(message); }
 	else { $("#messages-from-me .messages").html(message); }
 	message.find(".message-item").each(function() { $(this).removeClass('unread', 500); }); // small bug here that closes reply box if you open before class removed
-	
-}
-
-function addMessage(to, body, message_id, tab) {
-    var message =
-    $('<div class="message" data-mid="' + message_id + '">' +
-    '  <div class="message-item unread sent">' +
-    '    <div class="message-item-header">' +
-    '    <div class="message-item-info"><strong>You</strong> to <strong>' + to + '</strong> just now</div>' +
-    '    <div class="message-actions">' +
-    '      <ul class="icons ui-widget ui-helper-clearfix">' +
-    '        <li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>' +
-    '        <li class="ui-state-default ui-corner-all delete-button" title="Delete"><span class="ui-icon ui-icon-trash"></span></li>' +
-    '        <li class="ui-state-default ui-corner-all block-button" title="Block User"><span class="ui-icon ui-icon-cancel"></span></li>' +
-    '      </ul>' +
-    '    </div>' +
-    '    </div>' +
-	'    <div class="message-item-body">' + body + '</div>' +
-	'  </div>' +
-	'  <div class="message-item reply reply-box" style="display:none;"><input type="text" class="reply-text"></div>' +
-	'</div>');
-	if ($('#messages-' + tab + ' .messages .message').length > 0) { $("#messages-from-me .messages .message:first").before(message); }
-	else { $('#messages-' + tab + ' .messages').html(message); }
 }
 
 function crushRemoveListener() {
     var crush = $(this);
-    crush.parent().fadeOut("fast");
-    $.post("/crushes/remove", { "crush": crush.val() }, function(data) {
-        if (data.success == 0) { crush.parent().remove(); }
-        else if (data.success == 1) { alert("Your account must be paired and opted-in in order to remove crushes. Go to the settings page to resolve this issue."); crush.parent().show(); }
-        else if (data.success == 2) { alert("The username " + crush.val() + " does not exist and thus could not be removed. It might have been already removed."); crush.parent().remove(); }
-        else { alert("Error in deleting crush. Try again."); crush.parent().show(); }
-    }, "json");
+    if (confirm("Do you really want to remove this person from your list of crushes?")) {
+        crush.parent().fadeOut("fast");
+        $.post("/crushes/remove", { "crush": crush.val() }, function(data) {
+            if (data.success == 0) { crush.parent().remove(); }
+            else if (data.success == 1) { alert("Your account must be paired and opted-in in order to remove crushes. Go to the settings page to resolve this issue."); crush.parent().show(); }
+            else if (data.success == 2) { alert("The username " + crush.val() + " does not exist and thus could not be removed. It might have been already removed."); crush.parent().remove(); }
+            else { alert("Error in deleting crush. Try again."); crush.parent().show(); }
+        }, "json");
+    }
 }
 
 function messageSendListener(user) {
@@ -190,32 +182,17 @@ function blockUserListener() {
 
 function updateMessages() {
     $.get('/messages/get', function(data) {
-        // check to make sure boxes are not focused or update id reply boxes not focused
-        if (data.num_unread_messages > 0 || data.num_unread_sent_messages) {
-            // delete the old messages
-            alert("You have new messages. Reload the page to get them.");
-            //for (unread_message in data.unread_messages) {
-            //    alert(unread_message);
-            //}
-        }
+        if (data.num_unread_messages > 0 || data.num_unread_sent_messages) { $("#reload-messages").dialog("open"); }
         else { setTimeout('updateMessages()', 10000); }
-    }, "json");
-    
+    }, "json");   
 }
 
 function checkNoMessages() {
-    if ($("#messages-to-me .messages .message").length == 0) {
-        $("#messages-to-me .no-messages").show();
-    }
-    else {
-        $("#messages-to-me .no-messages").hide();
-    }
-    if ($("#messages-from-me .messages .message").length == 0) {
-        $("#messages-from-me .no-messages").show();
-    }
-    else {
-        $("#messages-from-me .no-messages").hide();
-    }
+    if ($("#messages-to-me .messages .message").length == 0) { $("#messages-to-me .no-messages").show(); }
+    else { $("#messages-to-me .no-messages").hide(); }
+    
+    if ($("#messages-from-me .messages .message").length == 0) { $("#messages-from-me .no-messages").show(); }
+    else { $("#messages-from-me .no-messages").hide(); }
 }
 
 function createCookie(name, value, days) {
