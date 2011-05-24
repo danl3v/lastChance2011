@@ -24,13 +24,13 @@
   <li class="{% if current_page.main %}active{% else %}inactive{% endif %}"><a href="/">Main</a></li>
   {% if user %}
     {% if opted_in and paired and site_status == 'open' %}
-      {% if num_unread_messages == 0 %}
+      {% if num_unread_total_messages == 0 %}
       <li class="{% if current_page.crushes %}active{% else %}inactive{% endif %}" ><a href="/crushes">Crushes</a></li>
       {% else %}
-        {% if num_unread_messages == 1 %}
+        {% if num_unread_total_messages == 1 %}
         <li class="alert{% if current_page.crushes %} active{% else %} inactive{% endif %}"><a href="/crushes">Crushes</a><span>you have 1 unread message</span></li>
         {% else %}
-        <li class="alert{% if current_page.crushes %} active{% else %} inactive{% endif %}"><a href="/crushes">Crushes</a><span>you have {{ num_unread_messages }} unread messages</span></li>
+        <li class="alert{% if current_page.crushes %} active{% else %} inactive{% endif %}"><a href="/crushes">Crushes</a><span>you have {{ num_unread_total_messages }} unread messages</span></li>
         {% endif %}
       {% endif %}
     {% endif %}

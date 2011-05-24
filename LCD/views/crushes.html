@@ -35,8 +35,8 @@
     <div id="messages-header">
         <h2 style="display:inline;">Messages</h2>
         <ul id="messages-nav">
-            <li id="messages-nav-to-me" class="active"><a href="javascript:void(0);" onclick="javascript:showMessages('to-me');">To Me</a></li>
-            <li id="messages-nav-from-me"><a href="javascript:void(0);" onclick="javascript:showMessages('from-me');">From Me</a></li>
+            <li id="messages-nav-to-me" class="active"><a href="javascript:void(0);" onclick="javascript:showMessages('to-me');">To Me{% if num_unread_messages > 0 %} ({{ num_unread_messages }}){% endif %}</a></li>
+            <li id="messages-nav-from-me"><a href="javascript:void(0);" onclick="javascript:showMessages('from-me');">From Me{% if num_unread_sent_messages > 0 %} ({{ num_unread_sent_messages }}){% endif %}</a></li>
         </ul>
     </div>
     <div id="messages-to-me" class="messages-tab">

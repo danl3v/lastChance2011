@@ -7,12 +7,15 @@ class Crushes(webapp.RequestHandler):
     @functions.only_if_paired_opted_in
     def get(self):
         import random
-        crushes = get_crushes_for_user(session.getCarl())
-        messages = get_messages_for_user(session.getCarl())
-        sent_messages = get_messages_from_user(session.getCarl())
+        user = session.getCarl()
+        crushes = get_crushes_for_user(user)
+        messages = get_messages_for_user(user)
+        sent_messages = get_messages_from_user(user)
         template_values = {
             'crushes': crushes,
             'messages': messages,
+            'num_unread_messages': user.num_unread_messages,
+            'num_unread_sent_messages': user.num_unread_sent_messages,
             'offset': random.randint(1, 100) - min([message.source.key().id() for message in messages]+[0]),
             'sent_messages': sent_messages,
             'current_page': { 'crushes': True }
@@ -21,8 +24,8 @@ class Crushes(webapp.RequestHandler):
         mark_messages_from_me_read(sent_messages)
         mark_messages_to_me_read(messages)
 
-        user = session.getCarl()
         user.num_unread_messages = 0
+        user.num_unread_sent_messages = 0
         user.put()      
 
 class AddCrush(webapp.RequestHandler):

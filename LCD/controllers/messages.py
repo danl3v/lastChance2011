@@ -30,7 +30,7 @@ class Get(webapp.RequestHandler):
             
         unread_sent_ids = unread_sent_ids[:-1]
         
-        self.response.out.write('{"num_unread_messages":' + str(user.num_unread_messages) + ',"unread_ids":[' + unread_ids + '],"unread_sent_ids":[' + unread_sent_ids + '],"unread_html":"' + unread_html + '","unread_sent_html":"' + unread_sent_html + '"}')
+        self.response.out.write('{"num_unread_messages":' + str(user.num_unread_messages) + ',"num_unread_sent_messages":' + str(user.num_unread_sent_messages) + ',"unread_ids":[' + unread_ids + '],"unread_sent_ids":[' + unread_sent_ids + '],"unread_html":"' + unread_html + '","unread_sent_html":"' + unread_sent_html + '"}')
 
 class Send(webapp.RequestHandler):
     @functions.only_if_site_open
@@ -68,13 +68,13 @@ class Reply(webapp.RequestHandler):
                 if message.source.carletonID == source.carletonID: # then we set the target as unread   
                     reply.source_unread = False
                     reply.message.target_any_unread = True
-                    message.target.num_unread_messages += 1 # separate into sent and in messages
+                    message.target.num_unread_messages += 1
                     message.target.put()
     
                 elif message.target.carletonID == source.carletonID: # then we set the source as unread
                     reply.target_unread = False
                     reply.message.source_any_unread = True
-                    message.source.num_unread_messages += 1 # separate into sent and in messages
+                    message.source.num_unread_sent_messages += 1
                     message.source.put()
                     
                 reply.source = source

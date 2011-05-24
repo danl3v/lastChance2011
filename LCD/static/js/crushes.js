@@ -164,7 +164,7 @@ function blockUserListener() {
 function updateMessages() {
     $.get('/messages/get', function(data) {
         // check to make sure boxes are not focused or update id reply boxes not focused
-        if (data.num_unread_messages > 0) {
+        if (data.num_unread_messages > 0 || data.num_unread_sent_messages) {
             // delete the old messages
             alert("You have new messages. Reload the page to get them.");
             // add in new ones at the top
