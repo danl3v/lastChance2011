@@ -15,7 +15,7 @@
     </div>
     <div id="crushes">
     {% for crush in crushes %}
-    <div class="crushdiv">
+    <div id="crush-{{ crush.target.carletonID }}" class="crushdiv">
         <img src="/user_images/{{ crush.target.carletonID }}.jpg" width="120" height="120" alt="{{ crush.target.carletonID }}"><br>
         {{ crush.target.first_name }} {{ crush.target.last_name }}<br>
         {% if not crush.target.opted_in %}<span style="color:red;">opted out</span><br>

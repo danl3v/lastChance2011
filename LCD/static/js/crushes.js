@@ -8,11 +8,13 @@ $(document).ready(function() {
                 $(this).val("");
                     $.post("/crushes/add", { "crush": ui.item.carletonID }, function(data) {
                         if (data.success == 0) {
-                            var status;
-                            if (data.status == "not_paired") { status = '<span style="color:red;">not yet registered</span><br>'; }
-                            else if (data.status == "opted_out") { status = '<span style="color:red;">opted out</span><br>'; }
-                            else { status = '<span style="color:green;">participating!</span><br>'; }
-                            $("#crushes").append('<div class="crushdiv"><img src="/user_images/' + ui.item.carletonID + '.jpg" width="120" height="120"><br>' + ui.item.first_name + " " + ui.item.last_name + "<br>" + status + '<button class="messageCrush" value="' + ui.item.carletonID + '" data-first-name="' + ui.item.first_name + '" data-last-name="' + ui.item.last_name + '">message</button> <button class="removeCrush" value="' + ui.item.carletonID + '">remove</button></div>');
+                            if ($('#crush-' + ui.item.carletonID).length == 0) {
+                                var status;
+                                if (data.status == "not_paired") { status = '<span style="color:red;">not yet registered</span><br>'; }
+                                else if (data.status == "opted_out") { status = '<span style="color:red;">opted out</span><br>'; }
+                                else { status = '<span style="color:green;">participating!</span><br>'; }
+                                $("#crushes").append('<div id="crush-' + ui.item.carletonID + '" class="crushdiv"><img src="/user_images/' + ui.item.carletonID + '.jpg" width="120" height="120"><br>' + ui.item.first_name + " " + ui.item.last_name + "<br>" + status + '<button class="messageCrush" value="' + ui.item.carletonID + '" data-first-name="' + ui.item.first_name + '" data-last-name="' + ui.item.last_name + '">message</button> <button class="removeCrush" value="' + ui.item.carletonID + '">remove</button></div>');
+                            }
                         }
                         else if (data.success == 1) { alert("Your account must be paired and opted-in in order to add crushes. Go to the settings page to resolve this issue."); }
                         else if (data.success == 2) { alert(ui.item.first_name + " " + ui.item.last_name + " is already one of your crushes."); }
