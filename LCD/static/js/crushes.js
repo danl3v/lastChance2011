@@ -177,7 +177,7 @@ function messageSendReplyListener(event) {
 }
 
 function blockUserListener() {
-    alert("feature not implemented yet. sorry");
+    alert("Feature not implemented yet. Sorry. If a user is giving you a lot of trouble, send us an email.");
 }
 
 function updateMessages() {
