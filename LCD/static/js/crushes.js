@@ -156,6 +156,7 @@ function messageReplyListener() {
     messageItem.next(".reply-box").show();
     messageItem.next(".reply-box").find("input").focus(); // bug here that causes hitting enter to send many replies
     messageItem.find(".reply-button").each(function() { $(this).remove(); });
+    messageItem.find(".message-item-body").each(function() { $(this).css("width","22em"); });
 }
 
 function messageSendReplyListener(event) {

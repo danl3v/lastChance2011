@@ -392,6 +392,7 @@ div.messages div.message div.message-item div.message-item-header div.message-ac
 div.messages div.message div.message-item div.message-item-body
 {
     margin-top: .4em;
+    width: 20em;
 }
 
 /* mesage replies */
