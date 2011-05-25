@@ -24,7 +24,8 @@ class Carl(db.Model):
         
     @property
     def matches(self):
-        return Match.gql("WHERE source = :1", self.key())
+        #return Match.gql("WHERE source = :1", self.key())
+        return self.in_crushes # hopefully less DB strain?
 
 class Crush(db.Model):
     source = db.ReferenceProperty(Carl, collection_name="in_crushes")
