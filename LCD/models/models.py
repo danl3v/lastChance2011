@@ -22,15 +22,12 @@ class Carl(db.Model):
     num_unread_messages = db.IntegerProperty(default=0)
     num_unread_sent_messages = db.IntegerProperty(default=0)
         
-    @property
-    def matches(self):
-        return Match.gql("WHERE source = :1", self.key())
-
 class Crush(db.Model):
     source = db.ReferenceProperty(Carl, collection_name="in_crushes")
     target = db.ReferenceProperty(Carl, collection_name="out_crushes")
     created = db.DateTimeProperty(auto_now_add=True)
     deleted = db.BooleanProperty(default=False)
+    deleted_time = db.DateTimeProperty(auto_add_now=False)
     notified = db.BooleanProperty(default=False)
     
 class Match(db.Model):

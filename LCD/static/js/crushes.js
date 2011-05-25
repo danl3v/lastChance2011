@@ -67,18 +67,6 @@ $(document).ready(function() {
         close: function() { $("textarea[name='message-body']").val(""); }
     });
     
-    $("#reload-messages").dialog({
-        autoOpen: false,
-        height: 200,
-        width: 450,
-        modal: true,
-        resizable: false,
-        buttons: {
-            "Reload Page": function() { window.location.reload(); },
-            Cancel: function() { $(this).dialog("close"); }
-        }
-    });
-    
     $(".messageCrush:button").live('click', messageSendListener);
     $(".removeCrush:button").live('click', crushRemoveListener);
     $(".reply-button").live('click', messageReplyListener);
@@ -187,7 +175,7 @@ function updateMessages() {
             var text;
             if (data.num_unread_messages + data.num_unread_sent_messages == 1) { text = "1 unread message"; }
             else { text = (data.num_unread_messages + data.num_unread_sent_messages).toString() + " unread messages"; }
-            $("#crushes-tab span").html('you have ' + text + '. <a href="/crushes">reload</a>.');
+            $("#crushes-tab span").html('you have ' + text + '. <a href="/crushes">reload!</a>');
             $("#crushes-tab").addClass("alert");
             $("#crushes-tab span").fadeIn("fast");
         } //$("#reload-messages").dialog("open"); }

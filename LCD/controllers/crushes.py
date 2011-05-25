@@ -3,30 +3,39 @@ from models import models
 import session, view, functions
 
 class Crushes(webapp.RequestHandler):
-    @functions.only_if_site_open
     @functions.only_if_paired_opted_in
     def get(self):
-        import random
-        user = session.getCarl()
-        crushes = get_crushes_for_user(user)
-        messages = get_messages_for_user(user)
-        sent_messages = get_messages_from_user(user)
-        template_values = {
-            'crushes': crushes,
-            'messages': messages,
-            'num_unread_messages': user.num_unread_messages,
-            'num_unread_sent_messages': user.num_unread_sent_messages,
-            'offset': random.randint(1, 100) - min([message.source.key().id() for message in messages]+[0]),
-            'sent_messages': sent_messages,
-            'current_page': { 'crushes': True }
-            }
-        view.renderTemplate(self, 'crushes.html', template_values)
-        mark_messages_from_me_read(sent_messages)
-        mark_messages_to_me_read(messages)
-
-        user.num_unread_messages = 0
-        user.num_unread_sent_messages = 0
-        user.put()      
+        site_status = functions.get_site_status()
+        if site_status == "open":
+            import random
+            user = session.getCarl()
+            crushes = get_crushes_for_user(user)
+            messages = get_messages_for_user(user)
+            sent_messages = get_messages_from_user(user)
+            template_values = {
+                'crushes': crushes,
+                'messages': messages,
+                'num_unread_messages': user.num_unread_messages,
+                'num_unread_sent_messages': user.num_unread_sent_messages,
+                'offset': random.randint(1, 100) - min([message.source.key().id() for message in messages]+[0]),
+                'sent_messages': sent_messages,
+                'current_page': { 'crushes': True }
+                }
+            view.renderTemplate(self, 'crushes.html', template_values)
+            mark_messages_from_me_read(sent_messages)
+            mark_messages_to_me_read(messages)
+            
+            user.num_unread_messages = 0
+            user.num_unread_sent_messages = 0
+            user.put()      
+        elif site_status == "showing":
+            template_values = {
+                'matches': session.getCarl().in_matches,
+                'current_page': { 'crushes': True }
+                }
+            view.renderTemplate(self, 'matches.html', template_values)
+        else:
+            self.redirect("/")
 
 class AddCrush(webapp.RequestHandler):
     @functions.only_if_site_open
@@ -49,11 +58,13 @@ class RemoveCrush(webapp.RequestHandler):
     @functions.only_if_site_open
     @functions.only_if_paired_opted_in
     def post(self):
+        from datetime import datetime
         source = session.getCarl()
         target = functions.get_user_by_CID(self.request.get("crush"))
         crush = functions.has_crush(source, target)
         if crush:
             crush.deleted = True
+            crush.deleted_time = datetime.now()
             crush.put()
             self.response.out.write('{"success":0}')
         else:

@@ -16,7 +16,7 @@
 <div id="container">
 
 <div id="header">
-<h1><a href="/">lcD</a></h1> <small><strong>hey there,</strong> {% if user and paired %}{{ first_name|lower }} {{ last_name|lower }}.{% else %}{% if user %} <a href="javascript:void(0);" onclick="focusPairForm();">pair your account!</a>{% else %} <a href="{{ login_url }}">log in!</a>{% endif %}{% endif %}</small>
+<h1><a href="/">Last Chance Dance</a></h1> <small><strong>hey there,</strong> {% if user and paired %}{{ first_name|lower }} {{ last_name|lower }}.{% else %}{% if user %} <a href="javascript:void(0);" onclick="focusPairForm();">pair your account!</a>{% else %} <a href="{{ login_url }}">log in!</a>{% endif %}{% endif %}</small>
 </div>
 {% block navigation %}
 <div id="nav">
@@ -35,7 +35,7 @@
       {% endif %}
     {% endif %}
     {% if opted_in and paired and site_status == 'showing' %}
-      <li class="{% if current_page.matches %}active{% else %}inactive{% endif %}"><a href="/matches">Matches</a></li>
+      <li class="{% if current_page.crushes %}active{% else %}inactive{% endif %}"><a href="/crushes">Matches</a></li>
     {% endif %}
     {% if paired and not opted_in %}
       <li class="alert{% if current_page.settings %} active{% else %} inactive{% endif %}"><a href="/settings">Settings</a><span>you are opted out</span></li>
@@ -52,7 +52,7 @@
 
 </div>
 {% block content %}{% endblock %}
-<div id="footer">{% if paired %}Logged in as <strong>{{ carleton_id }}</strong> - {% endif %}Problems? Feedback? <a href="/contact">Send us an email</a></div>
+<div id="footer">{% if paired %}Logged in as <strong>{{ carleton_id }}</strong> - {% else %}{% if user %}Logged in as <strong>{{ user.email }}</strong> - {% endif %}{% endif %}Problems? Feedback? <a href="/contact">Send us an email</a></div>
 </div>
 </body>
 </html>

@@ -1,6 +1,6 @@
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
-from controllers import crushes, settings, messages, welcome, admin, tasks, matches
+from controllers import crushes, settings, messages, welcome, admin, tasks
 
 def main():
     application = webapp.WSGIApplication([
@@ -17,7 +17,6 @@ def main():
            ('/messages/send', messages.Send),
            ('/messages/reply', messages.Reply),
            ('/messages/delete', messages.Delete),
-           ('/matches', matches.Matches),
            ('/admin', admin.Admin),
            ('/admin/', admin.Admin),
            ('/admin/addusers', admin.AddUsers),
