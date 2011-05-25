@@ -24,8 +24,8 @@
   <li class="{% if current_page.main %}active{% else %}inactive{% endif %}"><a href="/">Main</a></li>
   {% if user %}
     {% if opted_in and paired and site_status == 'open' %}
-      {% if num_unread_total_messages == 0 %}
-      <li class="{% if current_page.crushes %}active{% else %}inactive{% endif %}" ><a href="/crushes">Crushes</a></li>
+      {% if num_unread_total_messages == 0 or current_page.crushes %}
+      <li id="crushes-tab" class="{% if current_page.crushes %}active{% else %}inactive{% endif %}"><a href="/crushes">Crushes</a><span></span></li>
       {% else %}
         {% if num_unread_total_messages == 1 %}
         <li class="alert{% if current_page.crushes %} active{% else %} inactive{% endif %}"><a href="/crushes">Crushes</a><span>you have 1 unread message</span></li>
@@ -52,7 +52,7 @@
 
 </div>
 {% block content %}{% endblock %}
-<div id="footer">{% if user %}Logged in as <strong>{{ user.email }}</strong> - {% endif %}{% if paired %}Paired with <strong>{{ carleton_id }}</strong> - {% endif %}Problems? Feedback? <a href="/contact">Send us an email</a></div>
+<div id="footer">{% if paired %}Logged in as <strong>{{ carleton_id }}</strong> - {% endif %}Problems? Feedback? <a href="/contact">Send us an email</a></div>
 </div>
 </body>
 </html>

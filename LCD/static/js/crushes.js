@@ -183,8 +183,15 @@ function blockUserListener() {
 
 function updateMessages() {
     $.get('/messages/get', function(data) {
-        if (data.num_unread_messages > 0 || data.num_unread_sent_messages) { $("#reload-messages").dialog("open"); }
-        else { setTimeout('updateMessages()', 10000); }
+        if (data.num_unread_messages > 0 || data.num_unread_sent_messages) {
+            var text;
+            if (data.num_unread_messages + data.num_unread_sent_messages == 1) { text = "1 unread message"; }
+            else { text = (data.num_unread_messages + data.num_unread_sent_messages).toString() + " unread messages"; }
+            $("#crushes-tab span").html('you have ' + text + '. <a href="/crushes">reload</a>.');
+            $("#crushes-tab").addClass("alert");
+            $("#crushes-tab span").fadeIn("fast");
+        } //$("#reload-messages").dialog("open"); }
+        setTimeout('updateMessages()', 10000);
     }, "json");   
 }
 

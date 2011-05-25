@@ -86,7 +86,6 @@ div.colwrapper
 {
     overflow: auto;
     width: 100%;
-    padding: 1em 0;
 }
 
 div.leftcol
@@ -99,6 +98,11 @@ div.rightcol
 {
     width: 50%;
     float: right;   
+}
+
+div#admin-colwrapper
+{
+    padding: 1em 0;
 }
 
 /* HEADER LAYOUT OBJECTS */
@@ -192,6 +196,12 @@ div#nav ul li.alert span:after
     left: 62px;
     bottom: -14px;
     margin: auto;
+}
+
+div#nav ul li.alert span a, div#nav ul li.alert span a:hover, div#nav ul li.alert span a:visited, div#nav ul li.alert span a:active
+{
+    color: #FFFFFF !important;
+    text-decoration: underline !important;
 }
 
 /* MAIN LAYOUT OBJECTS */

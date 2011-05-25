@@ -3,12 +3,14 @@
 {% block content %}
 <div id="main">
     
-    {% if site_status == 'pre' %}<h1 class="alert">ALERT: LCD will open Wednesday, May 25, 2011.</h1>{% endif %}
+    {% if site_status == 'pre' %}<h1 class="alert">ALERT: LCD will open Friday, May 27, 2011.</h1>{% endif %}
     {% if site_status == 'calculating' %}<h1 class="alert">ALERT: LCD is Closed. Matches being calculated.</h1>{% endif %}
     {% if site_status == 'showing' %}<h1 class="alert">ALERT: Matches are out!</h1>{% endif %}
     
     <h2>Welcome</h2>
-    <p>Last Chance Dance is your final opportunity to let that special someone know that you've been interested in them, even if you're been too reserved to 'make a move'. It's now or never baby!</p>
+    <p>Last Chance Dance is your final opportunity to let that special someone know that you've been interested in them, even if you've been too reserved to make a move.
+
+    <p>It's now or never baby!</p>
 
     <h2>How it works</h2>
     <ol>
@@ -35,14 +37,16 @@
         {% endif %}
     </li>
     <li>Go to the Crushes tab and enter up to five people!</li>
-    <li>Feel free to update your crushes until <strong>June 1, 2011</strong>, when your crushes will be locked and the system will start to calculate the matches.</li>
-    <li>A match occurs when one of your crushes also selects you as a crush.</li>
-    <li>On the morning of <strong>June 7, 2011</strong>, before the Senior Week Event Karaoke “Knight” at the Rueb, you will receive an automatically generated email with your matches.</li>
+    <li>Feel free to update your crushes until <strong>June 3, 2011</strong>, when your crushes will be locked and the system will start to calculate the matches.</li>
+    <li>A match occurs when one of your crushes also selects you as a crush. <strong>Your crushes will not know that you picked them unless they pick you too.</strong></li>
+    <li>On the morning of <strong>June 7, 2011</strong>, before the <strong>Senior Week Event Karaoke “Knight” at the Rueb</strong>, you will receive an automatically generated email with your matches.</li>
     </ol>
     
     {% if not paired %}
     <h2>What is pairing your account?</h2>
-    <p>Last Chance Dance uses Google Accounts to log you in, which is way more secure than creating our own authentication system. Thus, though we know which Google user you are, we don't know which Carleton user you are. By entering your Carleton ID and Pair Code from your invitation, we can verify that you are the Carleton student who you say you are, and once we know that, you can start using Last Chance Dance!</p>
+    <p>Last Chance Dance uses Google Accounts to log you in, which is more secure than creating our own authentication system.</p>
+    <p>By entering your Carleton ID and Pair Code from your invitation, we can verify that you are the Carleton student who you say you are, and once we know that, you can start using Last Chance Dance! We do this to keep your information confidential.</p>
+
     {% endif %}
     
     <h2>Statistics So Far (updated every 2 hours)</h2>
@@ -63,8 +67,7 @@
     <p>Consent is sexy. Always ask for consent, even with your matches.</p>
 
     <h2>Privacy</h2>
-    <p><strong>No one will ever see your list.</strong></p>
-    <p>Everything you enter here is between you and a database server. No human will ever see who you picked other than you and that person (if they picked you too).</p>  
+    <p>We respect your privacy and will not release any of the information you provide under any circumstances. If you have any concerns, please send us an email at <a href="/contact">contact@lastchance2011.com</a>.</p>
 
 </div>
 {% endblock %}

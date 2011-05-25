@@ -37,7 +37,7 @@
   <div class="settings-form" id="unpair-form">
         <form method="post" action="/settings/unpair">
             <h1>Un-Pair Your Account</h1>
-            <p>Your account is currently paired with <strong>{{ carleton_id }}</strong>. If you want to un-pair your account, click Un-Pair Account.</p>
+            <p>Your Google Account <strong>{{ user.email }}</strong> is currently paired with <strong>{{ carleton_id }}</strong>. If you want to un-pair your account, click Un-Pair Account.</p>
             
             <button type="submit" onclick="if(!confirm('Do you really want to un-pair this Google ID from this Carleton ID?')){return false;};">Un-Pair Account</button>
             <div class="spacer"></div>
