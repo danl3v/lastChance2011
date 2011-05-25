@@ -37,9 +37,14 @@
     <li>Go to the Crushes tab and enter up to five people!</li>
     <li>Feel free to update your crushes until <strong>June 1, 2011</strong>, when your crushes will be locked and the system will start to calculate the matches.</li>
     <li>A match occurs when one of your crushes also selects you as a crush.</li>
-    <li>On the morning of <strong>June 7, 2011</strong>, before Karaoke “Knight” at the Rueb, you will receive an automatically generated email with your matches.</li>
+    <li>On the morning of <strong>June 7, 2011</strong>, before the Senior Week Event Karaoke “Knight” at the Rueb, you will receive an automatically generated email with your matches.</li>
     </ol>
-
+    
+    {% if not paired %}
+    <h2>What is pairing your account?</h2>
+    <p>Last Chance Dance uses Google Accounts to log you in, which is way more secure than creating our own authentication system. Thus, though we know which Google user you are, we don't know which Carleton user you are. By entering your Carleton ID and Pair Code from your invitation, we can verify that you are the Carleton student who you say you are, and once we know that, you can start using Last Chance Dance!</p>
+    {% endif %}
+    
     <h2>Statistics So Far (updated every 2 hours)</h2>
     <div class="colwrapper">
     <div class="leftcol">
