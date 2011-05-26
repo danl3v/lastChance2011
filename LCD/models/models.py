@@ -27,7 +27,7 @@ class Crush(db.Model):
     target = db.ReferenceProperty(Carl, collection_name="out_crushes")
     created = db.DateTimeProperty(auto_now_add=True)
     deleted = db.BooleanProperty(default=False)
-    deleted_time = db.DateTimeProperty(auto_add_now=False)
+    deleted_time = db.DateTimeProperty(auto_now_add=False)
     notified = db.BooleanProperty(default=False)
     
 class Match(db.Model):

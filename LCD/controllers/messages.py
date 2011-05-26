@@ -6,16 +6,7 @@ import view, session, functions
 class Get(webapp.RequestHandler):
     def get(self):
         user = session.getCarl()
-        unread_messages = get_unread_messages_for_user(user)
-        unread_sent_messages = get_unread_messages_from_user(user)
-        
-        unread_messages_html = ''
-        #for unread_message in unread_messages:
-
-        unread_sent_messages_html = ''
-        #for unread_sent_message in unread_sent_messages:
-        
-        self.response.out.write('{"num_unread_messages":' + str(user.num_unread_messages) + ',"num_unread_sent_messages":' + str(user.num_unread_sent_messages) + ',"unread_messages":"' + unread_messages_html + '","unread_sent_messages":"' + unread_sent_messages_html + '"}')
+        self.response.out.write('{"num_unread_messages":' + str(user.num_unread_messages) + ',"num_unread_sent_messages":' + str(user.num_unread_sent_messages) + '}')
 
 class Send(webapp.RequestHandler):
     @functions.only_if_site_open
@@ -33,7 +24,7 @@ class Send(webapp.RequestHandler):
                 message.body = self.request.get("body")
                 message.put()
 
-                target.num_unread_messages += 1 # separate into sent and in messages
+                target.num_unread_messages += 1
                 target.put()
 
                 self.response.out.write('{"success":0,"mid":' + str(message.key().id()) + ',"name":"' + message.target.first_name + ' ' + message.target.last_name + '"}')
@@ -93,17 +84,17 @@ class Delete(webapp.RequestHandler):
             self.response.out.write('{"success":2}')
             
 def get_unread_messages_for_user(user):
-    messages = models.Message.all() # can use in_messages
-    messages.filter("target =", user)
-    messages.filter("target_deleted =", False)
-    messages.filter("target_any_unread =", True)
-    messages.order("-updated")
-    return messages
+    #messages = models.Message.all() # can use in_messages
+    #messages.filter("target =", user)
+    #messages.filter("target_deleted =", False)
+    #messages.filter("target_any_unread =", True)
+    #messages.order("-updated")
+    return user.in_messages.filter("target_deleted =", False).filter("target_any_unread =", True).order("-updated")
 
 def get_unread_messages_from_user(user):
-    messages = models.Message.all() # can use out_messages
-    messages.filter("source =", user)
-    messages.filter("source_deleted =", False)
-    messages.filter("source_any_unread =", True)
-    messages.order("-updated")
-    return messages
+    #messages = models.Message.all() # can use out_messages
+    #messages.filter("source =", user)
+    #messages.filter("source_deleted =", False)
+    #messages.filter("source_any_unread =", True)
+    #messages.order("-updated")
+    return user.out_messages.filter("source_deleted =", False).filter("source_any_unread =", True).order("-updated")
