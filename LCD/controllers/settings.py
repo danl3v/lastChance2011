@@ -4,6 +4,7 @@ import session, view, emailfunctions, functions
 
 class Settings(webapp.RequestHandler):
 
+    @functions.only_if_site_not_pre
     def get(self, action=None):
 
         if session.opted_in(): optedout = False
@@ -19,6 +20,7 @@ class Settings(webapp.RequestHandler):
 
         view.renderTemplate(self, 'settings.html', template_values)
 
+    @functions.only_if_site_not_pre
     def post(self, action=None):
 
         if action == "optin" and not session.opted_in() and session.isPaired():
@@ -90,6 +92,8 @@ class Settings(webapp.RequestHandler):
                 self.response.out.write('{"success":1}')
 
 class AutoPair(webapp.RequestHandler):
+
+    @functions.only_if_site_not_pre
     def get(self, user="", pair_code=""):
         theCarl = functions.get_user_by_CID(user)
         if (theCarl) and (theCarl.pair_code == pair_code):
@@ -102,6 +106,7 @@ class AutoPair(webapp.RequestHandler):
                 'googleEmail': session.get_current_user().email()
                 }                
             view.renderTemplate(self, 'pair_success.html', template_values)
+
         else:
             template_values = {
                 'pairCode' : pair_code,

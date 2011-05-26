@@ -43,6 +43,21 @@ def get_site_status(): # make a get setting function and a set setting function
         site_status.put()
     return site_status.value
 
+def set_site_status(new_site_status):
+    if new_site_status not in ["pre", "open", "calculating", "showing"]:
+        return '{"success":1, "status":"' + new_site_status + '"}'
+    else:
+        site_status = models.Setting.all().filter("name =", "site_status").get()
+        if not site_status:
+            site_status = models.Setting()
+            site_status.name = "site_status"
+            site_status.value = new_site_status
+            site_status.put()
+        else:
+            site_status.value = new_site_status
+            site_status.put()
+        return '{"success":0, "status":"' + new_site_status + '"}'
+
 def get_statistic(name):
     statistic = models.Statistic.all().filter("name =", name).get()
     if statistic: return statistic.value
@@ -56,28 +71,26 @@ def set_statistic(name, value):
     statistic.value = value
     statistic.put()
 
+def only_if_site_not_pre(f):
+    def helper(self):
+        if get_site_status() != "pre": return f(self)
+        self.redirect("/")
+    return helper
+
 def only_if_site_open(f):
     def helper(self):
-        site_status = get_site_status()
-        if site_status == "open":
-            return f(self)
-        else:
-            self.response.out.write("The status of the site is " + site_status + ". You cannot edit crushes at this time")
+        if get_site_status() == "open": return f(self)
+        else: self.response.out.write('You can\'t enter crushes anymore on Last Chance Dance. <a href="/">Head on back home</a>.')
     return helper
     
 def only_if_site_showing(f):
     def helper(self):
-        site_status = get_site_status()
-        if site_status == "showing":
-            return f(self)
-        else:
-            self.response.out.write("The status of the site is " + site_status + ". You cannot view matches at this time")
+        if get_site_status() == "showing": return f(self)
+        else: self.response.out.write('The matches are not out yet. <a href="/">Head on back home</a>.')
     return helper
     
 def only_if_paired_opted_in(f):
     def helper(self):
-        if session.isPaired() and session.opted_in():
-            return f(self)
-        else:
-            self.response.out.write('{"success":1}')
+        if session.isPaired() and session.opted_in(): return f(self)
+        else: self.response.out.write('{"success":1}')
     return helper

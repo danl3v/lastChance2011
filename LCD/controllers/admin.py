@@ -16,20 +16,7 @@ class Admin(webapp.RequestHandler):
 
 class SetSiteStatus(webapp.RequestHandler):
     def post(self):
-        new_site_status = self.request.get("site_status")
-        if new_site_status not in ["pre", "open", "calculating", "showing"]:
-            self.response.out.write('{"success":1, "status":"' + new_site_status + '"}')
-        else:
-            site_status = models.Setting.all().filter("name =", "site_status").get()
-            if not site_status:
-                site_status = models.Setting()
-                site_status.name = "site_status"
-                site_status.value = new_site_status
-                site_status.put()
-            else:
-                site_status.value = new_site_status
-                site_status.put()
-            self.response.out.write('{"success":0, "status":"' + new_site_status + '"}')
+        self.response.out.write(functions.set_site_status(self.request.get("site_status")))
 
 class SendMatchNotifications(webapp.RequestHandler):
     def get(self):

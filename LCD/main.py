@@ -28,7 +28,10 @@ def main():
            ('/admin/send_match_notifications', admin.SendMatchNotifications),
            ('/admin/set_site_status', admin.SetSiteStatus),
            ('/tasks/send_digest', tasks.SendDigest),
-           ('/tasks/update_statistics', tasks.UpdateStatistics)
+           ('/tasks/update_statistics', tasks.UpdateStatistics),
+           ('/tasks/open', tasks.OpenSite),
+           ('/tasks/close', tasks.CloseSite),
+           ('/tasks/show', tasks.ShowMatches)
          ],debug=True)
 
     run_wsgi_app(application)

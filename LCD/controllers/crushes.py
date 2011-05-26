@@ -17,7 +17,7 @@ class Crushes(webapp.RequestHandler):
                 'messages': messages,
                 'num_unread_messages': user.num_unread_messages,
                 'num_unread_sent_messages': user.num_unread_sent_messages,
-                'offset': random.randint(1, 100),# - min([message.source.key().id() for message in messages]+[0]),
+                'offset': random.randint(1, 100) - min([message.source.key().id() for message in messages]+[0]),
                 'sent_messages': sent_messages,
                 'current_page': { 'crushes': True }
                 }
@@ -30,7 +30,7 @@ class Crushes(webapp.RequestHandler):
             user.put()      
         elif site_status == "showing":
             template_values = {
-                'matches': session.getCarl().in_matches,
+                'matches': session.getCarl().in_matches.fetch(20), # there should be no more than 5
                 'current_page': { 'crushes': True }
                 }
             view.renderTemplate(self, 'matches.html', template_values)

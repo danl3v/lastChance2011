@@ -1,16 +1,19 @@
 {% extends "base.html" %}
 
+{% if site_status == 'open' %}{% block extrahead %}
+<script type="text/javascript" src="/js/countdown.js"></script>
+{% endblock %}{% endif %}
+
 {% block content %}
 <div id="main">
     
-    {% if site_status == 'pre' %}<h1 class="alert">ALERT: LCD will open Friday, May 27, 2011.</h1>{% endif %}
-    {% if site_status == 'calculating' %}<h1 class="alert">ALERT: LCD is Closed. Matches being calculated.</h1>{% endif %}
-    {% if site_status == 'showing' %}<h1 class="alert">ALERT: Matches are out!</h1>{% endif %}
+    {% if site_status == 'pre' %}<h1 class="alert">NOTICE: LCD will open Friday, May 27, 2011.</h1>{% endif %}
+    {% if site_status == 'open' %}<h1 class="alert"><span id="countdown"></span> to enter crushes!</h1>{% endif %}
+    {% if site_status == 'calculating' %}<h1 class="alert">NOTICE: LCD is Closed. Matches being calculated.</h1>{% endif %}
+    {% if site_status == 'showing' %}<h1 class="alert">NOTICE: Matches are out!</h1>{% endif %}
     
-    <h2>Welcome</h2>
-    <p>Last Chance Dance is your final opportunity to let that special someone know that you've been interested in them, even if you've been too reserved to make a move.
-
-    <p>It's now or never baby!</p>
+    <h2>Welcome Carleton Seniors</h2>
+    <p>Last Chance Dance is your final opportunity to see if your secret crushes have been interested in you all this time. Enter your top 5 and if they're into it to, you'll get a chance to meet up and make the night what you want. It's completely risk-free because matches are sent out own only if the feelings are mutual. It's now or never baby!</p>
 
     <h2>How it works</h2>
     <ol>
@@ -36,7 +39,7 @@
         </div>
         {% endif %}
     </li>
-    <li>Go to the Crushes tab and enter up to five people!</li>
+    <li>Go to the Crushes tab and enter up to five people! You can send them anonymous messages too!</li>
     <li>Feel free to update your crushes until <strong>Friday, June 3, 2011</strong>, when your crushes will be locked and the system will start to calculate the matches.</li>
     <li>A match occurs when one of your crushes also selects you as a crush. <strong>Your crushes will not know that you picked them unless they pick you too.</strong></li>
     <li>At <strong>12 noon on Tuesday, June 7, 2011</strong>, before the <strong>Senior Week Event Karaoke “Knight” at the Rueb</strong>, you will receive an automatically generated email with your matches.</li>
@@ -46,9 +49,9 @@
     <h2>What is pairing your account?</h2>
     <p>Last Chance Dance uses Google Accounts to log you in, which is more secure than creating our own authentication system.</p>
     <p>By entering your Carleton ID and Pair Code from your invitation, we can verify that you are the Carleton student who you say you are, and once we know that, you can start using Last Chance Dance! We do this to keep your information confidential.</p>
-
     {% endif %}
-    
+
+    {% if site_status != 'pre' %}
     <h2>Statistics So Far (updated every 2 hours)</h2>
     <div class="colwrapper">
     <div class="leftcol">
@@ -63,6 +66,8 @@
       <p><span class="big">{{ num_to_pair }}</span> {% if num_to_pair == 1 %}person still needs{% else %}people still need{% endif %} to register</p>
     </div>
     </div>
+    {% endif %}
+
     <h2>Disclaimer</h2>
     <p>Consent is sexy. Always ask for consent, even with your matches.</p>
 

@@ -8,9 +8,9 @@
     {% if matches|length > 0 %}
       <h2>Your matches...</h2>
       {% for match in matches %}
-        <div>
-          <div><img src="/user_images/{{ match.target.carletonID }}.jpg" width="120" height="120" alt="{{ match.target.carletonID }}"><br>{{ match.target.first_name }} {{ match.target.last_name }}</div>
-	</div>
+        <div class="crushdiv">
+          <img src="/user_images/{{ match.target.carletonID }}.jpg" width="120" height="120" alt="{{ match.target.carletonID }}"><br>{{ match.target.first_name }} {{ match.target.last_name }}
+        </div>
       {% endfor %}
     {% else %}
     <p>Sorry, you didn't have any matches.</p>

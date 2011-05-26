@@ -9,3 +9,18 @@ cron:
   url: /tasks/update_statistics
   schedule: every 2 hours
   timezone: America/Chicago
+
+- description: open site
+  url: /tasks/open
+  schedule: every day 12:00
+  timezone: America/Chicago
+
+- description: close site
+  url: /tasks/close
+  schedule: every day 12:00
+  timezone: America/Chicago
+
+- description: show matches
+  url: /tasks/show
+  schedule: every day 12:00
+  timezone: America/Chicago

@@ -37,10 +37,12 @@
     {% if opted_in and paired and site_status == 'showing' %}
       <li class="{% if current_page.crushes %}active{% else %}inactive{% endif %}"><a href="/crushes">Matches</a></li>
     {% endif %}
-    {% if paired and not opted_in %}
-      <li class="alert{% if current_page.settings %} active{% else %} inactive{% endif %}"><a href="/settings">Settings</a><span>you are opted out</span></li>
-    {% else %}
-      <li class="{% if current_page.settings %}active{% else %}inactive{% endif %}"><a href="/settings">Settings</a></li>
+    {% if site_status != 'pre' %}
+      {% if paired and not opted_in %}
+        <li class="alert{% if current_page.settings %} active{% else %} inactive{% endif %}"><a href="/settings">Settings</a><span>you are opted out</span></li>
+      {% else %}
+        <li class="{% if current_page.settings %}active{% else %}inactive{% endif %}"><a href="/settings">Settings</a></li>
+      {% endif %}
     {% endif %}
   {% endif %}
   {% if admin %}
