@@ -53,7 +53,7 @@
              <ul class="icons ui-widget ui-helper-clearfix">
                {% if not message.reply_messages.count %}<li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>{% endif %}
                <li class="ui-state-default ui-corner-all delete-button" title="Delete"><span class="ui-icon ui-icon-trash"></span></li>
-               <li class="ui-state-default ui-corner-all block-button" title="Report Abuse"><span class="ui-icon ui-icon-alert"></span></li>
+               <li class="ui-state-default ui-corner-all report-abuse-button" title="Report Abuse"><span class="ui-icon ui-icon-alert"></span></li>
              </ul>
            </div>
            </div>
@@ -86,7 +86,7 @@
              <ul class="icons ui-widget ui-helper-clearfix">
                {% if not message.reply_messages.count %}<li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>{% endif %}
                <li class="ui-state-default ui-corner-all delete-button" title="Delete"><span class="ui-icon ui-icon-trash"></span></li>
-               <li class="ui-state-default ui-corner-all block-button" title="Report Abuse"><span class="ui-icon ui-icon-alert"></span></li>
+               <li class="ui-state-default ui-corner-all report-abuse-button" title="Report Abuse"><span class="ui-icon ui-icon-alert"></span></li>
              </ul>
            </div>
            </div>
@@ -118,7 +118,7 @@
     <label for="message-to-box">To</label><input type="text" name="message-to-box" id="message-to-box" class="text ui-widget-content ui-corner-all" disabled>
     <label for="message-body">Body</label><textarea name="message-body" id="message-body" class="text ui-widget-content ui-corner-all"></textarea>
   </fieldset>
-  <p>Note: Beware of what you send. Even though messages are anonymous, users have the power to block you, so don't spam and be appropriate.</p>
+  <p>Note: Beware of what you send. Even though messages are anonymous, users can report you, so don't spam and be appropriate.</p>
 </form>
 </div>
 {% endblock %}

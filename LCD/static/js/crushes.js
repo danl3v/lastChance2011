@@ -75,7 +75,7 @@ $(document).ready(function() {
     $(".removeCrush:button").live('click', crushRemoveListener);
     $(".reply-button").live('click', messageReplyListener);
     $(".delete-button").live('click', messageDeleteListener);
-    $(".block-button").live('click', blockUserListener);
+    $(".report-abuse-button").live('click', reportUserListener);
     $(".reply-text").live('keyup', messageSendReplyListener);
 });
 
@@ -89,7 +89,7 @@ function addSentMessage(to, body, message_id) {
     '      <ul class="icons ui-widget ui-helper-clearfix">' +
     '        <li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>' +
     '        <li class="ui-state-default ui-corner-all delete-button" title="Delete"><span class="ui-icon ui-icon-trash"></span></li>' +
-    '        <li class="ui-state-default ui-corner-all block-button" title="Report Abuse"><span class="ui-icon ui-icon-alert"></span></li>' +
+    '        <li class="ui-state-default ui-corner-all report-abuse-button" title="Report Abuse"><span class="ui-icon ui-icon-alert"></span></li>' +
     '      </ul>' +
     '    </div>' +
     '    </div>' +
@@ -173,7 +173,7 @@ function messageSendReplyListener(event) {
     }
 }
 
-function blockUserListener() {
+function reportUserListener() {
     var message_id = $(this).parent().parent().parent().parent().parent().attr("data-mid");
     if (confirm("Do you really want to report this user?")) {
 	$.post("/messages/report_abuse", { "mid": message_id }, function(data) {
@@ -202,16 +202,16 @@ function updateMessages() {
 }
 
 function checkNoMessages() {
-    if ($("#messages-to-me .messages .message").length == 0) { $("#messages-to-me .no-messages").show(); }
-    else { $("#messages-to-me .no-messages").hide(); }
+    if ($("#messages-to-me .messages .message").length == 0) { $("#messages-to-me .no-messages").fadeIn("fast"); }
+    else { $("#messages-to-me .no-messages").fadeOut("fast"); }
     
-    if ($("#messages-from-me .messages .message").length == 0) { $("#messages-from-me .no-messages").show(); }
-    else { $("#messages-from-me .no-messages").hide(); }
+    if ($("#messages-from-me .messages .message").length == 0) { $("#messages-from-me .no-messages").fadeIn("fast"); }
+    else { $("#messages-from-me .no-messages").fadeOut("fast"); }
 }
 
 function checkNoCrushes() {
-    if ($("#crushes .crushdiv").length == 0) { $("#crushes .no-crushes").show(); }
-    else { $("#crushes .no-crushes").hide(); }
+    if ($("#crushes .crushdiv").length == 0) { $("#crushes .no-crushes").fadeIn("fast"); }
+    else { $("#crushes .no-crushes").fadeOut("fast"); }
 }
 
 function createCookie(name, value, days) {

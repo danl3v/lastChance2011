@@ -39,8 +39,10 @@ class UpdateStatistics(webapp.RequestHandler):
 class OpenSite(webapp.RequestHandler): # open the site on may 27, 2011
     def get(self):
         from datetime import date
-        if date.today() == date(2011,5,27): functions.set_site_status('open')
-
+        if date.today() == date(2011,5,27):
+            # maybe send invites here?
+            functions.set_site_status('open')
+        
 class CloseSite(webapp.RequestHandler): # close the site on jun 3, 2011
     def get(self):
         from datetime import date
@@ -49,4 +51,7 @@ class CloseSite(webapp.RequestHandler): # close the site on jun 3, 2011
 class ShowMatches(webapp.RequestHandler): # show the matches on jun 7, 2011
     def get(self):
         from datetime import date
-        if date.today() == date(2011,6,7): functions.set_site_status('showing')
+        if date.today() == date(2011,6,7):
+            functions.update_matches()
+            # maybe send emails here?
+            functions.set_site_status('showing')
