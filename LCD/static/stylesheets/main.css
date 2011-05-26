@@ -294,6 +294,15 @@ div#crushes div.crushdiv span
     display: block;
 }
 
+div#crushes p#no-crushes {
+    display: none;
+    text-align: center;
+    padding: 6.5em 0;
+    width: 45%;
+    background-color: #EEE;
+    border: 1px solid #CCC;
+}
+
 /* MESSAGES LAYOUT OBJECTS */
 div.messages-tab p.no-messages {
     display: none;

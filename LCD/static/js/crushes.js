@@ -5,6 +5,7 @@ $(document).ready(function() {
     updateMessages();
     
     checkNoMessages();
+    checkNoCrushes();
 
     $.getJSON('/autofill', function(data) {
         $(".crush").autocomplete({
@@ -30,6 +31,7 @@ $(document).ready(function() {
                         else if (data.success == 5) { alert("Sorry. You can't have more than 5 crushes. Please remove one before adding another."); }
 			else if (data.success == 6) { alert("Sorry. Last Chance Dance has closed and you are not allowed to add crushes anymore. Redirecting..."); window.location='/'; }
                         else { alert("There was an error in adding your crush. Please try again."); }
+			checkNoCrushes();
                     }, "json");
                 return false; // tells autocomplete not to update the field with the selected value
             }
@@ -110,6 +112,7 @@ function crushRemoveListener() {
             else if (data.success == 2) { crush.parent().remove(); alert("The username " + crush.val() + " does not exist and thus could not be removed. It might have been already removed."); }
 	    else if (data.success == 6) { alert("Sorry. Last Chance Dance has closed and you are not allowed to modify crushes anymore. Redirecting..."); window.location='/'; }
             else { alert("Error in deleting crush. Try again."); crush.parent().show(); }
+	    checkNoCrushes();
         }, "json");
     }
 }
@@ -171,7 +174,16 @@ function messageSendReplyListener(event) {
 }
 
 function blockUserListener() {
-    alert("Feature not implemented yet. Sorry. If a user is giving you a lot of trouble, send us an email.");
+    var message_id = $(this).parent().parent().parent().parent().parent().attr("data-mid");
+    if (confirm("Do you really want to report this user?")) {
+	$.post("/messages/report_abuse", { "mid": message_id }, function(data) {
+	    if (data.success == 0) { alert("This user has been reported. Thank you."); }
+	    else if (data.success == 1) { alert("Your account must be paired and opted-in in order to report abuse. Redirecting to settings page to resolve the issue..."); window.location='/settings'; }
+	    else if (data.success == 2) { alert("Message does not exist or you tried to report abuse on another user's message. Abuse report not sent."); }
+	    else if (data.success == 6) { alert("Sorry. Last Chance Dance has closed and you are not allowed to report abuse since no one can send messages anyways. Redirecting..."); window.location='/'; }
+	    else { alert("Error in reporting user. Try again."); }
+	    }, "json");
+    }
 }
 
 function updateMessages() {
@@ -195,6 +207,11 @@ function checkNoMessages() {
     
     if ($("#messages-from-me .messages .message").length == 0) { $("#messages-from-me .no-messages").show(); }
     else { $("#messages-from-me .no-messages").hide(); }
+}
+
+function checkNoCrushes() {
+    if ($("#crushes .crushdiv").length == 0) { $("#crushes .no-crushes").show(); }
+    else { $("#crushes .no-crushes").hide(); }
 }
 
 function createCookie(name, value, days) {

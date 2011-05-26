@@ -18,6 +18,7 @@ def main():
            ('/messages/send', messages.Send),
            ('/messages/reply', messages.Reply),
            ('/messages/delete', messages.Delete),
+           ('/messages/report_abuse', messages.Report),
            ('/admin', admin.Admin),
            ('/admin/', admin.Admin),
            ('/admin/addusers', admin.AddUsers),

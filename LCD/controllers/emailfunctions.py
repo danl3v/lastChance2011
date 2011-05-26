@@ -66,6 +66,18 @@ def send_matches(carletonAccount, matches):
     
     mail.send_mail(sender_address, user_address, subject, body)
 
+def send_report(user, reported_user, message):
+    '''
+    Reports a user for message abuse.
+    '''
+    to_address = last_chance_dance_email_address
+    from_address = last_chance_dance_email_address
+    subject = subject_prefix + "[Abuse Report] [" + reported_user.carletonID + "]"
+    body = user.first_name + " " + user.last_name + " reports abuse by: " + reported_user.first_name + " " + reported_user.last_name + " (message id: " + str(message.key().id()) + ")\n"
+    body += "The message source was: " + message.source.first_name + " " + message.source.last_name + " and the target was: " + message.target.first_name + " " + message.target.last_name
+    
+    mail.send_mail(from_address, to_address, subject, body)
+
 def send_contact_form(subject, body, anonymous):
     '''
     Sends a contact form.

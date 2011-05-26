@@ -1,6 +1,6 @@
 from google.appengine.ext import webapp
 from models import models
-import view, session, functions
+import view, session, functions, emailfunctions
 
 class Get(webapp.RequestHandler):
     @functions.only_if_paired_opted_in
@@ -42,13 +42,13 @@ class Reply(webapp.RequestHandler):
                 reply = models.Reply()
                 reply.message = message
     
-                if message.source.carletonID == source.carletonID: # then we set the target as unread   
+                if message.source.carletonID == source.carletonID: # then we set the message.target as unread   
                     reply.source_unread = False
                     reply.message.target_any_unread = True
                     message.target.num_unread_messages += 1
                     message.target.put()
     
-                elif message.target.carletonID == source.carletonID: # then we set the source as unread
+                elif message.target.carletonID == source.carletonID: # then we set the message.source as unread
                     reply.target_unread = False
                     reply.message.source_any_unread = True
                     message.source.num_unread_sent_messages += 1
@@ -80,9 +80,24 @@ class Delete(webapp.RequestHandler):
             if user.carletonID == message.source.carletonID: message.source_deleted = True
             elif user.carletonID == message.target.carletonID: message.target_deleted = True
             message.put()
-            self.response.out.write('{"success":0}')
+            self.response.out.write('{"success":0}') # success!
         else:
-            self.response.out.write('{"success":2}')
+            self.response.out.write('{"success":2}') # message not owned by the user or was deleted
+
+class Report(webapp.RequestHandler):
+    @functions.only_if_site_open
+    @functions.only_if_paired_opted_in
+    def post(self):
+        message = models.Message.get_by_id(long(self.request.get("mid"))) # maybe use key instead of key.id to find the message                                                                                                                                           
+        user = session.getCarl()
+        if message and (message.source.carletonID == user.carletonID or message.target.carletonID == user.carletonID): # check if the user owns the message
+            if message.source.carletonID == user.carletonID: # then the message.target is being reported
+                emailfunctions.send_report(user, message.target, message)
+            elif message.target.carletonID == user.carletonID: # then we set the message.source is being reported
+                emailfunctions.send_report(user, message.source, message)
+            self.response.out.write('{"success":0}') # success!
+        else:
+            self.response.out.write('{"success":2}') # message not owned by the user or was deleted
             
 def get_unread_messages_for_user(user):
     return user.in_messages.filter("target_deleted =", False).filter("target_any_unread =", True).order("-updated")

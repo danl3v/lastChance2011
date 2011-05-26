@@ -15,6 +15,7 @@
     <span id="new-crush">new crush: <input type="text" class="crush" name="crush"></span>
     </div>
     <div id="crushes">
+    <p id="no-crushes">You have no crushes right now.<br><br>Add a crush above and send them an anonymous message!</p>
     {% for crush in crushes %}
     <div id="crush-{{ crush.target.carletonID }}" class="crushdiv">
         <img src="/user_images/{{ crush.target.carletonID }}.jpg" width="120" height="120" alt="{{ crush.target.carletonID }}"><br>
@@ -110,7 +111,7 @@
 
 </div>
 
-<div id="new-message-form" title="New Message">
+<div id="new-message-form" title="New Anonymous Message">
   <form>
   <fieldset>
     <input type="hidden" name="message-to" id="message-to">
