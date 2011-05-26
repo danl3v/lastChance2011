@@ -80,13 +80,7 @@ def only_if_site_not_pre(f):
 def only_if_site_open(f):
     def helper(self):
         if get_site_status() == "open": return f(self)
-        else: self.response.out.write('You can\'t enter crushes anymore on Last Chance Dance. <a href="/">Head on back home</a>.')
-    return helper
-    
-def only_if_site_showing(f):
-    def helper(self):
-        if get_site_status() == "showing": return f(self)
-        else: self.response.out.write('The matches are not out yet. <a href="/">Head on back home</a>.')
+        else: self.response.out.write('{"success":6}') # 6 is error code for site not open
     return helper
     
 def only_if_paired_opted_in(f):

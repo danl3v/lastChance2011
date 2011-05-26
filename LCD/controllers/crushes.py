@@ -3,7 +3,7 @@ from models import models
 import session, view, functions
 
 class Crushes(webapp.RequestHandler):
-    @functions.only_if_paired_opted_in
+    @functions.only_if_paired_opted_in # need to deal with case where user is not paired or opted in, redirect to settings
     def get(self):
         site_status = functions.get_site_status()
         if site_status == "open":
@@ -71,7 +71,6 @@ class RemoveCrush(webapp.RequestHandler):
             self.response.out.write('{"success":2}')
 
 class AutoFill(webapp.RequestHandler):
-    @functions.only_if_site_open
     def get(self):
         users = models.Carl.all().order("first_name")
         theJSON = ''.join([generate_JSON(user) for user in users])

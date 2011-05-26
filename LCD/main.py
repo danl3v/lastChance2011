@@ -12,6 +12,7 @@ def main():
            ('/autofill', crushes.AutoFill),
            ('/settings', settings.Settings),
            ('/pair/(.*)/(.*)', settings.AutoPair),
+           ('/settings/invite', settings.Invite),
            ('/settings/(.*)', settings.Settings),
            ('/messages/get', messages.Get),
            ('/messages/send', messages.Send),

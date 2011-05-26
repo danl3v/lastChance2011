@@ -3,9 +3,10 @@ from models import models
 import view, session, functions
 
 class Get(webapp.RequestHandler):
+    @functions.only_if_paired_opted_in
     def get(self):
         user = session.getCarl()
-        self.response.out.write('{"num_unread_messages":' + str(user.num_unread_messages) + ',"num_unread_sent_messages":' + str(user.num_unread_sent_messages) + '}')
+        self.response.out.write('{"success":0,"num_unread_messages":' + str(user.num_unread_messages) + ',"num_unread_sent_messages":' + str(user.num_unread_sent_messages) + '}')
 
 class Send(webapp.RequestHandler):
     @functions.only_if_site_open

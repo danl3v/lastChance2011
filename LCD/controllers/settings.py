@@ -5,7 +5,7 @@ import session, view, emailfunctions, functions
 class Settings(webapp.RequestHandler):
 
     @functions.only_if_site_not_pre
-    def get(self, action=None):
+    def get(self):
 
         if session.opted_in(): optedout = False
         else: optedout = True
@@ -20,7 +20,7 @@ class Settings(webapp.RequestHandler):
 
         view.renderTemplate(self, 'settings.html', template_values)
 
-    @functions.only_if_site_not_pre
+    #@functions.only_if_site_not_pre
     def post(self, action=None):
 
         if action == "optin" and not session.opted_in() and session.isPaired():
@@ -81,19 +81,23 @@ class Settings(webapp.RequestHandler):
                 }
             view.renderTemplate(self, 'unpair_success.html', template_values)
 
-        elif action == "invite":
-            carletonAccount = functions.get_user_by_CID(self.request.get('carletonID').split("@")[0])
-            if carletonAccount:
-                carletonAccount.pair_code = functions.generate_pair_code()
-                carletonAccount.put()
-                emailfunctions.send_invitation(carletonAccount)
-                self.response.out.write('{"success":0}')
-            else:
-                self.response.out.write('{"success":1}')
+        else:
+            self.redirect('/settings')
+
+class Invite(webapp.RequestHandler):
+    def post(self):
+        carletonAccount = functions.get_user_by_CID(self.request.get('carletonID').split("@")[0])
+        if carletonAccount:
+            carletonAccount.pair_code = functions.generate_pair_code()
+            carletonAccount.put()
+            emailfunctions.send_invitation(carletonAccount)
+            self.response.out.write('{"success":0}') # success!
+        else:
+            self.response.out.write('{"success":1}') # user not found
 
 class AutoPair(webapp.RequestHandler):
 
-    @functions.only_if_site_not_pre
+    #@functions.only_if_site_not_pre
     def get(self, user="", pair_code=""):
         theCarl = functions.get_user_by_CID(user)
         if (theCarl) and (theCarl.pair_code == pair_code):
@@ -120,3 +124,4 @@ def get_crushes_for_user_by_target(user):
     crushes.filter("deleted =", False)
     crushes.filter("target =", user)
     return crushes.fetch(1000) # there should not be more than num users in db
+

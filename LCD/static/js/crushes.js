@@ -23,11 +23,12 @@ $(document).ready(function() {
                                 $("#crushes").append('<div id="crush-' + ui.item.carletonID + '" class="crushdiv"><img src="/user_images/' + ui.item.carletonID + '.jpg" width="120" height="120"><br>' + ui.item.first_name + " " + ui.item.last_name + "<br>" + status + '<button class="messageCrush" value="' + ui.item.carletonID + '" data-first-name="' + ui.item.first_name + '" data-last-name="' + ui.item.last_name + '">message</button> <button class="removeCrush" value="' + ui.item.carletonID + '">remove</button></div>');
                             }
                         }
-                        else if (data.success == 1) { alert("Your account must be paired and opted-in in order to add crushes. Go to the settings page to resolve this issue."); }
+                        else if (data.success == 1) { alert("Your account must be paired and opted-in in order to add crushes. Redirecting to settings page to resolve the issue..."); window.location='/settings'; }
                         else if (data.success == 2) { alert(ui.item.first_name + " " + ui.item.last_name + " is already one of your crushes."); }
                         else if (data.success == 3) { alert(ui.item.first_name + " " + ui.item.last_name + " is not in our database."); }
                         else if (data.success == 4) { alert("You cannot choose yourself as a crush."); }
                         else if (data.success == 5) { alert("Sorry. You can't have more than 5 crushes. Please remove one before adding another."); }
+			else if (data.success == 6) { alert("Sorry. Last Chance Dance has closed and you are not allowed to add crushes anymore. Redirecting..."); window.location='/'; }
                         else { alert("There was an error in adding your crush. Please try again."); }
                     }, "json");
                 return false; // tells autocomplete not to update the field with the selected value
@@ -55,10 +56,11 @@ $(document).ready(function() {
                                         checkNoMessages();
                                         showMessages('from-me');
                                     }
-                                    else if (data.success == 1) { alert("Your account must be paired and opted-in in order to send messages."); }
+                                    else if (data.success == 1) { alert("Your account must be paired and opted-in in order to send messages. Redirecting to settings page to resolve the issue..."); window.location='/settings'; }
                                     else if (data.success == 2) { alert(name + " is not in our database. Could not send message."); }
                                     else if (data.success == 3) { alert(name + " is not one of your crushes. You can only send a message to one of your crushes. Refresh the page to get the most updated list of your crushes."); }
                                     else if (data.success == 4) { alert("Your message did not have a body. It was not sent."); }
+				    else if (data.success == 6) { alert("Sorry. Last Chance Dance has closed and you are not allowed to send messages anymore. Redirecting..."); window.location='/'; }
                                     else { alert("There was an error in sending your message. Please try again."); }
                                 }, "json");
                             },
@@ -70,7 +72,7 @@ $(document).ready(function() {
     $(".messageCrush:button").live('click', messageSendListener);
     $(".removeCrush:button").live('click', crushRemoveListener);
     $(".reply-button").live('click', messageReplyListener);
-    $(".delete-button").live('click', messageRemoveListener);
+    $(".delete-button").live('click', messageDeleteListener);
     $(".block-button").live('click', blockUserListener);
     $(".reply-text").live('keyup', messageSendReplyListener);
 });
@@ -104,8 +106,9 @@ function crushRemoveListener() {
         crush.parent().fadeOut("fast");
         $.post("/crushes/remove", { "crush": crush.val() }, function(data) {
             if (data.success == 0) { crush.parent().remove(); }
-            else if (data.success == 1) { alert("Your account must be paired and opted-in in order to remove crushes. Go to the settings page to resolve this issue."); crush.parent().show(); }
-            else if (data.success == 2) { alert("The username " + crush.val() + " does not exist and thus could not be removed. It might have been already removed."); crush.parent().remove(); }
+            else if (data.success == 1) { alert("Your account must be paired and opted-in in order to remove crushes. Redirecting to settings page to resolve the issue..."); window.location='/settings'; }
+            else if (data.success == 2) { crush.parent().remove(); alert("The username " + crush.val() + " does not exist and thus could not be removed. It might have been already removed."); }
+	    else if (data.success == 6) { alert("Sorry. Last Chance Dance has closed and you are not allowed to modify crushes anymore. Redirecting..."); window.location='/'; }
             else { alert("Error in deleting crush. Try again."); crush.parent().show(); }
         }, "json");
     }
@@ -117,15 +120,16 @@ function messageSendListener(user) {
     $("#new-message-form").dialog("open");
 }
 
-function messageRemoveListener() {
+function messageDeleteListener() {
     if (confirm("Do you really want to delete this message?")) {
         var message = $(this).parent().parent().parent().parent().parent();
         message.fadeOut("fast");
         $.post("/messages/delete", { "mid": message.attr("data-mid") }, function(data) {
             if (data.success == 0) { message.remove(); }
-            else if (data.success == 1) { alert("Your account must be paired and opted-in in order to delete messages. Go to the settings page to resolve this issue."); message.show(); }
-            else if (data.success == 2) { alert("Message does not exist or you tried to delete another user's message."); message.remove(); }
-            else { alert("Error in deleting message. Try again."); message.show(); }
+            else if (data.success == 1) { alert("Your account must be paired and opted-in in order to delete messages. Redirecting to settings page to resolve the issue..."); window.location='/settings'; }
+            else if (data.success == 2) { message.remove(); alert("Message does not exist or you tried to delete another user's message."); }
+	    else if (data.success == 6) { alert("Sorry. Last Chance Dance has closed and you are not allowed to delete messages anymore. Redirecting..."); window.location='/'; }
+            else { message.show(); alert("Error in deleting message. Try again."); }
             checkNoMessages();
         }, "json");
     }
@@ -156,9 +160,10 @@ function messageSendReplyListener(event) {
         $(this).parent().before('<div class="message-item sent reply"><div class="message-item-header"><div class="message-item-info"><strong>You</strong> just now</div></div><div class="message-item-body">' + body + '</div></div>');
         $.post("/messages/reply", { "mid": message_id, "body": body }, function(data) {
           if (data.success == 0) { }
-          else if (data.success == 1) { alert("Your account must be paired and opted-in in order to reply to messages. The added reply will be gone when you refresh the page. Go to the settings page to resolve this issue."); }
+          else if (data.success == 1) { alert("Your account must be paired and opted-in in order to reply to messages. Redirecting to settings page to resolve the issue..."); window.location='/settings'; }
           else if (data.success == 2) { alert("Message does not exist or you tried to reply another user's message. The added reply will be gone when you refresh the page."); }
           else if (data.success == 3) { alert("Reply not sent because there was no text to send. The added reply will be gone when you refresh the page."); }
+	  else if (data.success == 6) { alert("Sorry. Last Chance Dance has closed and you are not allowed to reply to messages anymore. Redirecting..."); window.location='/'; }
           else { alert("Error in replying to  message. Try again. The added reply will be gone when you refresh the page."); }
         }, "json");
       }
@@ -171,7 +176,7 @@ function blockUserListener() {
 
 function updateMessages() {
     $.get('/messages/get', function(data) {
-        if (data.num_unread_messages > 0 || data.num_unread_sent_messages) {
+        if (data.success == 0 && (data.num_unread_messages > 0 || data.num_unread_sent_messages)) {
             var text;
             if (data.num_unread_messages + data.num_unread_sent_messages == 1) { text = "1 unread message"; }
             else { text = (data.num_unread_messages + data.num_unread_sent_messages).toString() + " unread messages"; }
@@ -179,6 +184,7 @@ function updateMessages() {
             $("#crushes-tab").addClass("alert");
             $("#crushes-tab span").fadeIn("fast");
         }
+	else if (data.success == 1) { alert("Your account must be paired and opted-in in order to reply to messages. Redirecting to settings page to resolve the issue..."); window.location='/settings'; }
         setTimeout('updateMessages()', 10000);
     }, "json");   
 }
