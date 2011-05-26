@@ -20,6 +20,7 @@ class UpdateStatistics(webapp.RequestHandler):
     def get(self):
     
         matches = functions.update_matches()
+        num_users_with_matches = functions.num_users_with_matches()
         num_crushes = models.Crush.all().filter("deleted =", False).count()
         num_messages = models.Message.all().count()
         num_replies = models.Reply.all().count()
@@ -32,6 +33,7 @@ class UpdateStatistics(webapp.RequestHandler):
         functions.set_statistic("num_messages", num_messages)
         functions.set_statistic("num_replies", num_replies)
         functions.set_statistic("num_matches", num_matches)
+        functions.set_statistic("num_users_with_matches", num_users_with_matches)
         functions.set_statistic("num_paired", num_paired)
         functions.set_statistic("num_opted_out", num_opted_out)
         functions.set_statistic("num_to_pair", num_to_pair)

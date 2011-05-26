@@ -31,6 +31,9 @@ def update_matches():
         new_match.put()
     return matches
 
+def num_users_with_matches():
+    return sum([1 for user in models.Carl.all() if user.in_matches.count() > 0])
+
 def get_site_status(): # make a get setting function and a set setting function
     site_status = models.Setting.all().filter("name =", "site_status").get()
     if not site_status:

@@ -12,6 +12,7 @@ class MainPage(webapp.RequestHandler):
             'num_messages': functions.get_statistic('num_messages'),
             'num_replies': functions.get_statistic('num_replies'),
             'num_matches': functions.get_statistic('num_matches'),
+            'num_users_with_matches': functions.get_statistic('num_users_with_matches'),
             'num_paired': functions.get_statistic('num_paired'),
             'num_opted_out': functions.get_statistic('num_opted_out'),
             'num_to_pair': functions.get_statistic('num_to_pair'),
