@@ -200,8 +200,9 @@ div#nav ul li.alert span:after
 
 div#nav ul li.alert span a, div#nav ul li.alert span a:hover, div#nav ul li.alert span a:visited, div#nav ul li.alert span a:active
 {
-    color: #FFFFFF !important;
     text-decoration: underline !important;
+    background: none !important;
+    padding: 0 !important;
 }
 
 /* MAIN LAYOUT OBJECTS */

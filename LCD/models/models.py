@@ -1,6 +1,6 @@
 from google.appengine.ext import db
 from google.appengine.api import users
-from datetime import timedelta
+from datetime import timedelta, datetime
 tz_offset = -5
 
 class Setting(db.Model):
@@ -22,16 +22,12 @@ class Carl(db.Model):
     num_unread_messages = db.IntegerProperty(default=0)
     num_unread_sent_messages = db.IntegerProperty(default=0)
         
-    @property
-    def matches(self):
-        #return Match.gql("WHERE source = :1", self.key())
-        return self.in_crushes # hopefully less DB strain?
-
 class Crush(db.Model):
     source = db.ReferenceProperty(Carl, collection_name="in_crushes")
     target = db.ReferenceProperty(Carl, collection_name="out_crushes")
     created = db.DateTimeProperty(auto_now_add=True)
     deleted = db.BooleanProperty(default=False)
+    deleted_time = db.DateTimeProperty(auto_now_add=False)
     notified = db.BooleanProperty(default=False)
     
 class Match(db.Model):
@@ -54,17 +50,21 @@ class Message(db.Model):
     target_any_unread = db.BooleanProperty(default=True)
 
     @property
-    def local_created(self):
-        return self.created + timedelta(hours=tz_offset)
-        
+    def local_created(self): return self.created + timedelta(hours=tz_offset)
+    
     @property
-    def local_updated(self):
-        return self.updated + timedelta(hours=tz_offset)
+    def pretty_created(self): return pretty_date(self, self.created)
+    
+    @property
+    def local_updated(self): return self.updated + timedelta(hours=tz_offset)
     
     @property
     def replies(self):
         #return Reply.gql("WHERE message = :1 ORDER BY created ASC", self.key())
         return self.reply_messages # hopefully faster
+
+    def pretty_updated(self): return pretty_date(self, self.updated)
+    
 
 class Reply(db.Model):
     message = db.ReferenceProperty(Message, collection_name="reply_messages")
@@ -76,5 +76,25 @@ class Reply(db.Model):
     target_unread = db.BooleanProperty(default=True)
 
     @property
-    def local_created(self):
-        return self.created + timedelta(hours=tz_offset)
+    def local_created(self): return self.created + timedelta(hours=tz_offset)
+
+    @property
+    def pretty_created(self): return pretty_date(self, self.created)
+
+def pretty_date(self, time):
+    now = datetime.now()
+    diff = now - time 
+    second_diff = diff.seconds
+    day_diff = diff.days
+    if day_diff < 0: return ""
+    if day_diff == 0:
+        if second_diff < 10: return "just now"
+        if second_diff < 60: return str(second_diff) + " seconds ago"
+        if second_diff < 120: return  "a minute ago"
+        if second_diff < 3600: return str( second_diff / 60 ) + " minutes ago"
+        if second_diff < 7200: return "an hour ago"
+        if second_diff < 86400: return str( second_diff / 3600 ) + " hours ago"
+    if day_diff == 1: return "Yesterday at " + self.local_updated.strftime("%I:%M%p")
+    if day_diff < 7: return self.local_updated.strftime("%A at %I:%M%p")
+    if day_diff < 365: return self.local_updated.strftime("%B %d at %I:%M%p")
+    return self.local_updated.strftime("%B %d, %Y at %I:%M%p")

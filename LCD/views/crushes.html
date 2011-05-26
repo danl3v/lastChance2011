@@ -3,6 +3,7 @@
 {% block extrahead %}
 <link rel="stylesheet" type="text/css" href="/stylesheets/jquery/jquery-ui-1.8.12.custom.css" />
 <script type="text/javascript" src="/js/jquery/jquery-ui-1.8.12.custom.min.js"></script>
+<script type="text/javascript" src="/js/crushes.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -46,7 +47,7 @@
          <div class="message" data-mid="{{ message.key.id }}">
          <div class="message-item{% if carleton_id == message.target.carletonID and message.target_unread %} unread{% endif %}">
            <div class="message-item-header">
-           <div class="message-item-info"><strong>User #{{ message.source.key.id|add:offset }}</strong> on {{ message.local_created|date:"M d \@ g:i:s A"}}</div>
+           <div class="message-item-info"><strong>User #{{ message.source.key.id|add:offset }}</strong> {{ message.pretty_created }}</div>
            <div class="message-actions">
              <ul class="icons ui-widget ui-helper-clearfix">
                {% if not message.replies.count %}<li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>{% endif %}
@@ -61,9 +62,7 @@
            <div class="message-item reply{% if carleton_id == message.source.carletonID and reply.source_unread or carleton_id != message.source.carletonID and reply.target_unread %} unread{% endif %}{% if carleton_id == reply.source.carletonID %} sent{% endif %}">
              <div class="message-item-header">
              <div class="message-item-info">
-               {% if carleton_id == reply.source.carletonID %}<strong>You</strong> on
-               {% else %}<strong>User #{{ message.source.key.id|add:offset }}</strong> on {% endif %}
-               {{ reply.local_created|date:"M d \@ g:i:s A"}}
+               <strong>{% if carleton_id == reply.source.carletonID %}You{% else %}User #{{ message.source.key.id|add:offset }}{% endif %}</strong> {{ reply.pretty_created }}
              </div>
              </div>
 	         <div class="message-item-body">{{ reply.body }}</div>
@@ -81,7 +80,7 @@
          <div class="message" data-mid="{{ message.key.id }}">
          <div class="message-item sent">
            <div class="message-item-header">
-           <div class="message-item-info"><strong>You</strong> to <strong>{{ message.target.first_name }} {{ message.target.last_name }}</strong> on {{ message.local_created|date:"M d \@ g:i:s A"}}</div>
+           <div class="message-item-info"><strong>You</strong> to <strong>{{ message.target.first_name }} {{ message.target.last_name }}</strong> {{ message.pretty_created }}</div>
            <div class="message-actions">
              <ul class="icons ui-widget ui-helper-clearfix">
                {% if not message.replies.count %}<li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>{% endif %}
@@ -96,9 +95,7 @@
            <div class="message-item reply{% if carleton_id == message.source.carletonID and reply.source_unread or carleton_id != message.source.carletonID and reply.target_unread %} unread{% endif %}{% if carleton_id == reply.source.carletonID %} sent{% endif %}">
              <div class="message-item-header">
              <div class="message-item-info">
-               {% if carleton_id == reply.source.carletonID %}<strong>You</strong> on
-               {% else %}<strong>{{ reply.source.first_name }} {{ reply.source.last_name }}</strong> on {% endif %}
-               {{ reply.local_created|date:"M d \@ g:i:s A"}}
+               <strong>{% if carleton_id == reply.source.carletonID %}You{% else %}{{ reply.source.first_name }} {{ reply.source.last_name }}{% endif %}</strong> {{ reply.pretty_created }}
              </div>
              </div>
 	         <div class="message-item-body">{{ reply.body }}</div>
@@ -123,10 +120,4 @@
   <p>Note: Beware of what you send. Even though messages are anonymous, users have the power to block you, so don't spam and be appropriate.</p>
 </form>
 </div>
-
-<div id="reload-messages" title="You have new messages!">
-    <p>Do you want to reload the page to get them?</p>
-</div>
-
-<script type="text/javascript" src="/js/crushes.js"></script>
 {% endblock %}

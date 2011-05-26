@@ -21,7 +21,7 @@ def generate_pair_code():
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(N))
 
 def update_matches():
-    crushes = models.Crush.all()
+    crushes = models.Crush.all().filter("deleted =", False)
     db.delete(models.Match.all())
     matches = [crush for crush in crushes if has_crush(crush.target, crush.source)] # we still calculate matches for opted out users in case they want to opt in at the last minute or something
     for match in matches:
