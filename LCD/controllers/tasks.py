@@ -1,6 +1,8 @@
 from google.appengine.ext import webapp
 from models import models
 import functions, emailfunctions
+from datetime import timedelta, datetime
+tz_offset = -5
 
 class SendDigest(webapp.RequestHandler):
     def get(self):
@@ -38,20 +40,26 @@ class UpdateStatistics(webapp.RequestHandler):
 
 class OpenSite(webapp.RequestHandler): # open the site on may 27, 2011
     def get(self):
-        from datetime import date
-        if date.today() == date(2011,5,27):
+        local_time = get_local_time()
+        if local_time.day == 27 and local_time.month == 5 and local_time.year == 2011:
             # maybe send invites here?
             functions.set_site_status('open')
         
 class CloseSite(webapp.RequestHandler): # close the site on jun 3, 2011
     def get(self):
-        from datetime import date
-        if date.today() == date(2011,6,3): functions.set_site_status('calculating')
+        local_time = get_local_time()
+        if local_time.day == 3 and local_time.month == 6 and local_time.year == 2011:
+            functions.set_site_status('calculating')
 
 class ShowMatches(webapp.RequestHandler): # show the matches on jun 7, 2011
     def get(self):
-        from datetime import date
-        if date.today() == date(2011,6,7):
+        local_time = get_local_time()
+        if local_time.day == 7 and local_time.month == 7 and local_time.year == 2011:
             functions.update_matches()
             # maybe send emails here?
             functions.set_site_status('showing')
+
+def get_local_time():
+    from datetime import timedelta, datetime
+    tz_offset = -5
+    return (datetime.now() + timedelta(hours=tz_offset))
