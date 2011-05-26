@@ -63,7 +63,8 @@ class Message(db.Model):
     
     @property
     def replies(self):
-        return Reply.gql("WHERE message = :1 ORDER BY created ASC", self.key())
+        #return Reply.gql("WHERE message = :1 ORDER BY created ASC", self.key())
+        return self.reply_messages # hopefully faster
 
 class Reply(db.Model):
     message = db.ReferenceProperty(Message, collection_name="reply_messages")
