@@ -178,7 +178,7 @@ function updateMessages() {
             $("#crushes-tab span").html('you have ' + text + '. <a href="/crushes">reload!</a>');
             $("#crushes-tab").addClass("alert");
             $("#crushes-tab span").fadeIn("fast");
-        } //$("#reload-messages").dialog("open"); }
+        }
         setTimeout('updateMessages()', 10000);
     }, "json");   
 }
