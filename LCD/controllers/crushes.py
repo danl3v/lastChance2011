@@ -90,26 +90,13 @@ def get_status(user):
     else: return "participating"
 
 def get_crushes_for_user(user):
-    #crushes = session.getCarl().in_crushes  # is the filter query or this property cheaper than next two lines?
-    #crushes = models.Crush.all()
-    #crushes.filter("source =", user)
-    #crushes.filter("deleted =", False)
     return user.in_crushes.filter("deleted =", False).fetch(20) # there should not be more than 5
 
 def get_messages_for_user(user): # need to somehow get messages by source
-    #messages = models.Message.all()
-    #messages.filter("target =", user)
-    #messages.filter("target_deleted =", False)
-    #messages.order("-updated")
     return user.out_messages.filter("target_deleted =", False).order("-updated")
 
 def get_messages_from_user(user): # need to somehow get messages by source
-    #messages = models.Message.all()
-    #messages.filter("source =", user)
-    #messages = user.in_messages
     return user.in_messages.filter("source_deleted =", False).order("-updated")
-    #messages.order("-updated")
-    #return messages
 
 def mark_messages_from_me_read(messages):
     for message in messages:
@@ -124,5 +111,3 @@ def mark_messages_to_me_read(messages):
         for reply in message.replies:
             reply.target_unread = False
             reply.put()
-
-
