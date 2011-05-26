@@ -17,7 +17,7 @@ class Crushes(webapp.RequestHandler):
                 'messages': messages,
                 'num_unread_messages': user.num_unread_messages,
                 'num_unread_sent_messages': user.num_unread_sent_messages,
-                'offset': random.randint(1, 100) - min([message.source.key().id() for message in messages]+[0]),
+                'offset': random.randint(1, 100),# - min([message.source.key().id() for message in messages]+[0]),
                 'sent_messages': sent_messages,
                 'current_page': { 'crushes': True }
                 }
@@ -73,9 +73,7 @@ class RemoveCrush(webapp.RequestHandler):
 class AutoFill(webapp.RequestHandler):
     @functions.only_if_site_open
     def get(self):
-        users = models.Carl.all()
-        users.order("first_name")
-        results = users.fetch(1000) #if we have more than 1000 users, we need to fetch multiple times until we run out of fetches
+        users = models.Carl.all().order("first_name")
         theJSON = ''.join([generate_JSON(user) for user in users])
         theJSON = "[" + theJSON[:-1] + "]"
         self.response.out.write(theJSON)
@@ -92,22 +90,24 @@ def get_status(user):
 def get_crushes_for_user(user):
     return user.in_crushes.filter("deleted =", False).fetch(20) # there should not be more than 5
 
-def get_messages_for_user(user): # need to somehow get messages by source
+def get_messages_for_user(user):
     return user.out_messages.filter("target_deleted =", False).order("-updated")
 
-def get_messages_from_user(user): # need to somehow get messages by source
+def get_messages_from_user(user):
     return user.in_messages.filter("source_deleted =", False).order("-updated")
 
-def mark_messages_from_me_read(messages):
+def mark_messages_from_me_read(messages): # make these faster
     for message in messages:
-        for reply in message.replies:
+        for reply in message.reply_messages:
             reply.source_unread = False
             reply.put()
 
-def mark_messages_to_me_read(messages):
+def mark_messages_to_me_read(messages): # make these faster
     for message in messages:
         message.target_unread = False
+        if message.target_any_unread:
+            for reply in message.reply_messages:
+                reply.target_unread = False
+                reply.put()
+        message.target_any_unread = False
         message.put()
-        for reply in message.replies:
-            reply.target_unread = False
-            reply.put()

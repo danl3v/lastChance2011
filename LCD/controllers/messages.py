@@ -1,5 +1,4 @@
 from google.appengine.ext import webapp
-from datetime import datetime
 from models import models
 import view, session, functions
 
@@ -34,6 +33,7 @@ class Reply(webapp.RequestHandler):
     @functions.only_if_paired_opted_in
     def post(self):
         if self.request.get('body'):
+            from datetime import datetime
             message = models.Message.get_by_id(long(self.request.get("mid"))) # maybe use key instead of key.id to find the message
             source = session.getCarl()
             if message and (message.source.carletonID == source.carletonID or message.target.carletonID == source.carletonID):

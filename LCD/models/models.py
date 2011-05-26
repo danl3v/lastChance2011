@@ -1,5 +1,4 @@
 from google.appengine.ext import db
-from google.appengine.api import users
 from datetime import timedelta, datetime
 tz_offset = -5
 
@@ -57,15 +56,9 @@ class Message(db.Model):
     
     @property
     def local_updated(self): return self.updated + timedelta(hours=tz_offset)
-    
-    @property
-    def replies(self):
-        #return Reply.gql("WHERE message = :1 ORDER BY created ASC", self.key())
-        return self.reply_messages # hopefully faster
 
     def pretty_updated(self): return pretty_date(self, self.updated)
     
-
 class Reply(db.Model):
     message = db.ReferenceProperty(Message, collection_name="reply_messages")
     source = db.ReferenceProperty(Carl, collection_name="reply_source")

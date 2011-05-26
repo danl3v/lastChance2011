@@ -50,7 +50,7 @@
            <div class="message-item-info"><strong>User #{{ message.source.key.id|add:offset }}</strong> {{ message.pretty_created }}</div>
            <div class="message-actions">
              <ul class="icons ui-widget ui-helper-clearfix">
-               {% if not message.replies.count %}<li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>{% endif %}
+               {% if not message.reply_messages.count %}<li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>{% endif %}
                <li class="ui-state-default ui-corner-all delete-button" title="Delete"><span class="ui-icon ui-icon-trash"></span></li>
                <li class="ui-state-default ui-corner-all block-button" title="Block User"><span class="ui-icon ui-icon-cancel"></span></li>
              </ul>
@@ -58,7 +58,7 @@
            </div>
            <div class="message-item-body">{{ message.body }}</div>
          </div>
-         {% for reply in message.replies %}
+         {% for reply in message.reply_messages %}
            <div class="message-item reply{% if carleton_id == message.source.carletonID and reply.source_unread or carleton_id != message.source.carletonID and reply.target_unread %} unread{% endif %}{% if carleton_id == reply.source.carletonID %} sent{% endif %}">
              <div class="message-item-header">
              <div class="message-item-info">
@@ -68,7 +68,7 @@
 	         <div class="message-item-body">{{ reply.body }}</div>
 	       </div>
 	     {% endfor %}
-         <div class="message-item reply reply-box"{% if not message.replies.count %} style="display:none;"{% endif %}><input type="text" class="reply-text" placeholder="Write a reply...hit enter"></div>
+         <div class="message-item reply reply-box"{% if not message.reply_messages.count %} style="display:none;"{% endif %}><input type="text" class="reply-text" placeholder="Write a reply...hit enter"></div>
          </div>
        {% endfor %}
     </div>
@@ -83,7 +83,7 @@
            <div class="message-item-info"><strong>You</strong> to <strong>{{ message.target.first_name }} {{ message.target.last_name }}</strong> {{ message.pretty_created }}</div>
            <div class="message-actions">
              <ul class="icons ui-widget ui-helper-clearfix">
-               {% if not message.replies.count %}<li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>{% endif %}
+               {% if not message.reply_messages.count %}<li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>{% endif %}
                <li class="ui-state-default ui-corner-all delete-button" title="Delete"><span class="ui-icon ui-icon-trash"></span></li>
                <li class="ui-state-default ui-corner-all block-button" title="Block User"><span class="ui-icon ui-icon-cancel"></span></li>
              </ul>
@@ -91,7 +91,7 @@
            </div>
            <div class="message-item-body">{{ message.body }}</div>
          </div>
-         {% for reply in message.replies %}
+         {% for reply in message.reply_messages %}
            <div class="message-item reply{% if carleton_id == message.source.carletonID and reply.source_unread or carleton_id != message.source.carletonID and reply.target_unread %} unread{% endif %}{% if carleton_id == reply.source.carletonID %} sent{% endif %}">
              <div class="message-item-header">
              <div class="message-item-info">
@@ -101,7 +101,7 @@
 	         <div class="message-item-body">{{ reply.body }}</div>
 	       </div>
   	   {% endfor %}
-       <div class="message-item reply reply-box"{% if not message.replies.count %} style="display:none;"{% endif %}><input type="text" class="reply-text" placeholder="Write a reply...hit enter"></div>
+       <div class="message-item reply reply-box"{% if not message.reply_messages.count %} style="display:none;"{% endif %}><input type="text" class="reply-text" placeholder="Write a reply...hit enter"></div>
        </div>
        {% endfor %}
     </div>
