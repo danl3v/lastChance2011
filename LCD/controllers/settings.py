@@ -6,7 +6,6 @@ class Settings(webapp.RequestHandler):
 
     @functions.only_if_site_not_pre
     def get(self):
-
         if session.opted_in(): optedout = False
         else: optedout = True
 
@@ -20,8 +19,11 @@ class Settings(webapp.RequestHandler):
 
         view.renderTemplate(self, 'settings.html', template_values)
 
-    #@functions.only_if_site_not_pre
     def post(self, action=None):
+
+        if functions.get_site_status() == 'pre': # make this a decorator
+            self.redirect("/")
+            return
 
         if action == "optin" and not session.opted_in() and session.isPaired():
             theCarl = session.getCarl()
@@ -85,7 +87,13 @@ class Settings(webapp.RequestHandler):
             self.redirect('/settings')
 
 class Invite(webapp.RequestHandler):
+
     def post(self):
+
+        if functions.get_site_status() == 'pre': # make this a decorator
+            response.out.write('{"success":2}') # the site is not open yet
+            return
+
         carletonAccount = functions.get_user_by_CID(self.request.get('carletonID').split("@")[0])
         if carletonAccount:
             carletonAccount.pair_code = functions.generate_pair_code()
@@ -97,8 +105,12 @@ class Invite(webapp.RequestHandler):
 
 class AutoPair(webapp.RequestHandler):
 
-    #@functions.only_if_site_not_pre
     def get(self, user="", pair_code=""):
+
+        if functions.get_site_status() == 'pre': # make this a decorator
+            self.redirect("/")
+            return
+
         theCarl = functions.get_user_by_CID(user)
         if (theCarl) and (theCarl.pair_code == pair_code):
             theCarl.googleID = str(session.get_current_user().user_id())
