@@ -89,7 +89,7 @@ function addSentMessage(to, body, message_id) {
     '      <ul class="icons ui-widget ui-helper-clearfix">' +
     '        <li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>' +
     '        <li class="ui-state-default ui-corner-all delete-button" title="Delete"><span class="ui-icon ui-icon-trash"></span></li>' +
-    '        <li class="ui-state-default ui-corner-all block-button" title="Block User"><span class="ui-icon ui-icon-cancel"></span></li>' +
+    '        <li class="ui-state-default ui-corner-all block-button" title="Report Abuse"><span class="ui-icon ui-icon-alert"></span></li>' +
     '      </ul>' +
     '    </div>' +
     '    </div>' +

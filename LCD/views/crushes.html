@@ -15,7 +15,7 @@
     <span id="new-crush">new crush: <input type="text" class="crush" name="crush"></span>
     </div>
     <div id="crushes">
-    <p id="no-crushes">You have no crushes right now.<br><br>Add a crush above and send them an anonymous message!</p>
+    <p class="no-crushes">You have no crushes right now.<br><br>Add a crush above and send them an <strong>anonymous</strong> message!</p>
     {% for crush in crushes %}
     <div id="crush-{{ crush.target.carletonID }}" class="crushdiv">
         <img src="/user_images/{{ crush.target.carletonID }}.jpg" width="120" height="120" alt="{{ crush.target.carletonID }}"><br>
@@ -53,7 +53,7 @@
              <ul class="icons ui-widget ui-helper-clearfix">
                {% if not message.reply_messages.count %}<li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>{% endif %}
                <li class="ui-state-default ui-corner-all delete-button" title="Delete"><span class="ui-icon ui-icon-trash"></span></li>
-               <li class="ui-state-default ui-corner-all block-button" title="Block User"><span class="ui-icon ui-icon-cancel"></span></li>
+               <li class="ui-state-default ui-corner-all block-button" title="Report Abuse"><span class="ui-icon ui-icon-alert"></span></li>
              </ul>
            </div>
            </div>
@@ -86,7 +86,7 @@
              <ul class="icons ui-widget ui-helper-clearfix">
                {% if not message.reply_messages.count %}<li class="ui-state-default ui-corner-all reply-button" title="Reply"><span class="ui-icon ui-icon-arrowreturnthick-1-w"></span></li>{% endif %}
                <li class="ui-state-default ui-corner-all delete-button" title="Delete"><span class="ui-icon ui-icon-trash"></span></li>
-               <li class="ui-state-default ui-corner-all block-button" title="Block User"><span class="ui-icon ui-icon-cancel"></span></li>
+               <li class="ui-state-default ui-corner-all block-button" title="Report Abuse"><span class="ui-icon ui-icon-alert"></span></li>
              </ul>
            </div>
            </div>

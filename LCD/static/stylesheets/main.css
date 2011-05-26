@@ -294,11 +294,12 @@ div#crushes div.crushdiv span
     display: block;
 }
 
-div#crushes p#no-crushes {
+div#crushes p.no-crushes {
     display: none;
     text-align: center;
-    padding: 6.5em 0;
-    width: 45%;
+    margin-top: .8em;
+    padding: 6.5em 2em;
+    width: 75%;
     background-color: #EEE;
     border: 1px solid #CCC;
 }
