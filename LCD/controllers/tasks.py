@@ -8,7 +8,7 @@ class SendDigest(webapp.RequestHandler):
     def get(self):
         users = models.Carl.all()
         for user in users:
-            num_crushes = user.out_crushes.filter("notified =", False).count()
+            num_crushes = user.out_crushes.filter("deleted =", False).filter("notified =", False).count()
             num_messages = user.num_unread_messages + user.num_unread_sent_messages
             if (num_crushes or num_messages) and user.opted_in:
                 emailfunctions.send_digest(user, num_crushes, num_messages)

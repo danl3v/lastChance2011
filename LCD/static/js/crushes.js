@@ -17,6 +17,7 @@ $(document).ready(function() {
                     $.post("/crushes/add", { "crush": ui.item.carletonID }, function(data) {
                         if (data.success == 0) {
                             if ($('#crush-' + ui.item.carletonID).length == 0) {
+				$("#crushes .no-crushes").fadeOut("fast");
                                 var status;
                                 if (data.status == "not_paired") { status = '<span style="color:red;">not yet registered</span><br>'; }
                                 else if (data.status == "opted_out") { status = '<span style="color:red;">opted out</span><br>'; }
@@ -31,7 +32,6 @@ $(document).ready(function() {
                         else if (data.success == 5) { alert("Sorry. You can't have more than 5 crushes. Please remove one before adding another."); }
 			else if (data.success == 6) { alert("Sorry. Last Chance Dance has closed and you are not allowed to add crushes anymore. Redirecting..."); window.location='/'; }
                         else { alert("There was an error in adding your crush. Please try again."); }
-			checkNoCrushes();
                     }, "json");
                 return false; // tells autocomplete not to update the field with the selected value
             }
@@ -52,10 +52,10 @@ $(document).ready(function() {
                                 if (body == "") { alert("Please enter a message body."); return; }
                                 $.post("/messages/send", { "to": to, "body": body }, function(data) {
                                     if (data.success == 0) {
+                                        $("#messages-from-me .no-messages").fadeOut("fast");
                                         $("#new-message-form").dialog("close");
                                         $(".message-item").removeClass("just-sent");
                                         addSentMessage(data.name, body, data.mid);
-                                        checkNoMessages();
                                         showMessages('from-me');
                                     }
                                     else if (data.success == 1) { alert("Your account must be paired and opted-in in order to send messages. Redirecting to settings page to resolve the issue..."); window.location='/settings'; }
