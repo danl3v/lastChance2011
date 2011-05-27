@@ -96,17 +96,18 @@ def get_messages_from_user(user):
     return user.in_messages.filter("source_deleted =", False).order("-updated")
 
 def mark_messages_from_me_read(messages): # make these faster
-    for message in messages:
-        for reply in message.reply_messages:
+    for message in messages.filter("source_any_unread =", True):
+        for reply in message.reply_messages.filter("source_unread =", True):
             reply.source_unread = False
             reply.put()
+        message.source_any_unread = False
+        message.put()
 
 def mark_messages_to_me_read(messages): # make these faster
-    for message in messages:
+    for message in messages.filter("target_any_unread =", True):
         message.target_unread = False
-        if message.target_any_unread:
-            for reply in message.reply_messages:
-                reply.target_unread = False
-                reply.put()
+        for reply in message.reply_messages.filter("target_unread =", True):
+            reply.target_unread = False
+            reply.put()
         message.target_any_unread = False
         message.put()

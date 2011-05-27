@@ -22,7 +22,7 @@ class SendMatchNotifications(webapp.RequestHandler):
     def get(self):
         users = models.Carl.all()
         for user in users:
-            matches = user.matches.fetch(10)
+            matches = user.in_matches.fetch(10)
             if len(matches) > 0 and user.opted_in:
                 emailfunctions.send_matches(user, matches)
         self.response.out.write('{"success":0}')

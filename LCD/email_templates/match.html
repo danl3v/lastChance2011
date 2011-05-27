@@ -1,6 +1,6 @@
 Hey there {{ carletonAccount.first_name }}!
 
-Congradulations! You have been matched by Last Chance Dance 2011!
+Congratulations! You have been matched by Last Chance Dance 2011!
 
 {% if matches|length > 1 %}Here are your matches:
 {% for match in matches %}-- {{ match.target.first_name }} {{ match.target.last_name }} ({{ match.target.carletonID }})
