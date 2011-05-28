@@ -30,7 +30,7 @@ $(document).ready(function() {
                         else if (data.success == 3) { alert(ui.item.first_name + " " + ui.item.last_name + " is not in our database."); }
                         else if (data.success == 4) { alert("You cannot choose yourself as a crush."); }
                         else if (data.success == 5) { alert("Sorry. You can't have more than 5 crushes. Please remove one before adding another."); }
-			else if (data.success == 6) { alert("Sorry. Last Chance Dance has closed and you are not allowed to add crushes anymore. Redirecting..."); window.location='/'; }
+                        else if (data.success == 6) { alert("Sorry. Last Chance Dance has closed and you are not allowed to add crushes anymore. Redirecting..."); window.location='/'; }
                         else { alert("There was an error in adding your crush. Please try again."); }
                     }, "json");
                 return false; // tells autocomplete not to update the field with the selected value

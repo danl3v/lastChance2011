@@ -49,6 +49,10 @@ class Message(db.Model):
 
     source_any_unread = db.BooleanProperty(default=False)
     target_any_unread = db.BooleanProperty(default=True)
+    
+    @property
+    def replies(self):
+        return Reply.gql("WHERE message = :1 ORDER BY created ASC", self.key())
 
     @property
     def local_created(self): return self.created + timedelta(hours=tz_offset)
