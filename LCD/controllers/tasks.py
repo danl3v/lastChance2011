@@ -1,8 +1,6 @@
 from google.appengine.ext import webapp
 from models import models
 import functions, emailfunctions
-from datetime import timedelta, datetime
-tz_offset = -5
 
 class SendDigest(webapp.RequestHandler):
     def get(self):
@@ -29,6 +27,8 @@ class UpdateStatistics(webapp.RequestHandler):
         num_paired = models.Carl.all().filter("googleID !=", None).count()
         num_opted_out = models.Carl.all().filter("opted_in =", False).count()
         num_to_pair = models.Carl.all().count() - num_paired
+        num_users_crushing = sum([1 for carl in models.Carl.all() if carl.in_crushes.filter("deleted =", False).count() > 0])
+        num_users_crushed_on = sum([1 for carl in models.Carl.all() if carl.out_crushes.filter("deleted =", False).count() > 0])
 
         functions.set_statistic("num_crushes", num_crushes)
         functions.set_statistic("num_messages", num_messages)
@@ -38,31 +38,29 @@ class UpdateStatistics(webapp.RequestHandler):
         functions.set_statistic("num_paired", num_paired)
         functions.set_statistic("num_opted_out", num_opted_out)
         functions.set_statistic("num_to_pair", num_to_pair)
+        functions.set_statistic("num_users_crushing", num_users_crushing)
+        functions.set_statistic("num_users_crushed_on", num_users_crushed_on)
         
         self.response.out.write('{"success":0}')
 
 class OpenSite(webapp.RequestHandler): # open the site on may 27, 2011
     def get(self):
-        local_time = get_local_time()
+        local_time = functions.get_local_time()
         if local_time.day == 27 and local_time.month == 5 and local_time.year == 2011:
             # maybe send invites here?
             functions.set_site_status('open')
         
 class CloseSite(webapp.RequestHandler): # close the site on jun 3, 2011
     def get(self):
-        local_time = get_local_time()
+        local_time = functions.get_local_time()
         if local_time.day == 3 and local_time.month == 6 and local_time.year == 2011:
             functions.set_site_status('calculating')
 
 class ShowMatches(webapp.RequestHandler): # show the matches on jun 7, 2011
     def get(self):
-        local_time = get_local_time()
+        local_time = functions.get_local_time()
         if local_time.day == 7 and local_time.month == 7 and local_time.year == 2011:
             functions.update_matches()
             # maybe send emails here?
             functions.set_site_status('showing')
 
-def get_local_time():
-    from datetime import timedelta, datetime
-    tz_offset = -5
-    return (datetime.now() + timedelta(hours=tz_offset))

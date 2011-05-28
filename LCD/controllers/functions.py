@@ -91,3 +91,8 @@ def only_if_paired_opted_in(f):
         if session.isPaired() and session.opted_in(): return f(self)
         else: self.response.out.write('{"success":1}')
     return helper
+    
+def get_local_time():
+    from datetime import timedelta, datetime
+    tz_offset = -5
+    return (datetime.now() + timedelta(hours=tz_offset))

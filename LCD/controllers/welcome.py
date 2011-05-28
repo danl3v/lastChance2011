@@ -5,7 +5,7 @@ import view, session, functions, emailfunctions
 
 class MainPage(webapp.RequestHandler):
     def get(self):
-        from datetime import datetime
+        from datetime import datetime, timedelta
         template_values = {
             'current_page': {'main': True},
             'num_crushes': functions.get_statistic('num_crushes'),
@@ -16,7 +16,9 @@ class MainPage(webapp.RequestHandler):
             'num_paired': functions.get_statistic('num_paired'),
             'num_opted_out': functions.get_statistic('num_opted_out'),
             'num_to_pair': functions.get_statistic('num_to_pair'),
-            'time_now': datetime.now()
+            'num_users_crushing': functions.get_statistic('num_users_crushing'),
+            'num_users_crushed_on': functions.get_statistic('num_users_crushed_on'),
+            'time_now': functions.get_local_time()
             }
         view.renderTemplate(self, 'index.html', template_values)
 
