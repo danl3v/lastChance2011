@@ -18,6 +18,8 @@ class Carl(db.Model):
     pair_code = db.StringProperty() # set default to generateVerificationCodeed
     opted_in = db.BooleanProperty(default=True)
 
+    date_paired = db.DateTimeProperty(auto_now_add=False)
+
     num_unread_messages = db.IntegerProperty(default=0)
     num_unread_sent_messages = db.IntegerProperty(default=0)
         

@@ -1,5 +1,6 @@
 from google.appengine.ext import webapp
 from models import models
+from datetime import datetime
 import session, view, emailfunctions, functions
 
 class Settings(webapp.RequestHandler):
@@ -56,6 +57,8 @@ class Settings(webapp.RequestHandler):
             if (theCarl) and (theCarl.pair_code == self.request.get('pair_code')):
                 theCarl.googleID = str(session.get_current_user().user_id())
                 theCarl.pair_code = functions.generate_pair_code()
+                if not theCarl.date_paired:
+                    theCarl.date_paired = datetime.now()
                 theCarl.put()
                 #emailfunctions.send_paired(theCarl, session.get_current_user())
                 template_values = {
@@ -91,7 +94,7 @@ class Invite(webapp.RequestHandler):
     def post(self):
 
         if functions.get_site_status() == 'pre': # make this a decorator
-            response.out.write('{"success":2}') # the site is not open yet
+            self.response.out.write('{"success":2}') # the site is not open yet
             return
 
         carletonAccount = functions.get_user_by_CID(self.request.get('carletonID').split("@")[0])
