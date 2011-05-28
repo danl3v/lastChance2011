@@ -50,6 +50,6 @@ function GetCount(cdate,ddate,iid){
 	out = out.substr(0,out.length-2);
 	document.getElementById(iid).innerHTML=out;
 
-	setTimeout(function(){GetCount(cdate,ddate,iid)}, 1000);
+	setTimeout(function(){GetCount(new Date(cdate-(-1000)),ddate,iid)}, 1000);
     }
 }

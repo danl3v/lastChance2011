@@ -57,28 +57,28 @@
     {% if site_status != 'pre' %}
     <h2>Statistics So Far <small>(updated automatically about every 2 hours)</small></h2>
     <div class="colwrapper">
-    <div style="float:left; width: 25%">
+    <div style="float:left; width: 30%">
       <h3>Users</h3>
       <p><span class="big">{{ num_paired }}</span> {% if num_paired == 1 %}person{% else %}people{% endif %} registered so far</p>
       <p><span class="big">{{ num_opted_out }}</span> {% if num_opted_out = 1 %}person{% else %}people{% endif %} opted out</p>
       <p><span class="big">{{ num_to_pair }}</span> {% if num_to_pair == 1 %}person still needs{% else %}people still need{% endif %} to register</p>
     </div>
-    <div style="float:left; width: 20%">
+    <div style="float:left; width: 18%">
       <h3>Messages</h3>
       <p><span class="big">{{ num_messages }}</span> {% if num_messages == 1 %}message{% else %}messages{% endif %}</p>
       <p><span class="big">{{ num_replies }}</span> {% if num_replies == 1 %}reply{% else %}replies{% endif %}</p>
       
     </div>
-    <div style="float:left; width: 25%">
+    <div style="float:left; width: 27%">
       <h3>Crushes</h3>
       <p><span class="big">{{ num_crushes }}</span> {% if num_crushes == 1 %}crush{% else %}crushes{% endif %} total</p>
       <p><span class="big">{{ num_users_crushing }}</span> {% if num_users_crushing == 1 %}user{% else %}users{% endif %} crushing</p>
       <p><span class="big">{{ num_users_crushed_on }}</span> {% if num_users_crushed_on == 1 %}user{% else %}users{% endif %} being crushed on</p>
     </div>
-    <div style="float:left; width: 30%">
+    <div style="float:left; width: 25%">
       <h3>Matches</h3>
       <p><span class="big">{{ num_matches }}</span> {% if num_matches == 1 %}match{% else %}matches{% endif %}</p>
-      <p><span class="big">{{ num_users_with_matches }}</span> {% if num_users_with_matches == 1 %}user has{% else %}users have{% endif %} at least one match</p>
+      <p><span class="big">{{ num_users_with_matches }}</span> {% if num_users_with_matches == 1 %}user has{% else %}users have{% endif %} a match</p>
     </div>
     </div>
     {% endif %}
