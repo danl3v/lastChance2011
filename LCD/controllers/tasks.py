@@ -7,11 +7,12 @@ class SendDigest(webapp.RequestHandler):
         if functions.get_site_status() == 'open':
             users = models.Carl.all()
             for user in users:
-                num_crushes = user.out_crushes.filter("deleted =", False).filter("notified =", False).count()
+                out_crushes = user.out_crushes.filter("deleted =", False).filter("notified =", False)
+                num_crushes = out_crushes.count()
                 num_messages = user.num_unread_messages + user.num_unread_sent_messages
                 if (num_crushes or num_messages) and user.opted_in:
                     emailfunctions.send_digest(user, num_crushes, num_messages)
-                    for crush in user.in_crushes:
+                    for crush in out_crushes:
                         crush.notified = True
                         crush.put()
             
