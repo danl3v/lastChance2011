@@ -114,6 +114,10 @@ class AutoPair(webapp.RequestHandler):
             self.redirect("/")
             return
 
+        if session.isPaired():
+            self.response.out.write("Your google account is already paired to another carleton account. Please unpair from that accout before pairing with a new one")
+            return
+
         theCarl = functions.get_user_by_CID(user)
         if (theCarl) and (theCarl.pair_code == pair_code):
             theCarl.googleID = str(session.get_current_user().user_id())
