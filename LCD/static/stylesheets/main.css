@@ -208,12 +208,12 @@ div#nav ul li.alert span a, div#nav ul li.alert span a:hover, div#nav ul li.aler
 /* MAIN LAYOUT OBJECTS */
 div#main h1.alert
 {
-    color: #FFF;
+    color: #FFFFFF;
     font-size: 1.5em;
-    border: 1px solid #04346C;
+    border: 1px solid #000000;
     text-align: center;
     padding: .5em;
-    background-color: #C91010;
+    background-color: #326EB6;
     
 }
 

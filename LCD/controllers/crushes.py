@@ -3,8 +3,12 @@ from models import models
 import session, view, functions
 
 class Crushes(webapp.RequestHandler):
-    @functions.only_if_paired_opted_in # need to deal with case where user is not paired or opted in, redirect to settings
+    #@functions.only_if_paired_opted_in # need to deal with case where user is not paired or opted in, redirect to settings
     def get(self):
+        if not (session.isPaired() and session.opted_in()): # make this a decorator
+            self.redirect("/")
+            return
+       
         site_status = functions.get_site_status()
         if site_status == "open":
             import random
