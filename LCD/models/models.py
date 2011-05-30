@@ -93,7 +93,7 @@ def pretty_date(self, time):
         if second_diff < 3600: return str( second_diff / 60 ) + " minutes ago"
         if second_diff < 7200: return "an hour ago"
         if second_diff < 86400: return str( second_diff / 3600 ) + " hours ago"
-    if day_diff == 1: return "Yesterday at " + self.local_updated.strftime("%I:%M%p")
-    if day_diff < 7: return self.local_updated.strftime("%A at %I:%M%p")
-    if day_diff < 365: return self.local_updated.strftime("%B %d at %I:%M%p")
-    return self.local_updated.strftime("%B %d, %Y at %I:%M%p")
+    if day_diff == 1: return "Yesterday at " + self.local_created.strftime("%I:%M%p")
+    if day_diff < 7: return self.local_created.strftime("%A at %I:%M%p")
+    if day_diff < 365: return self.local_created.strftime("%B %d at %I:%M%p")
+    return self.local_created.strftime("%B %d, %Y at %I:%M%p")
