@@ -190,11 +190,13 @@ function updateMessages() {
     $.get('/messages/get', function(data) {
         if (data.success == 0 && (data.num_unread_messages > 0 || data.num_unread_sent_messages)) {
             var text;
-            if (data.num_unread_messages + data.num_unread_sent_messages == 1) { text = "1 unread message"; }
-            else { text = (data.num_unread_messages + data.num_unread_sent_messages).toString() + " unread messages"; }
+            var num_messages = data.num_unread_messages + data.num_unread_sent_messages;
+            if (num_messages == 1) { text = "1 unread message"; }
+            else { text = num_messages.toString() + " unread messages"; }
             $("#crushes-tab span").html('you have ' + text + '. <a href="/crushes">reload!</a>');
             $("#crushes-tab").addClass("alert");
             $("#crushes-tab span").fadeIn("fast");
+            document.title = 'LstCxDx - ' + text; 
         }
 	else if (data.success == 1) { alert("Your account must be paired and opted-in in order to reply to messages. Redirecting to settings page to resolve the issue..."); window.location='/settings'; }
         setTimeout('updateMessages()', 10000);

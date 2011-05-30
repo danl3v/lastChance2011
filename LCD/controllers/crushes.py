@@ -82,7 +82,9 @@ class AutoFill(webapp.RequestHandler):
         self.response.out.write(theJSON)
 
 def generate_JSON(user):
-    extra = " (opted-out)" if not user.opted_in else ""
+    if not user.googleID: extra = " (not yet registered)"
+    elif not user.opted_in: extra = " (opted-out)"
+    else: extra = ""
     return '{"value":"' + user.first_name + ' ' + user.last_name + ' (' + user.carletonID + ')' + extra + '","carletonID":"' + user.carletonID + '","first_name":"' + user.first_name + '","last_name":"' + user.last_name + '"},'
 
 def get_status(user):

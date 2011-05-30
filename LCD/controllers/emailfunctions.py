@@ -10,7 +10,7 @@ from google.appengine.ext.webapp import template
 import session
 
 last_chance_dance_email_address = "Last Chance Dance <contact@lastchance2011.com>" # this is our email
-subject_prefix = "[lcD 2011] "
+subject_prefix = "[LstCxDx] "
 
 def render_email_body(template_file, template_values):
     '''
