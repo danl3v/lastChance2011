@@ -24,6 +24,7 @@
     <h2>Actions</h2>
     <button onclick="updateStatistics();">Update Matches and Statistics</button>
     {% if site_status == 'open' %}<button onclick="inviteAll();">Invite All</button>{% endif %}
+    {% if site_status == 'open' %}<button onclick="inviteNotPaired();">Invite Not-Paired</button>{% endif %}
     {% if site_status == 'showing' %}<button onclick="sendMatchNotifications();">Send Match Notifications</button>{% endif %}
     
   <form onSubmit="setSiteStatus(); return false;">

@@ -26,6 +26,7 @@ def main():
            ('/admin/deletecarl', admin.DeleteCarl),
            ('/admin/invite', admin.Invite),
            ('/admin/invite_all', admin.InviteAll),
+           ('/admin/invite_not_paired', admin.InviteNotPaired),
            ('/admin/unpaircarl', admin.UnPairCarl),
            ('/admin/send_match_notifications', admin.SendMatchNotifications),
            ('/admin/set_site_status', admin.SetSiteStatus),

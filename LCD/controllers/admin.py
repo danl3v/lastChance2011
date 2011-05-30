@@ -76,6 +76,13 @@ class InviteAll(webapp.RequestHandler):
         for user in users:
             emailfunctions.send_invitation(user)
         self.response.out.write('{"success":0}')
+        
+class InviteNotPaired(webapp.RequestHandler):
+    def get(self):
+        users = models.Carl.all()
+        for user in users:
+            if not user.googleID: emailfunctions.send_invitation(user)
+        self.response.out.write('{"success":0}')
 
 def addCarl(first_name, last_name, carleton_id):
     if functions.get_user_by_CID(carleton_id.strip()):
