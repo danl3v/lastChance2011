@@ -17,6 +17,7 @@ class Send(webapp.RequestHandler):
             if not target: self.response.out.write('{"success":2}') # check if user exists
             elif not functions.has_crush(source, target): self.response.out.write('{"success":3}') # you must have them as a crush
             elif not self.request.get("body"): self.response.out.write('{"success":4}') # message must have a body
+            elif len(self.request.get("body")) > 500: self.response.out.write('{"success":5}') # message must be less than 500 characters
             else:
                 message = models.Message()
                 message.source = source
@@ -33,6 +34,10 @@ class Reply(webapp.RequestHandler):
     @functions.only_if_site_open
     @functions.only_if_paired_opted_in
     def post(self):
+        if len(self.request.get("body")) > 500: # message must be less than 500 characters
+            self.response.out.write('{"success":5}')
+            return
+            
         if self.request.get('body'):
             from datetime import datetime
             message = models.Message.get_by_id(long(self.request.get("mid"))) # maybe use key instead of key.id to find the message

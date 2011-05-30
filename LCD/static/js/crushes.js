@@ -49,7 +49,8 @@ $(document).ready(function() {
                                 var to = $("input[name='message-to']").val();
                                 var name = $("input[name='message-to-box']").val();
                                 var body = $("textarea[name='message-body']").val();
-                                if (body == "") { alert("Please enter a message body."); return; }
+                                if (body.length == 0) { alert("Please enter a message body."); return; }
+                                else if (body.length > 500) { $("#message-too-long").dialog("open"); return; }
                                 $.post("/messages/send", { "to": to, "body": body }, function(data) {
                                     if (data.success == 0) {
                                         $("#messages-from-me .no-messages").fadeOut("fast");
@@ -62,13 +63,26 @@ $(document).ready(function() {
                                     else if (data.success == 2) { alert(name + " is not in our database. Could not send message."); }
                                     else if (data.success == 3) { alert(name + " is not one of your crushes. You can only send a message to one of your crushes. Refresh the page to get the most updated list of your crushes."); }
                                     else if (data.success == 4) { alert("Your message did not have a body. It was not sent."); }
-				    else if (data.success == 6) { alert("Sorry. Last Chance Dance has closed and you are not allowed to send messages anymore. Redirecting..."); window.location='/'; }
+                                    else if (data.success == 5) { $("#message-too-long").dialog("open"); }
+                                    else if (data.success == 6) { alert("Sorry. Last Chance Dance has closed and you are not allowed to send messages anymore. Redirecting..."); window.location='/'; }
                                     else { alert("There was an error in sending your message. Please try again."); }
                                 }, "json");
                             },
             Cancel: function() { $(this).dialog("close"); }
         },
         close: function() { $("textarea[name='message-body']").val(""); }
+    });
+    
+    $("#message-too-long").dialog({
+        autoOpen: false,
+        modal: true,
+        buttons: { Ok: function() { $( this ).dialog( "close" ); } }
+    });
+    
+    $("#reply-too-long").dialog({
+        autoOpen: false,
+        modal: true,
+        buttons: { Ok: function() { $( this ).dialog( "close" ); } }
     });
     
     $(".messageCrush:button").live('click', messageSendListener);
@@ -110,7 +124,7 @@ function crushRemoveListener() {
             if (data.success == 0) { crush.parent().remove(); }
             else if (data.success == 1) { alert("Your account must be paired and opted-in in order to remove crushes. Redirecting to settings page to resolve the issue..."); window.location='/settings'; }
             else if (data.success == 2) { crush.parent().remove(); alert("The username " + crush.val() + " does not exist and thus could not be removed. It might have been already removed."); }
-	    else if (data.success == 6) { alert("Sorry. Last Chance Dance has closed and you are not allowed to modify crushes anymore. Redirecting..."); window.location='/'; }
+            else if (data.success == 6) { alert("Sorry. Last Chance Dance has closed and you are not allowed to modify crushes anymore. Redirecting..."); window.location='/'; }
             else { alert("Error in deleting crush. Try again."); crush.parent().show(); }
 	    checkNoCrushes();
         }, "json");
@@ -131,7 +145,7 @@ function messageDeleteListener() {
             if (data.success == 0) { message.remove(); }
             else if (data.success == 1) { alert("Your account must be paired and opted-in in order to delete messages. Redirecting to settings page to resolve the issue..."); window.location='/settings'; }
             else if (data.success == 2) { message.remove(); alert("Message does not exist or you tried to delete another user's message."); }
-	    else if (data.success == 6) { alert("Sorry. Last Chance Dance has closed and you are not allowed to delete messages anymore. Redirecting..."); window.location='/'; }
+            else if (data.success == 6) { alert("Sorry. Last Chance Dance has closed and you are not allowed to delete messages anymore. Redirecting..."); window.location='/'; }
             else { message.show(); alert("Error in deleting message. Try again."); }
             checkNoMessages();
         }, "json");
@@ -158,7 +172,8 @@ function messageSendReplyListener(event) {
     if (event.keyCode == 13) {
       var message_id = $(this).parent().parent().attr("data-mid");
       var body = $(this).val();
-      if (body) {
+      if (body.length > 500) { $("#reply-too-long").dialog("open"); return; }
+      else if (body) {
         $(this).val("");
         $(this).parent().before('<div class="message-item sent reply"><div class="message-item-header"><div class="message-item-info"><strong>You</strong> just now</div></div><div class="message-item-body">' + body + '</div></div>');
         $.post("/messages/reply", { "mid": message_id, "body": body }, function(data) {
@@ -166,7 +181,8 @@ function messageSendReplyListener(event) {
           else if (data.success == 1) { alert("Your account must be paired and opted-in in order to reply to messages. Redirecting to settings page to resolve the issue..."); window.location='/settings'; }
           else if (data.success == 2) { alert("Message does not exist or you tried to reply another user's message. The added reply will be gone when you refresh the page."); }
           else if (data.success == 3) { alert("Reply not sent because there was no text to send. The added reply will be gone when you refresh the page."); }
-	  else if (data.success == 6) { alert("Sorry. Last Chance Dance has closed and you are not allowed to reply to messages anymore. Redirecting..."); window.location='/'; }
+          else if (data.success == 5) { $("#reply-too-long").dialog("open"); }
+          else if (data.success == 6) { alert("Sorry. Last Chance Dance has closed and you are not allowed to reply to messages anymore. Redirecting..."); window.location='/'; }
           else { alert("Error in replying to  message. Try again. The added reply will be gone when you refresh the page."); }
         }, "json");
       }

@@ -85,7 +85,7 @@ def pretty_date(self, time):
     diff = now - time 
     second_diff = diff.seconds
     day_diff = diff.days
-    if day_diff < 0: return ""
+    if day_diff < 0: return "no time available"
     if day_diff == 0:
         if second_diff < 10: return "just now"
         if second_diff < 60: return str(second_diff) + " seconds ago"
