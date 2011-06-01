@@ -17,7 +17,7 @@ cron:
 
 - description: close site
   url: /tasks/close
-  schedule: every day 12:00
+  schedule: every day 11:00
   timezone: America/Chicago
 
 - description: show matches

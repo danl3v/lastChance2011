@@ -1,24 +1,31 @@
 {% extends "base.html" %}
 
-{% if site_status == 'open' %}{% block extrahead %}
+{% block extrahead %}
+{% if site_status == 'open' %}
 <script type="text/javascript" src="/js/countdown.js"></script>
 <script>
-    window.onload = function() { GetCount(new Date({{ time_now.year }},{{ time_now.month|add:-1 }},{{ time_now.day }},{{ time_now.hour }},{{ time_now.minute }},{{ time_now.second }}), new Date(2011,5,3,12,00,00), 'countdown'); };
+    window.onload = function() { GetCount(new Date({{ time_now.year }},{{ time_now.month|add:-1 }},{{ time_now.day }},{{ time_now.hour }},{{ time_now.minute }},{{ time_now.second }}), new Date(2011,5,7,11,00,00), 'countdown'); };
 </script>
-{% endblock %}{% endif %}
+{% else %}{% if site_status == 'calculating' %}
+<script type="text/javascript" src="/js/countdown.js"></script>
+<script>
+    window.onload = function() { GetCount(new Date({{ time_now.year }},{{ time_now.month|add:-1 }},{{ time_now.day }},{{ time_now.hour }},{{ time_now.minute }},{{ time_now.second }}), new Date(2011,5,7,12,00,00), 'countdown'); };
+</script>
+{% endif %}{% endif %}
+{% endblock %}
 
 {% block content %}
 <div id="main">
 
-    {% if site_status == 'pre' %}<h1 class="alert">NOTICE: LCD will open at 12 noon on Friday, May 27, 2011.</h1>{% endif %}
+    {% if site_status == 'pre' %}<h1 class="alert">NOTICE: Last Chance Dance will open at 12 Noon on Friday, May 27, 2011.</h1>{% endif %}
     {% if site_status == 'open' %}<h1 class="alert"><span id="countdown"></span> to enter crushes!</h1>{% endif %}
-    {% if site_status == 'calculating' %}<h1 class="alert">NOTICE: LCD is Closed. Matches being calculated.</h1>{% endif %}
-    {% if site_status == 'showing' %}<h1 class="alert">NOTICE: Matches are out!</h1>{% endif %}
+    {% if site_status == 'calculating' %}<h1 class="alert"><span id="countdown"></span> until matches come out!</h1>{% endif %}
+    {% if site_status == 'showing' %}<h1 class="alert">NOTICE: Matches Are Out!</h1>{% endif %}
     
     <h2>Welcome Carleton Seniors</h2>
     <p>Last Chance Dance is your final opportunity to see if your secret crushes have been interested in you all this time. Enter your top 5 and if they're into it too, you'll get a chance to meet up and make the night what you want. It's completely risk-free because matches are sent out only if the feelings are mutual. It's now or never baby!</p>
 
-    <h2>How it works</h2>
+    <h2>How It Works</h2>
     <ol>
     <li>Sign in with your Google Account.</li>
     <li>Pair your Google Account with your Carleton Email ID.
@@ -43,13 +50,13 @@
         {% endif %}
     </li>
     <li>Go to the Crushes tab and enter up to five people! <strong>You can send them anonymous messages too!</strong></li>
-    <li>Feel free to update your crushes until <strong>Friday, June 3, 2011</strong>, when your crushes will be locked and the system will start to calculate the matches.</li>
+    <li>Feel free to update your crushes until <strong>11 A.M. Tuesday, June 7, 2011</strong>, when your crushes will be locked and the system will calculate the matches.</li>
     <li>A match occurs when one of your crushes also selects you as a crush. <strong>Your crushes will not know that you picked them unless they pick you too.</strong></li>
-    <li>At <strong>12 noon on Tuesday, June 7, 2011</strong>, before the <strong>Senior Week Event Karaoke “Knight” at the Rueb</strong>, you will receive an automatically generated email with your matches.</li>
+    <li>At <strong>12 Noon on Tuesday, June 7, 2011</strong>, before the <strong>Senior Week Event Karaoke “Knight” at the Rueb</strong>, you will be able to see your matches!!</li>
     </ol>
     
     {% if not paired %}
-    <h2>What is pairing your account?</h2>
+    <h2>What is Pairing Your Account?</h2>
     <p>Last Chance Dance uses Google Accounts to log you in, which is more secure than creating our own authentication system.</p>
     <p>By entering your Carleton ID and Pair Code from your invitation, we can verify that you are the Carleton student who you say you are, and once we know that, you can start using Last Chance Dance! We do this to keep your information confidential.</p>
     {% endif %}

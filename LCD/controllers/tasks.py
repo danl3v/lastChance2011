@@ -51,16 +51,16 @@ class OpenSite(webapp.RequestHandler): # open the site on may 27, 2011
             # maybe send invites here?
             functions.set_site_status('open')
         
-class CloseSite(webapp.RequestHandler): # close the site on jun 3, 2011
+class CloseSite(webapp.RequestHandler): # close the site on jun 7, 2011
     def get(self):
         local_time = functions.get_local_time()
-        if local_time.day == 3 and local_time.month == 6 and local_time.year == 2011:
+        if local_time.day == 7 and local_time.month == 6 and local_time.year == 2011:
             functions.set_site_status('calculating')
 
 class ShowMatches(webapp.RequestHandler): # show the matches on jun 7, 2011
     def get(self):
         local_time = functions.get_local_time()
-        if local_time.day == 7 and local_time.month == 7 and local_time.year == 2011:
+        if local_time.day == 7 and local_time.month == 6 and local_time.year == 2011:
             functions.update_matches()
             # maybe send emails here?
             functions.set_site_status('showing')
