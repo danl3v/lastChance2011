@@ -31,6 +31,7 @@ def main():
            ('/admin/send_match_notifications', admin.SendMatchNotifications),
            ('/admin/set_site_status', admin.SetSiteStatus),
            ('/tasks/send_digest', tasks.SendDigest),
+           ('/tasks/update_matches', tasks.UpdateMatches),
            ('/tasks/update_statistics', tasks.UpdateStatistics),
            ('/tasks/open', tasks.OpenSite),
            ('/tasks/close', tasks.CloseSite),

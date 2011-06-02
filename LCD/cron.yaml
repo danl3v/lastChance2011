@@ -10,6 +10,11 @@ cron:
   schedule: every 2 hours
   timezone: America/Chicago
 
+- description: update the matches
+  url: /tasks/update_matches
+  schedule: every 2 hours
+  timezone: America/Chicago
+
 - description: open site
   url: /tasks/open
   schedule: every day 12:00

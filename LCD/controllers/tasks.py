@@ -16,15 +16,22 @@ class SendDigest(webapp.RequestHandler):
                         crush.notified = True
                         crush.put()
             
+class UpdateMatches(webapp.RequestHandler):
+    def get(self):
+
+        matches = functions.update_matches()
+        num_matches = len(matches) / 2
+        num_users_with_matches = functions.num_users_with_matches()
+        functions.set_statistic("num_matches", num_matches)
+        functions.set_statistic("num_users_with_matches", num_users_with_matches)
+
+        self.response.out.write('{"success":0}')
+
 class UpdateStatistics(webapp.RequestHandler):
     def get(self):
-    
-        matches = functions.update_matches()
-        num_users_with_matches = functions.num_users_with_matches()
         num_crushes = models.Crush.all().filter("deleted =", False).count()
         num_messages = models.Message.all().count()
         num_replies = models.Reply.all().count()
-        num_matches = len(matches) / 2
         num_paired = models.Carl.all().filter("googleID !=", None).count()
         num_opted_out = models.Carl.all().filter("opted_in =", False).count()
         num_to_pair = models.Carl.all().count() - num_paired
@@ -34,8 +41,6 @@ class UpdateStatistics(webapp.RequestHandler):
         functions.set_statistic("num_crushes", num_crushes)
         functions.set_statistic("num_messages", num_messages)
         functions.set_statistic("num_replies", num_replies)
-        functions.set_statistic("num_matches", num_matches)
-        functions.set_statistic("num_users_with_matches", num_users_with_matches)
         functions.set_statistic("num_paired", num_paired)
         functions.set_statistic("num_opted_out", num_opted_out)
         functions.set_statistic("num_to_pair", num_to_pair)

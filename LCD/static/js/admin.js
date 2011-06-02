@@ -30,6 +30,11 @@ function updateStatistics() {
         if (data.success === 0) { alert('Statistics updated.'); }
         else { alert('Error updating statistics.'); }
     }, 'json');
+
+    $.get('/tasks/update_matches', function(data) {
+        if (data.success === 0) { alert('Matches updated.'); }
+        else { alert('Error updating matches.'); }
+    }, 'json');
 }
 
 function sendMatchNotifications() {
