@@ -39,7 +39,7 @@ def send_digest(carletonAccount, num_crushes, num_messages):
     '''
     user_address = carletonAccount.carletonID + "@carleton.edu"
     sender_address = last_chance_dance_email_address
-    subject = subject_prefix + "Daily Digest"
+    subject = subject_prefix + "Twice-a-Day Digest"
     
     template_values = {
            'first_name': carletonAccount.first_name,
