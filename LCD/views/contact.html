@@ -9,10 +9,10 @@
 <p>Subject:<br><input type="text" name="subject"></p>
 <p>Body:<br><textarea name="body"></textarea></p>
 {% if user %}
-<p><input type="checkbox" name="anonymous"> Send message anonymously</p>
+<p><input type="checkbox" name="anonymous"> Send message anonymously. It will not be replied to.</p>
 <input type="submit" value="Submit">
 {% else %}
-<p>This message is anonymous and will not be replied to. To recieve a reply, please login or provide your email address in this message.</p>
+<p>This message is anonymous and will not be replied to. To receive a reply, please login or provide your email address in this message.</p>
 <input type="submit" value="Submit">
 {% endif %}
 
